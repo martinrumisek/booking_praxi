@@ -8,4 +8,8 @@ class Home extends BaseController
     {
         return view('welcome_message');
     }
+    public function login(){
+        $data = ['title' => 'Přihlášení'];
+        return view('login', $data);
+    }
 }
