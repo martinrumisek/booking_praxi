@@ -84,6 +84,9 @@
     .login-oauh-block-company{
         display: none;
     }
+    input::placeholder{
+        font-size: 20px;
+    }
     @media (max-width: 990px){
         .loginForSchool{
             display:none;
