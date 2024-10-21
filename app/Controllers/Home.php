@@ -12,4 +12,8 @@ class Home extends BaseController
         $data = ['title' => 'Přihlášení'];
         return view('login', $data);
     }
+    public function registration(){
+        $data = ['title' => 'Registrace firmy'];
+        return view('registration', $data);
+    }
 }
