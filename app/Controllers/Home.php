@@ -21,4 +21,8 @@ class Home extends BaseController
         $data = ['title' => 'Nabídky praxe'];
         return view ('practise_offer', $data);
     }
+    public function people(){
+        $data = ['title' => 'Žáci'];
+        return view ('people', $data);
+    }
 }
