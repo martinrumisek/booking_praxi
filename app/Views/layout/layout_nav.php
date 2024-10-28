@@ -3,14 +3,37 @@
 <?= $this->include('layout/head')?>
 <body>
     <style>
+        /* Webkit Browsers (Chrome, Safari, Edge) */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f5f5f5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #006DBC ;
+            border-radius: 50px;
+            border: 3px solid #f5f5f5;
+        }
     .main-content {
             min-height: 200vh;
-            margin-left: 90px; 
+            margin-left: 82px; 
+            width: 100%;
             transition: margin-left 0.3s ease;
         }
         .nav-text {
             opacity: 0;
             transition: opacity 0.3s ease;
+        }
+        .nav-logo{
+            margin-top: 16px;
+            margin-left: 14px;
+            padding-right: 4px;
+            width: 65px;
+            height: auto;
+            opacity: 1;
         }
         .nav-container {
             width: 82px;
@@ -21,12 +44,43 @@
             z-index: 999;
             background-color: white;
             transition: width 0.3s ease;
+            background-color: #FFFFFF 0% 0% no-repeat padding-box;
+            box-shadow: 0px 3px 6px #00000029;
+            opacity: 1;
+        }
+        .nav-items{
+            margin-top: 43px;
         }
         .nav-item{
+            width: 82px;
+            height: 82px;
+            background-color: #FFFFFF 0 0 no-repeat padding-box;
+            box-shadow: 0px 3px 6px #00000029;
+            border: 1px solid #FFFFFF;
+            opacity: 1;
+            text-decoration: none;
+            position: relative;
+            z-index: 999;
             transition: width 0.3s ease;
         }
+        .nav-item:hover{
+            background-color: #006DBC;
+            border: 1px solid #006DBC;
+        }
+        .nav-item-logout:hover{
+            background-color: red;
+            border: 1px solid red;
+        }
+        .nav-item:hover .nav-text{
+            color: white;
+        }
+        .nav-item:hover .nav-icon{
+            color: white;
+        }
         a.nav-icon{
+            color: black;
             text-decoration: none;
+            border: none;
         }
         .nav-item-icon{
             width: 100%;
@@ -57,33 +111,52 @@
         .nav-container:hover ~ .main-content {
             margin-left: 90px;
         }
-        .nav-profile-container{
-            width: 350px;
-            height: 120px;
-            background: #FFFFFF 0% 0% no-repeat padding-box;
-            border: 1px solid #707070;
-            border-radius: 53px;
-            opacity: 1;
-            margin-top: 60px;
+        @media (max-height: 800px){
+            .nav-container{
+                width: 62px;
+            }
+            .nav-item{
+                width: 62px;
+                height: 62px;
+            }
+            .nav-logo{
+                width: 45px;
+            }
+            .main-content{
+                margin-left: 62px;
+            }
         }
-        #profile-icon{
-            box-shadow: 0px 3px 6px #00000029;
-            border-radius: 100%;
-            width:50px;
-            height: 50px
+        @media (max-width: 800px){
+        .nav-container{
+            width: 62px;
+        }
+        .nav-item{
+            width: 62px;
+            height: 62px;
+        }
+        .nav-logo{
+            width: 45px;
+        }
+        .main-content{
+                margin-left: 62px;
+            }
+    }
+    @media (max-height: 620px){
+            .nav-container{
+                width: 42px;
+            }
+            .nav-item{
+                width: 42px;
+                height: 42px;
+            }
+            .nav-logo{
+                width: 25px;
+            }
+            .main-content{
+                margin-left: 42px;
+            }
         }
     </style>
-    <div class="nav-profile-icon fixed-top d-flex justify-content-end m-3 p-2 ">
-        <!---Kontejner pro profil---->
-        <div class="nav-profile-container" style="display: none;">
-            <!-- <div class="d-flex justify-content-center align-items-center">
-                <a id="" class="nav-profile bg-white p-3 shadow-xl rounded-pill h3" href="#"><i class="fa-solid fa-user d-flex justify-content-center align-items-center"></i></a>
-                <div><p>Martin Rumíšek</p><br><span>Uživatel</span></div>
-            </div> -->
-        </div>
-        <!---profil--->
-        <a id="profile-icon" class="nav-profile bg-white p-3 shadow-xl rounded-pill h3" href="javascript:void(0)"><i class="fa-solid fa-user d-flex justify-content-center align-items-center"></i></a>
-    </div>
     <div class="d-flex">
         <!----Navigační panel----->
         <div class="d-block">
@@ -93,19 +166,16 @@
                 <p class="nav-text m-0 p-2 bold h5">BOOKING PRAXÍ</p>
                 </div>
                 <div class="nav-items">
-                    <a class="nav-icon" href="#1"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-house nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Domů</p></div></div></a>
-                    <a class="nav-icon" href="#1"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nabídky praxe</p></div></div></a>
-                    <a class="nav-icon" href="#1"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-user-group nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Lidé</p></div></div></a>
-                    <a class="nav-icon" href="#1"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-building nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Firmy</p></div></div></a>
-                    <a class="nav-icon" href="#1"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-circle-info nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Informace</p></div></div></a>
-                    <a class="nav-icon" href="#1"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-gear nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nastavení</p></div></div></a>
+                    <a class="nav-icon" href="#home"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-house nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Domů</p></div></div></a>
+                    <a class="nav-icon" href="#list_praxe"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nabídky praxe</p></div></div></a>
+                    <a class="nav-icon" href="#people"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-user-group nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Lidé</p></div></div></a>
+                    <a class="nav-icon" href="#company"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-building nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Firmy</p></div></div></a>
+                    <a class="nav-icon" href="#info"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-circle-info nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Informace</p></div></div></a>
+                    <a class="nav-icon" href="#setting"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-gear nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nastavení</p></div></div></a>
                 </div>
-                <div class=" d-flex align-content-end justify-content-center mt-auto">
-                    <div class="nav-soc-items rounded-pill mb-3">
-                        <a style="text-decoration: none;" class="nav-soc rounded-pill h5 my-3 mx-3 d-flex justify-content-center align-items-center" href="#"><i class="fa-solid fa-globe"></i></a>
-                        <a style="text-decoration: none;" class="nav-soc rounded-pill h5 my-3 mx-3 d-flex justify-content-center align-items-center" href="#"><i class="fa-brands fa-instagram"></i></a>
-                        <a style="text-decoration: none;" class="nav-soc rounded-pill h5 my-2 mx-3 d-flex justify-content-center align-items-center" href="#"><i class="fa-brands fa-facebook"></i></a>
-                    </div>
+                <div class=" mt-auto">
+                    <a class="nav-icon" href="#profile"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-user nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Profil</p></div></div></a>
+                    <a class="nav-icon" href="#logout"><div class="nav-item nav-item-logout d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-right-from-bracket nav-icon h2 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Odhlásit se</p></div></div></a>
                 </div>
             </div>
         </div>
