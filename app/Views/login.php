@@ -39,9 +39,17 @@
         height: 50px;
         border-radius: 30px;
     }
-    a{
-        text-decoration: none;
+    .soc-icon:hover{
+        border: 0.5px solid gray;
+    }
+    a{   
         color: black;
+    }
+    .soc-icon:hover .fa-facebook{
+        color: #3b5998;
+    }
+    .soc-icon:hover .fa-instagram{
+        color:  #C96868;
     }
     .login-input{
         height: 60px;
@@ -58,8 +66,16 @@
         font-size: 20px;
         border-radius: 20px;
     }
+    .form-button:hover{
+        background-color: white;
+        color: black;
+        box-shadow: 0px 3px 6px #00000029;
+    }
     .registration-btn{
         color: gray;
+    }
+    .registration-btn:hover{
+        color: black;
     }
     .circle-logo{
         width: 200px;
@@ -80,6 +96,10 @@
         border: none;
         border-radius: 25px;
         color: white;
+        text-decoration: none;
+    }
+    .login-oauh:hover{
+        border: 1px solid white;
     }
     .login-oauh-block-company{
         display: none;
@@ -120,12 +140,12 @@
                         <div class="d-flex justify-content-end"><button type="submit" class="btn form-button mt-3 px-5">Přihlásit se</button></div>
                     </form>
                 </div>
-                <div class="d-flex justify-content-center mt-4"><a class="registration-btn" href="">Registrovat se</a></div>
+                <div class="d-flex justify-content-center mt-5"><a class="registration-btn" href="">Registrovat se</a></div>
                 <div class=" justify-content-center mt-3 login-oauh-block-company"><a class="login-oauh h5" href="" alt="Přihlášení pro OAUH"><i class="fa-brands fa-microsoft"></i> Přihlásit se jako OAUH</a></div>
             </div>
             <div class="loginForSchool">
                 <div class="d-flex justify-content-center mt-3"><div class="circle-logo d-flex justify-content-center align-items-center"><img class="login-logo" src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" alt=""></div></div>
-                <div class="d-flex justify-content-center mt-5"><h2>Jsem z OAUH</h2></div>
+                <div class="d-flex justify-content-center mt-5 text-white"><h2>Jsem z OAUH</h2></div>
                 <div class="d-flex justify-content-center mt-2"><a class="login-oauh h5" href="" alt="Přihlášení pro OAUH"><i class="fa-brands fa-microsoft"></i> Přihlásit se jako OAUH</a></div>
             </div>
         </div>
