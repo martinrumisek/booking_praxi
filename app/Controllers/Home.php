@@ -6,7 +6,8 @@ class Home extends BaseController
 {
     public function index(): string
     {
-        return view('welcome_message');
+        $data = ['title' => 'Hlavní stránka'];
+        return view('index', $data);
     }
     public function login(){
         $data = ['title' => 'Přihlášení'];
