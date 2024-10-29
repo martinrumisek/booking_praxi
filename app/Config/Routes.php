@@ -10,3 +10,4 @@ $routes->get('login', 'Home::login');
 $routes->get('registration', 'Home::registration');
 $routes->get('practise_offer', 'Home::offerView');
 $routes->get('people','Home::people');
+$routes->get('company','Home::companyView');

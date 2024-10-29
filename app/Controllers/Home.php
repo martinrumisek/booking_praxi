@@ -25,4 +25,8 @@ class Home extends BaseController
         $data = ['title' => 'Žáci'];
         return view ('people', $data);
     }
+    public function companyView(){
+        $data = ['title' => 'Firmy'];
+        return view ('company', $data);
+    }
 }
