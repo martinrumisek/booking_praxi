@@ -29,4 +29,8 @@ class Home extends BaseController
         $data = ['title' => 'Firmy'];
         return view ('company', $data);
     }
+    public function profileView(){
+        $data = ['title' => 'Profil'];
+        return view ('profile', $data);
+    }
 }

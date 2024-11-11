@@ -11,3 +11,4 @@ $routes->get('registration', 'Home::registration');
 $routes->get('practise_offer', 'Home::offerView');
 $routes->get('people','Home::people');
 $routes->get('company','Home::companyView');
+$routes->get('profile','Home::profileView');
