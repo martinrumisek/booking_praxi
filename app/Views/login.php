@@ -146,7 +146,7 @@
             <div class="loginForSchool">
                 <div class="d-flex justify-content-center mt-3"><div class="circle-logo d-flex justify-content-center align-items-center"><img class="login-logo" src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" alt=""></div></div>
                 <div class="d-flex justify-content-center mt-5 text-white"><h2>Jsem z OAUH</h2></div>
-                <div class="d-flex justify-content-center mt-2"><a class="login-oauh h5" href="" alt="Přihlášení pro OAUH"><i class="fa-brands fa-microsoft"></i> Přihlásit se jako OAUH</a></div>
+                <div class="d-flex justify-content-center mt-2"><a class="login-oauh h5" href="<?=base_url('/logAD')?>" alt="Přihlášení pro OAUH"><i class="fa-brands fa-microsoft"></i> Přihlásit se jako OAUH</a></div>
             </div>
         </div>
         <div class="d-flex justify-content-center align-items-center mt-4">
