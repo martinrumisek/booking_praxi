@@ -6,7 +6,8 @@ class Home extends BaseController
 {
     public function index(): string
     {
-        $data = ['title' => 'Hlavní stránka'];
+        $user = session()->get('user');
+        $data = ['title' => 'Hlavní stránka', 'user' => $user];
         return view('index', $data);
     }
     public function login(){

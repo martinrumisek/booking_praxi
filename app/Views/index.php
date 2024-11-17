@@ -213,4 +213,11 @@
         <div class="next-previously d-flex align-items-center justify-content-center"><i class="fa-solid fa-chevron-right"></i></div>
     </a>
 </div>
+<?php if (session()->has('user')): ?>
+        <h2>Uživatel: <?= esc($user['jmeno']) ?> <?= esc($user['prijmeni']) ?></h2>
+        <p>ID: <?= esc($user['id']) ?></p>  <!-- Zobrazení ID -->
+        <p>Email: <?= esc($user['email']) ?></p>
+    <?php else: ?>
+        <p>Uživatel není přihlášen.</p>
+    <?php endif; ?>
 <?= $this->endSection() ?>
