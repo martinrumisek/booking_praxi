@@ -13,6 +13,7 @@
         "php": "^8.1",
         "codeigniter4/framework": "^4.0",
         "fortawesome/font-awesome": "^6.6",
+        "league/oauth2-client": "^2.7",
         "twbs/bootstrap": "^5.3"
     },
     "require-dev": {
@@ -37,7 +38,11 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "tbachert/spi": true
+        }
     },
     "scripts": {
         "test": "phpunit"
