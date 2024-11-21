@@ -143,20 +143,25 @@
                 <!--<div class="d-flex justify-content-center"><p>pro firmy</p></div>-->
                 <div class="mt-1 container d-flex justify-content-center">
                     <form action="" style="width: 80%;">
-                        <div class="mb-3 mt-2">
-                            <input type="text" class="form-control text-center registration-input shadow" placeholder="Název firmy/instituce" name="nameCompany" >
+                        <div class="mb-3 mt-2 form-floating">
+                            <input type="text" id="name_company" class="form-control text-center registration-input shadow" placeholder="Název firmy/instituce" name="nameCompany" >
+                            <label for="name_company" class="h6">Název firmy/instituce</label>
                         </div>
-                        <div class="mb-3">
-                            <input type="number" class="form-control text-center registration-input shadow" placeholder="IČO" name="ico">
+                        <div class="mb-3 form-floating">
+                            <input type="number" id="ico" class="form-control text-center registration-input shadow" placeholder="IČO" name="ico">
+                            <label for="ico" class="h6">IČO firmy</label>
                         </div>
-                        <div class="mb-3">
-                            <input type="email" class="form-control text-center registration-input shadow" placeholder="E-mail" name="email">
+                        <div class="mb-3 form-floating">
+                            <input type="email" id="mail" class="form-control text-center registration-input shadow" placeholder="E-mail" name="email">
+                            <label for="mail" class="h6">E-mail zastupující os.</label>
                         </div>
-                        <div class="mb-3">
-                            <input type="password" class="form-control text-center registration-input shadow" placeholder="Heslo" name="password">
+                        <div class="mb-3 form-floating">
+                            <input type="password" id="passw1" class="form-control text-center registration-input shadow" placeholder="Heslo" name="passwd1">
+                            <label for="passw1" class="h6">Heslo</label>
                         </div>
-                        <div class="mb-3">
-                            <input type="password" class="form-control text-center registration-input shadow" placeholder="Ověření hesla" name="password">
+                        <div class="mb-3 form-floating">
+                            <input type="password" id="passw2" class="form-control text-center registration-input shadow" placeholder="Potvrzení hesla" name="passwd2">
+                            <label for="passw2" class="h6">Potvrzení hesla</label>
                         </div>
                         <div class="d-flex justify-content-end"><button type="submit" class="btn form-button mt-3 px-5">Registrovat se</button></div>
                     </form>
