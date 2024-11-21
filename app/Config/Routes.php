@@ -21,3 +21,4 @@ $routes->get('profile','Home::profileView'); //stránka pro zobrazení profilu
 $routes->get('logAD', 'Auth::loginOAUH'); //routa pro tlačítko pro přesměrování na login Microsoft office - OAUH      
 $routes->get('/', 'Auth::callback'); // Routa pro zpracování údajů po přihlášení (Microsoft office - OAUH)   
 $routes->get('azure-users', 'UserAzureSync::index'); //routa pro btn - pro script (načtení všech uživatelů z db - azure)
+$routes->get('logout','Auth::logOut');

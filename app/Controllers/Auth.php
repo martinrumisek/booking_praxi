@@ -97,6 +97,8 @@ class Auth extends Controller
         return redirect()->to(base_url('/home'));
     }
     public function logOut(){
-        
+        session()->destroy();
+        $logoutUrl = 'https://login.microsoftonline.com/common/oauth2/v2.0/logout';
+        return redirect()->to($logoutUrl . '?post_logout_redirect_uri=' . urlencode(base_url('/login')));
     }
 }
