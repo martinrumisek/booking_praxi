@@ -129,13 +129,14 @@
                 <!--<div class="d-flex justify-content-center"><p>pro firmy</p></div>-->
                 <div class="mt-3 container d-flex justify-content-center">
                     <form action="" style="width: 80%;">
-                        <div class="mb-3 mt-3">
-                            <label for="email" class="form-label h5 input-text">E-mail</label>
-                            <input type="email" class="form-control text-center login-input shadow" placeholder="E-mail" name="email" >
+                        <div class="mb-3 mt-3 form-floating">
+                            <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
+                            <input type="email" class="form-control text-center login-input shadow" placeholder="E-mail" id="email" name="email" >
+                            <label for="email" class="h5 input-text">E-mail</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label h5 input-text mt-3">Heslo</label>
-                            <input type="password" class="form-control text-center login-input shadow" placeholder="Heslo" name="password">
+                        <div class="mb-3 mt-4 form-floating">
+                            <input type="password" class="form-control text-center login-input shadow" id="password" placeholder="Heslo" name="password">
+                            <label for="password" class="h5 input-text">Heslo</label>                        
                         </div>
                         <div class="d-flex justify-content-end"><button type="submit" class="btn form-button mt-3 px-5">Přihlásit se</button></div>
                     </form>
