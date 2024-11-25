@@ -10,6 +10,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/home', 'Home::index'); //routa na hlavní stránku
 $routes->get('login', 'Home::login'); //Přihlašovácí stránka
 $routes->get('registration', 'Home::registration'); //stránka pro registraci firmy
+$routes->get('next-step-register','Home::continuationRegister' );
 $routes->get('practise_offer', 'Home::offerView'); //stránka pro nabídky praxe
 $routes->get('people','Home::people'); //stránka pro zobrazení lidí z oauh
 $routes->get('company','Home::companyView'); //stránka pro zobrazení firem

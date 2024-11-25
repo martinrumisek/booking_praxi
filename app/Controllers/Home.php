@@ -18,6 +18,10 @@ class Home extends BaseController
         $data = ['title' => 'Registrace firmy'];
         return view('registration', $data);
     }
+    public function continuationRegister(){
+        $data = ['title'=> 'Dokončení registrace'];
+        return view('continuation_register', $data);
+    }
     public function offerView(){
         $data = ['title' => 'Nabídky praxe'];
         return view ('practise_offer', $data);
