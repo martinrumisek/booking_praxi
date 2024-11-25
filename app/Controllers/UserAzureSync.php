@@ -4,16 +4,18 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use App\Models\UserModel;
+use App\Models\ClassModel;
 
 class UserAzureSync extends Controller
 {
     protected $provider;
 
-    public function index()
+    public function getAllUsers()
     {
         $accessToken = $this->getAccessToken();
         $usersData = $this->getUsers($accessToken);
         $this->saveUsers($usersData);
+        $this->userToCLass();
     }
 
     // Získní přístupové tokenu, tak abych mohl pracovat s daty uživatelů
@@ -101,24 +103,52 @@ class UserAzureSync extends Controller
                 // Pokud některý z požadovaných údajů chybí, tento uživatel se přeskočí
                 continue;
             }
+            if (strpos($department, '-') === false) {
+                $role = 'teacher';  
+            }else{
+                //[$yearGraduation, $classLetter] = explode('-', $department, 2);
+                $role = 'student';
+            }
             // Uložení do databáze
-            $data = [
-                'email' => $mail,
-                'jmeno' => $name,
-                'prijmeni' => $surname,
-                'pozice' => $jobTitle,
-                'oddeleni' => $department
+            $dataUser = [
+                'mail' => $mail,
+                'name' => $name,
+                'surname' => $surname,
+                'job_title' => $jobTitle,
+                'department' => $department,
+                'role' => $role,
+                'phone' => '',
             ];
-
-            // Zkontroluj, jestli uživatel existuje
-            $userExist = $userModel->where('email', $mail)->first();
+            $userExist = $userModel->where('mail', $mail)->first();
             if ($userExist) {
-                // Aktualizace existujícího uživatele
-                $userModel->update($userExist['id'], $data);
+                $userModel->update($userExist['id'], $dataUser);
             } else {
-                // Vložení nového uživatele
-                $userModel->insert($data);
+                $userModel->insert($dataUser);
             }
         }
+    }
+    private function userToCLass(){
+        $userModel = new UserModel();
+        $classModel = new ClassModel();
+        $users = $userModel->where('role', 'student')->findAll();
+        foreach( $users as $user ){
+            $department = $user['department'];
+
+            if(strpos($department, '-') !== false){
+                [$yearGraduation, $letterClass] = explode('-', $department, 2);
+                $yearGraduation = intval($yearGraduation);
+                $letterClass = strtoupper(trim($letterClass));
+                $class = $classModel->where('year_graduation', $yearGraduation)->where('letter_class', $letterClass)->first();
+                if($class){
+                    $userModel->update($user['id'], ['Class_id' => $class['id']]);
+                }else{
+                    $userModel->delete($user['id']);
+                }
+            }
+        }
+    }
+    public function updateClassYearGraduation(){
+        $classModel = new ClassModel();
+        $classModel->db->table('class')->set('year_graduation', 'year_graduation - 1', false)->update();
     }
 }
