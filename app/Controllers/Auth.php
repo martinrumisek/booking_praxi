@@ -28,7 +28,7 @@ class Auth extends Controller
             'redirectUri'             => $redirectUrl,
             'urlAuthorize'            => "https://login.microsoftonline.com/{$tenantId}/oauth2/v2.0/authorize?scope=openid profile email User.Read",
             'urlAccessToken'          => "https://login.microsoftonline.com/{$tenantId}/oauth2/v2.0/token",
-            'urlResourceOwnerDetails' => 'https://graph.microsoft.com/v1.0/me',
+            'urlResourceOwnerDetails' => 'https://graph.microsoft.com/v1.0/me?$select=displayName,givenName,surname,jobTitle,department,mail,userPrincipalName',
         ]);
     }
 
@@ -96,6 +96,7 @@ class Auth extends Controller
         //Vracím na stránku /routu
         return redirect()->to(base_url('/home'));
     }
+    //metoda pro odhlašovaní uživatelů přihlášených přes ms office.
     public function logOut(){
         session()->destroy();
         $logoutUrl = 'https://login.microsoftonline.com/common/oauth2/v2.0/logout';
