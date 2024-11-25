@@ -72,26 +72,27 @@ class Auth extends Controller
         $email = $userData['mail'] ?? $userData['userPrincipalName'];
         $userModel = new UserModel();
 
-        $user = $userModel->where('email', $email)->first();
+        $user = $userModel->where('mail', $email)->first();
         // Zjistím, zda stávající uživatel již není uveden v databázi, a když není, tak ho tam napíší.
         if (!$user) {
             $data = [
-                'jmeno' => $userData['givenName']??'',
-                'prijmeni' => $userData['surname']??'',
-                'email' => $email,
-                'oddeleni' => $userData['department'] ?? '',
-                'pozice' => $userData['jobTitle'] ?? '',
+                'name' => $userData['givenName']??'',
+                'surname' => $userData['surname']??'',
+                'mail' => $email,
+                'department' => $userData['department'] ?? '',
+                'job_title' => $userData['jobTitle'] ?? '',
             ];
             $userModel->insert($data);
-            $user = $userModel->where('email', $email)->first();
+            $user = $userModel->where('mail', $email)->first();
         }
 
         // Potřebná data ukládám do session pro další práci s nimi
         session()->set('user', [
             'id' => $user['id'],
-            'jmeno' => $user['jmeno'],
-            'prijmeni' => $user['prijmeni'],
-            'email' => $user['email']
+            'jmeno' => $user['name'],
+            'prijmeni' => $user['surname'],
+            'email' => $user['mail'],
+            'class' => $user['Class_id'],
         ]);
         //Vracím na stránku /routu
         return redirect()->to(base_url('/home'));
