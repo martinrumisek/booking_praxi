@@ -98,6 +98,16 @@
         color: white;
         text-decoration: none;
     }
+    .toggle-pass {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+    }
     .login-oauh:hover{
         border: 1px solid white;
     }
@@ -136,7 +146,8 @@
                         </div>
                         <div class="mb-3 mt-4 form-floating">
                             <input type="password" class="form-control text-center login-input shadow" id="password" placeholder="Heslo" name="password">
-                            <label for="password" class="h5 input-text">Heslo</label>                        
+                            <label for="password" class="h5 input-text">Heslo</label> 
+                            <button type="button" class="toggle-pass"><i class="fa-regular fa-eye" id="toggle-icon"></i></button>                       
                         </div>
                         <div class="d-flex justify-content-end"><button type="submit" class="btn form-button mt-3 px-5">Přihlásit se</button></div>
                     </form>
@@ -157,4 +168,20 @@
         </div>
     </div>
 </div>
+<script>
+    const passwordInput = document.getElementById('password');
+    const togglePasswordButton = document.querySelector('.toggle-pass');
+    const toggleIcon = document.getElementById('toggle-icon');
+    togglePasswordButton.addEventListener('click', () => {
+        if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+        } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+        }
+    });
+</script>
 <?= $this->endSection() ?>
