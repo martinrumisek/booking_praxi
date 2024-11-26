@@ -111,15 +111,9 @@
     -moz-appearance: textfield;
     }
     @media (max-width: 990px){
-        .loginForSchool{
-            display:none;
-        }
         .loginForCompany{
             width: 100%;
-            height: 680px;
-        }
-        .login-oauh-block-company{
-            display:flex;
+            min-height: 900px;
         }
     }
 </style>
@@ -215,12 +209,11 @@
                                     <div class="invalid-feedback">Check this checkbox to continue.</div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-4"><div class="d-flex justify-content-end"><button type="submit" class="btn form-button mt-3 mr-3 px-5">Registrovat se</button></div></div>
+                            <div class="col-12 col-lg-4"><div class="d-flex justify-content-center justify-content-lg-end"><button type="submit" class="btn form-button mt-3 mr-3 px-5">Registrovat se</button></div></div>
                         </div>
                     </form>
                 </div>
                 <div class="d-flex justify-content-center mt-5"><a class="registration-btn" href="">registrovat znovu</a></div>
-                <div class=" justify-content-center mt-3 login-oauh-block-company"><a class="login-oauh h5" href="" alt="Přihlášení pro OAUH"><i class="fa-brands fa-microsoft"></i> Přihlásit se jako OAUH</a></div>
             </div>
         </div>
         <div class="d-flex justify-content-center align-items-center mt-4">
