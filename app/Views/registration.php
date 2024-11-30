@@ -167,17 +167,17 @@
             <div class="d-flex justify-content-center title-registration "><h2>Registrace</h2></div>
                 <!--<div class="d-flex justify-content-center"><p>pro firmy</p></div>-->
                 <div class="mt-1 container d-flex justify-content-center">
-                    <form action="" style="width: 80%;" novalidate>
+                    <form action="" style="width: 80%;" id="form" novalidate>
                         <div class="mb-3 mt-2 form-floating">
                             <input type="text" id="name_company" class="form-control text-center registration-input shadow" placeholder="Název firmy/instituce" name="nameCompany" >
                             <label for="name_company" class="h6">Název firmy/instituce</label>
                         </div>
                         <div class="mb-3 form-floating">
-                            <input type="number" id="ico" class="form-control text-center registration-input shadow" placeholder="IČO" name="ico">
+                            <input type="number" id="ico" class="form-control text-center registration-input shadow" placeholder="IČO" name="ico" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <label for="ico" class="h6">IČO firmy</label>
                         </div>
                         <div class="mb-3 form-floating">
-                            <input type="email" id="mail" class="form-control text-center registration-input shadow" placeholder="E-mail" name="email">
+                            <input type="email" id="mail" class="form-control text-center registration-input shadow" placeholder="E-mail" name="email" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <label for="mail" class="h6">E-mail zastupující os.</label>
                         </div>
                         <div class="mb-3 form-floating">
@@ -190,7 +190,7 @@
                             <label for="passw2" class="h6">Potvrzení hesla</label>
                             <button type="button" class="toggle-pass2"><i class="fa-regular fa-eye" id="toggle-icon2"></i></button>
                         </div>
-                        <div class="d-flex justify-content-end"><button type="submit" class="btn form-button mt-3 px-5">Registrovat se</button></div>
+                        <div class="d-flex justify-content-end"><button type="submit" id="submit" class="btn form-button mt-3 px-5">Registrovat se</button></div>
                     </form>
                 </div>
                 <div class="d-flex justify-content-center mt-4"><a class="registration-btn" href="">Přihlásit se</a></div>
@@ -234,38 +234,84 @@
     const password1Input = document.getElementById('passw1');
     const password2Input = document.getElementById('passw2');
     const mailInput = document.getElementById('mail');
+    const icoInput = document.getElementById('ico');
+    const nameCompanyInput = document.getElementById('name_company');
+    const checkNameCompany = () => {
+        if (!nameCompanyInput.value.trim()) {
+            nameCompanyInput.classList.add('invalid-input');
+        } else {
+            nameCompanyInput.classList.remove('invalid-input');
+        }
+    };
+    nameCompanyInput.addEventListener('input', checkNameCompany);
+    const tooltipPassword = new bootstrap.Tooltip(password1Input, {
+        html: true,
+        title: () => createTooltipContent(password1Input.value),
+        trigger: 'auto',
+    });
+    const tooltipIco = new bootstrap.Tooltip(icoInput,{
+        html: true,
+        title: 'Vaše IČO neodpovídá regulérnímu výrazu.',
+        trigger: 'auto',
+    });
+    const checkIcoValidity = () => {
+        const ico = icoInput.value.trim();
+        const icoPattern = /^\d{8}$/;
+        if (ico === '') {
+            icoInput.classList.add('invalid-input');
+            tooltipIco.hide();
+        } else if (!icoPattern.test(ico)) {
+            icoInput.classList.add('invalid-input');
+            tooltipIco.show();
+        } else {
+            icoInput.classList.remove('invalid-input');
+            tooltipIco.hide();
+        }
+    }
+    icoInput.addEventListener('input', checkIcoValidity);
+    const tooltipMail = new bootstrap.Tooltip(mailInput, {
+        html: true,
+        title: 'E-mailová adresa neodpovídá požadovanému výrazu.',
+        trigger: 'auto',
+    });
     const checkEmailValidity = () => {
         const mail = mailInput.value;
-        if (!emailPattern.test(mail)) {
+        if (mail === '') {
             mailInput.classList.add('invalid-input');
-        } else {
+            tooltipMail.hide();
+        }else if(!emailPattern.test(mail)){
+            mailInput.classList.add('invalid-input');
+            tooltipMail.show();
+        } 
+        else {
             mailInput.classList.remove('invalid-input');
+            tooltipMail.hide();
         }
     };
     mailInput.addEventListener('input', checkEmailValidity);
-    const tooltip = new bootstrap.Tooltip(password1Input, {
-        html: true,
-        title: () => createTooltipContent(password1Input.value),
-    });
     const validatePassword = () => {
         const password = password1Input.value;
         const allValid = Object.values(requirements).every((regex) => regex.test(password));
+        if(password === ''){
+            password1Input.classList.add('invalid-input');
+            return;
+        }
         if (password && !allValid) {
             password1Input.classList.add('invalid-input');
         } else {
             password1Input.classList.remove('invalid-input');
         }
-        tooltip.setContent({'.tooltip-inner': createTooltipContent(password),});
+        tooltipPassword.setContent({'.tooltip-inner': createTooltipContent(password),});
     };
     
     password1Input.addEventListener('input', validatePassword);
     password1Input.addEventListener('focus', validatePassword);
     password1Input.addEventListener('blur', validatePassword);
 
-    const tooltip2 = new bootstrap.Tooltip(password2Input, {
+    const tooltipPasswordMatch = new bootstrap.Tooltip(password2Input, {
         html: true,
         title: "Hesla se neshodují",
-        trigger: "auto" // Tooltip bude zobrazen manuálně
+        trigger: "auto" // 
     });
 
     // Kontrola hesel, jestli se shodují
@@ -274,15 +320,43 @@
         const password2 = password2Input.value;
     
         if (password1 && password2 && password1 !== password2) {
-            tooltip2.show();
+            tooltipPasswordMatch.show();
             password2Input.classList.add('invalid-input');
         } else {
-            tooltip2.hide();
+            tooltipPasswordMatch.hide();
             password2Input.classList.remove('invalid-input');
         }
     };
     password1Input.addEventListener('input', checkPasswordsMatch);
     password2Input.addEventListener('input', checkPasswordsMatch);
+
+    document.querySelector('form').addEventListener('submit', (event) => {
+        let isValid = true;
+
+        checkNameCompany();
+        if(nameCompanyInput.classList.contains('invalid-input')){
+            isValid = false;
+        }
+        checkIcoValidity(); 
+        if (icoInput.classList.contains('invalid-input')) {
+            isValid = false;
+        }
+        checkEmailValidity();
+        if (mailInput.classList.contains('invalid-input')) {
+            isValid = false;
+        }
+        validatePassword();
+        if (password1Input.classList.contains('invalid-input')) {
+            isValid = false;
+        }
+        checkPasswordsMatch();
+        if (password2Input.classList.contains('invalid-input')) {
+            isValid = false;
+        }
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });  
 
     //Zobrazení hesla pomocí ikonky a zároveň měnění ikonky podle situace.
     const togglePassword1Button = document.querySelector('.toggle-pass1');
