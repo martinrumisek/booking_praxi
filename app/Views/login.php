@@ -138,7 +138,7 @@
                 <div class="d-flex justify-content-center title-login "><h2>Přihlášení</h2></div>
                 <!--<div class="d-flex justify-content-center"><p>pro firmy</p></div>-->
                 <div class="mt-3 container d-flex justify-content-center">
-                    <form action="" style="width: 80%;">
+                    <form action="<?=base_url('/loginCompany')?>" method="POST" style="width: 80%;">
                         <div class="mb-3 mt-3 form-floating">
                             <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
                             <input type="email" class="form-control text-center login-input shadow" placeholder="E-mail" id="email" name="email" >
