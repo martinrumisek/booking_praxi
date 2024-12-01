@@ -36,7 +36,53 @@ class Auth extends Controller
 
     }
     public function registerCompany(){
+        $nameCompany = $this->request->getPost('name_company');
+        $ico = $this->request->getPost('ico');
+        $mail = $this->request->getPost('email');
+        $passwd1 = $this->request->getPost('passwd1');
+        $passwd2 = $this->request->getPost('passwd2');
 
+        $isValid = $this->verifyCompany($ico, $nameCompany);
+        if (!$isValid) {
+            return redirect()->to(base_url('/registration'));
+        }
+        $hashPasswd = password_hash($passwd1, PASSWORD_DEFAULT);
+        $town = $isValid['sidlo']['nazevObce'];
+        $street = $isValid['sidlo']['nazevUlice'].' '.$isValid['sidlo']['cisloDomovni'];
+        $postCode = $isValid['sidlo']['psc'];
+        $legalForm = $isValid['pravniForma'];
+        $this->session = session();
+        $this->session->set('company',[
+            'name_company' => $nameCompany,
+            'ico' => $ico,
+            'mail'=> $mail,
+            'town' => $town,
+            'street' => $street,
+            'postCode' => $postCode,
+            'legal_form' => $legalForm,
+        ]);
+        $this->session->set('passwdPerson', [
+            'hashPasswd' => $hashPasswd
+        ]);
+        $this->session->set('registration_start', true);
+        return redirect()->to(base_url('/next-step-register'));
+    }
+    private function verifyCompany($ico, $nameCompany){
+        $url = "http://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/$ico";
+        $header = get_headers($url, 1);
+        if(strpos($header[0],"404") !== false){
+            return null;
+        }
+        $response = @file_get_contents($url);
+        if($response === false){
+            return null;
+        }
+        $data = json_decode($response, true);
+        if(isset($data["ico"]) && $data["ico"] === $ico){
+            if(isset($data["obchodniJmeno"]) && $data["obchodniJmeno"] === $nameCompany){
+                return $data;
+            }else{return null;}
+        }else{return null;}
     }
     public function changePassCompany(){
 
