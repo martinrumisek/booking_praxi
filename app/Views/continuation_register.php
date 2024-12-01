@@ -132,34 +132,35 @@
                                 <div></div><!-- div pro text, napsané malým "firma" -->
                                 <div class="m-3 form-floating">
                                     <!-- Název firmy/instituce-->
-                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Název firmy/instituce" id="name_company" name="name_company" >
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Název firmy/instituce" id="name_company" name="name_company" value="<?=$name_company?>" disabled >
                                     <label for="name_company" class="h5 input-text">Název firmy/instituce</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- IČO-->
-                                    <input type="number" class="form-control text-center login-input shadow" placeholder="IČO" id="ico" name="ico" >
+                                    <input type="number" class="form-control text-center login-input shadow" placeholder="IČO" id="ico" name="ico" value="<?=$ico?>" disabled>
                                     <label for="ico" class="h5 input-text">IČO</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- Město/vesnice - sídlo firmy-->
-                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Město/vesnice" id="place_company" name="place_company" >
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Město/vesnice" id="place_company" name="place_company" value="<?=$town?>">
                                     <label for="place_company" class="h5 input-text">Město/vesnice</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- Ulice firmy daného města-->
-                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Ulice" id="street_company" name="street_company" >
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Ulice" id="street_company" name="street_company" value="<?=$street?>">
                                     <label for="street_company" class="h5 input-text">Ulice</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- PSČ daného města-->
-                                    <input type="number" class="form-control text-center login-input shadow" placeholder="PSČ" id="post_code_company" name="post_code_company" >
+                                    <input type="number" class="form-control text-center login-input shadow" placeholder="PSČ" id="post_code_company" name="post_code_company" value="<?=$postCode?>">
                                     <label for="post_code_company" class="h5 input-text">PSČ</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!---- (((JE potřeba dodělat, zde bude na výběr))) Subject firmy 'právnická' / 'fyzická osoba'-->
                                     <select class="form-control text-center login-input shadow" name="select_subject" id="select_subject">
-                                        <option>Fyzická osoba</option>
-                                        <option>Právnická osoba</option>
+                                        <option value="0"></option>
+                                        <option value="1">Fyzická osoba</option>
+                                        <option value="2">Právnická osoba</option>
                                     </select>
                                     <label for="select_subject" class="h5 input-text">Subject</label>
                                 </div>
@@ -177,7 +178,7 @@
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="phone" class="form-control text-center login-input shadow" placeholder="Mobilní číslo" id="phone" name="phone" >
+                                    <input type="tel" class="form-control text-center login-input shadow" placeholder="Mobilní číslo" id="phone" name="phone" >
                                     <label for="phone" class="h5 input-text">Mobilní číslo</label>
                                 </div>
                                 <div class="m-3 form-floating">
@@ -187,18 +188,13 @@
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="email" class="form-control text-center login-input shadow" placeholder="E-mail" id="mail" name="mail" >
+                                    <input type="email" class="form-control text-center login-input shadow" placeholder="E-mail" id="mail" name="mail" value="<?=$mail?>" >
                                     <label for="mail" class="h5 input-text">E-mail</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="password" class="form-control text-center login-input shadow" placeholder="Heslo" id="passwd1" name="passwd1" >
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Heslo" id="passwd1" name="passwd1" value="Heslo bylo vytvořeno!" disabled>
                                     <label for="passwd1" class="h5 input-text">Heslo</label>
-                                </div>
-                                <div class="m-3 form-floating">
-                                    <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="password" class="form-control text-center login-input shadow" placeholder="Heslo" id="passwd2" name="passwd2" >
-                                    <label for="passwd2" class="h5 input-text">Heslo</label>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-7">
