@@ -106,6 +106,9 @@
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
     }
+    .invalid-input {
+      border: 0.5px solid red !important;
+    }
     input::placeholder{
         font-size: 20px;
     }
@@ -133,7 +136,7 @@
                 <div class="d-flex justify-content-center title-login "><h2>Dokončení registrace</h2></div>
                 <!--<div class="d-flex justify-content-center"><p>pro firmy</p></div>-->
                 <div class="mt-3 container d-flex justify-content-center">
-                    <form action="<?=base_url('/confirmRegister')?>" method="POST" style="width: 100%;">
+                    <form action="<?=base_url('/confirmRegister')?>" method="POST" id="form" style="width: 100%;" novalidate>
                         <div class="row">
                             <div class="col-12 col-lg-6">
                                 <div class="d-flex justify-content-center"><div class="container-rounded-icon d-flex justify-content-center align-items-center"><i class="fa-solid fa-building h3 m-0"></i></div></div><!-- div pro ikonku firmy -->
@@ -170,7 +173,7 @@
                                         <option value="1">Fyzická osoba</option>
                                         <option value="2">Právnická osoba</option>
                                     </select>
-                                    <label for="select_subject" class="h5 input-text">Subject</label>
+                                    <label for="select_subject" class="h5 input-text">Právní subjekt</label>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6">
@@ -188,7 +191,7 @@
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="tel" class="form-control text-center login-input shadow" placeholder="Mobilní číslo" id="phone" name="phone" >
+                                    <input type="tel" class="form-control text-center login-input shadow" placeholder="Mobilní číslo" id="phone" name="phone" oninput="checkPhone()" >
                                     <label for="phone" class="h5 input-text">Mobilní číslo</label>
                                 </div>
                                 <div class="m-3 form-floating">
@@ -198,7 +201,7 @@
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="email" class="form-control text-center login-input shadow" placeholder="E-mail" id="mail" name="mail" value="<?=$mail?>" >
+                                    <input type="email" class="form-control text-center login-input shadow" placeholder="E-mail" id="mail" name="mail" value="<?=$mail?>" oninput="checkMail()" >
                                     <label for="mail" class="h5 input-text">E-mail</label>
                                 </div>
                                 <div class="m-3 form-floating">
@@ -209,11 +212,11 @@
                             </div>
                             <div class="col-12 col-lg-7">
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="myCheck" name="agree_person" value="1" required>
+                                    <input class="form-check-input" type="checkbox" id="agree_person" name="agree_person" value="1">
                                     <label class="form-check-label" for="myCheck">Souhlas se zpracováním osobních údajů</label>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-4"><div class="d-flex justify-content-center justify-content-lg-end"><button type="submit" class="btn form-button mt-3 mr-3 px-5">Registrovat se</button></div></div>
+                            <div class="col-12 col-lg-4"><div class="d-flex justify-content-center justify-content-lg-end"><button type="submit" id="submit" class="btn form-button mt-3 mr-3 px-5">Registrovat se</button></div></div>
                         </div>
                     </form>
                 </div>
@@ -227,4 +230,111 @@
         </div>
     </div>
 </div>
+<script>
+    const emailPattern = /^[a-žA-Ž0-9._-]+@[a-žA-Ž0-9.-]+\.[a-žA-Ž]{2,}$/; 
+    const nameInput =document.getElementById('name');
+    const surnameInput = document.getElementById('surname');
+    const mobileInput = document.getElementById('phone');
+    const functionInput = document.getElementById('function');
+    const selectInput = document.getElementById('select_subject');
+    const mailInput =document.getElementById('mail');
+    const checkboxInput = document.getElementById('agree_person');
+
+    const checkNamePerson = () => {
+        if (!nameInput.value.trim()){
+            nameInput.classList.add('invalid-input');
+        }else{
+            nameInput.classList.remove('invalid-input');
+        }
+    };
+    const checkSurnamePerson = () => {
+        if(!surnameInput.value.trim()){
+            surnameInput.classList.add('invalid-input');
+        }else{
+            surnameInput.classList.remove('invalid-input');
+        }
+    };
+    const checkPhone = () => {
+        const phoneInput = document.getElementById('phone');
+        let value = phoneInput.value.replace(/[^+\d]/g, '');
+        if (value.startsWith('420') || value.startsWith('421')) {
+            value = '+' + value;
+        }
+        if (value.startsWith('+420') || value.startsWith('+421')) {
+            value = value.slice(0, 4) + ' ' + value.slice(4, 7) + ' ' + value.slice(7, 10) + ' ' + value.slice(10, 13);
+        } else {
+            value = value.slice(0, 3) + ' ' + value.slice(3, 6) + ' ' + value.slice(6, 9);
+        }
+        phoneInput.value = value.trim();
+        const phonePattern = /^(?:\+420|\+421)? ?\d{3} ?\d{3} ?\d{3}$/;
+        if (phonePattern.test(phoneInput.value)) {
+            phoneInput.classList.remove('invalid-input');
+        } else {
+            phoneInput.classList.add('invalid-input');
+        }
+    };
+    const checkFunciton = () => {
+        if (!functionInput.value.trim()){
+            functionInput.classList.add('invalid-input');
+        }else{
+            functionInput.classList.remove('invalid-input');
+        }
+    };
+    const checkMail = () => {
+        const mail = mailInput.value;
+        if(!emailPattern.test(mail)){
+            mailInput.classList.add('invalid-input');
+        }else{
+            mailInput.classList.remove('invalid-input');
+        }
+    };
+    const checkCheckbox = () => { 
+        if(!checkboxInput.checked){
+            checkboxInput.classList.add('invalid-input');
+        }else{
+            checkboxInput.classList.remove('invalid-input');
+        }
+    };
+    const checkSelect = () => {
+        if(selectInput.value == "0"){
+            selectInput.classList.add('invalid-input');
+        }else{
+            selectInput.classList.remove('invalid-input');
+        }
+    };
+    document.querySelector('form').addEventListener('submit', (event) => {
+        let isValid = true;
+        checkNamePerson();
+        if(nameInput.classList.contains('invalid-input')){
+            isValid = false;
+        }
+        checkSurnamePerson();
+        if(surnameInput.classList.contains('invalid-input')){
+            isValid = false;
+        }
+        checkPhone();
+        if(phoneInput.classList.contains('invalid-input')){
+            isValid = false;
+        }
+        checkFunciton();
+        if(functionInput.classList.contains('invalid-input')){
+            isValid = false;
+        }
+        checkMail();
+        if(mailInput.classList.contains('invalid-input')){
+            isValid = false;
+        }
+        checkSelect();
+        if(selectInput.classList.contains('invalid-input')){
+            isValid = false;
+        }
+        checkCheckbox();
+        if(checkboxInput.classList.contains('invalid-input')){
+            isValid = false;
+        }
+        if (!isValid){
+            event.preventDefault();
+        }
+    });
+</script>
 <?= $this->endSection() ?>
