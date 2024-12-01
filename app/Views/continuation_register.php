@@ -150,17 +150,17 @@
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- Město/vesnice - sídlo firmy-->
-                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Město/vesnice" id="place_company" name="place_company" value="<?=$town?>">
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Město/vesnice" id="place_company" name="place_company" value="<?=$town?>" disabled>
                                     <label for="place_company" class="h5 input-text">Město/vesnice</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- Ulice firmy daného města-->
-                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Ulice" id="street_company" name="street_company" value="<?=$street?>">
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Ulice" id="street_company" name="street_company" value="<?=$street?>" disabled>
                                     <label for="street_company" class="h5 input-text">Ulice</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- PSČ daného města-->
-                                    <input type="number" class="form-control text-center login-input shadow" placeholder="PSČ" id="post_code_company" name="post_code_company" value="<?=$postCode?>">
+                                    <input type="number" class="form-control text-center login-input shadow" placeholder="PSČ" id="post_code_company" name="post_code_company" value="<?=$postCode?>" disabled>
                                     <label for="post_code_company" class="h5 input-text">PSČ</label>
                                 </div>
                                 <div class="m-3 form-floating">

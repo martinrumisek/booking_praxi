@@ -107,9 +107,9 @@ class Auth extends Controller
         $legalFormNumber = $companySession['legal_form'];
         $nameCompany = $companySession['name_company'];
         $ico = $companySession['ico'];
-        $placeCompany = $this->request->getPost('place_company');
-        $streetCompany = $this->request->getPost('street_company');
-        $postCode = $this->request->getPost('post_code_company');
+        $placeCompany = $companySession['town'];
+        $streetCompany = $companySession['street'];
+        $postCode = $companySession['postCode'];
         $legalForm = $this->request->getPost('select_subject');
         $agreeDocument = $this->request->getPost('agree_person');
         $namePerson = $this->request->getPost('name');
