@@ -142,6 +142,7 @@ class Auth extends Controller
         $representativeCompanyModel->insert($dataPerson);
         $this->session->remove('company');
         $this->session->remove('passwdPerson');
+        $this->session->set('registration_start', false);
         return redirect()->to(base_url('/login'));
     }
     public function changePassCompany(){
