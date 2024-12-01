@@ -84,6 +84,37 @@ class Auth extends Controller
             }else{return null;}
         }else{return null;}
     }
+    public function completionRegister(){
+        $this->session = session();
+        $passwordSession = $this->session->get('passwdPerson');
+        $companySession = $this->session->get('company');
+        $password = $passwordSession['hashPasswd'];
+        $legalFormNubmer = $companySession['legal_form'];
+        $nameCompany = $this->request->getPost('name_company');
+        $ico = $this->request->getPost('ico');
+        $placeCompany = $this->request->getPost('place_company');
+        $streetCompany = $this->request->getPost('street_company');
+        $postCode = $this->request->getPost('post_code_company');
+        $legalForm = $this->request->getPost('select_subject');
+        $namePerson = $this->request->getPost('name');
+        $surnamePerson = $this->request->getPost('surname');
+        $phonePerson = $this->request->getPost('phone');
+        $functionPerson = $this->request->getPost('function');
+        $mail = $this->request->getPost('mail');
+
+        $dataCompany = [
+
+        ];
+        $dataPerson = [
+
+        ];
+
+        //insert data do db
+
+        //
+        $this->session->remove('company');
+        $this->session->remove('passwdPerson');
+    }
     public function changePassCompany(){
 
     }
