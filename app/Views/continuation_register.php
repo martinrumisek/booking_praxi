@@ -133,14 +133,14 @@
                 <div class="d-flex justify-content-center title-login "><h2>Dokončení registrace</h2></div>
                 <!--<div class="d-flex justify-content-center"><p>pro firmy</p></div>-->
                 <div class="mt-3 container d-flex justify-content-center">
-                    <form action="" style="width: 100%;">
+                    <form action="<?=base_url('/confirmRegister')?>" method="POST" style="width: 100%;">
                         <div class="row">
                             <div class="col-12 col-lg-6">
                                 <div class="d-flex justify-content-center"><div class="container-rounded-icon d-flex justify-content-center align-items-center"><i class="fa-solid fa-building h3 m-0"></i></div></div><!-- div pro ikonku firmy -->
                                 <p class="text-center h5">Firma</p><!-- div pro text, napsané malým "firma" -->
                                 <div class="m-3 form-floating">
                                     <!-- Název firmy/instituce-->
-                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Název firmy/instituce" id="name_company" name="name_company" value="<?=$name_company?>" disabled >
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Název firmy/instituce" id="name_company" name="name_company" value="<?=$name_company?>" disabled>
                                     <label for="name_company" class="h5 input-text">Název firmy/instituce</label>
                                 </div>
                                 <div class="m-3 form-floating">
@@ -209,10 +209,8 @@
                             </div>
                             <div class="col-12 col-lg-7">
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="myCheck" name="remember" required>
+                                    <input class="form-check-input" type="checkbox" id="myCheck" name="agree_person" value="1" required>
                                     <label class="form-check-label" for="myCheck">Souhlas se zpracováním osobních údajů</label>
-                                    <div class="valid-feedback">Valid.</div>
-                                    <div class="invalid-feedback">Check this checkbox to continue.</div>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-4"><div class="d-flex justify-content-center justify-content-lg-end"><button type="submit" class="btn form-button mt-3 mr-3 px-5">Registrovat se</button></div></div>
