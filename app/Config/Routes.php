@@ -25,3 +25,4 @@ $routes->get('azure-users', 'UserAzureSync::getAllUsers'); //routa pro btn - pro
 $routes->get('plus-graduationClass', 'UserAzureSync::updateClassYearGraduation');
 $routes->post('/registerCompany','Auth::registerCompany');
 $routes->post('/confirmRegister','Auth::completionRegister');
+$routes->post('/loginCompany','Auth::loginCompany');
