@@ -35,7 +35,18 @@ class Auth extends Controller
     }
 
     public function loginCompany(){
+        $representativeCompanyModel = new RepresentativeCompanyModel();
+        $mail = $this->request->getPost('email');
+        $passwd = $this->request->getPost('password');
+        $user = $representativeCompanyModel->where('mail', $mail)->first();
+        if(!$user || !password_verify($passwd, $user['password'])){
+            //když uživatel neexistuje nebo nesprávné heslo
+            //!!Je potřeba dodělat hlášku
+            return redirect()->to(base_url('/login'));
+        }
+        //!!Potřeba uložit data o uživateli do session, některé
 
+        return redirect()->to(base_url('/home')); //!!Je potřeba dodat správnou url
     }
     public function registerCompany(){
         $nameCompany = $this->request->getPost('name_company');
