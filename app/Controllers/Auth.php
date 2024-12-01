@@ -5,6 +5,8 @@ namespace App\Controllers;
 use CodeIgniter\Controller;
 use League\OAuth2\Client\Provider\GenericProvider;
 use App\Models\UserModel;
+use App\Models\CompanyModel;
+use App\Models\RepresentativeCompanyModel;
 
 class Auth extends Controller
 {
@@ -86,16 +88,19 @@ class Auth extends Controller
     }
     public function completionRegister(){
         $this->session = session();
+        $companyModel = new CompanyModel();
+        $representativeCompanyModel = new RepresentativeCompanyModel();
         $passwordSession = $this->session->get('passwdPerson');
         $companySession = $this->session->get('company');
         $password = $passwordSession['hashPasswd'];
-        $legalFormNubmer = $companySession['legal_form'];
-        $nameCompany = $this->request->getPost('name_company');
-        $ico = $this->request->getPost('ico');
+        $legalFormNumber = $companySession['legal_form'];
+        $nameCompany = $companySession['name_company'];
+        $ico = $companySession['ico'];
         $placeCompany = $this->request->getPost('place_company');
         $streetCompany = $this->request->getPost('street_company');
         $postCode = $this->request->getPost('post_code_company');
         $legalForm = $this->request->getPost('select_subject');
+        $agreeDocument = $this->request->getPost('agree_person');
         $namePerson = $this->request->getPost('name');
         $surnamePerson = $this->request->getPost('surname');
         $phonePerson = $this->request->getPost('phone');
@@ -103,17 +108,30 @@ class Auth extends Controller
         $mail = $this->request->getPost('mail');
 
         $dataCompany = [
-
+            'name' => $nameCompany,	
+            'ico' => $ico,
+            'subject' => $legalForm,
+            'legal_form' => $legalFormNumber,
+            'city' => $placeCompany,
+            'agree_document' => $agreeDocument,
+            'street' => $streetCompany,
+            'post_code' => $postCode,    
         ];
+        $companyModel->insert($dataCompany);
+        $lastIdInsert = $companyModel->getInsertID();
         $dataPerson = [
-
+            'name' => $namePerson,
+            'surname' => $surnamePerson,
+            'mail' => $mail,
+            'password' => $password,
+            'phone' => $phonePerson,
+            'function' => $functionPerson,
+            'Company_id' => $lastIdInsert,
         ];
-
-        //insert data do db
-
-        //
+        $representativeCompanyModel->insert($dataPerson);
         $this->session->remove('company');
         $this->session->remove('passwdPerson');
+        return redirect()->to(base_url('/login'));
     }
     public function changePassCompany(){
 
