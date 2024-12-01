@@ -19,10 +19,10 @@ $routes->get('profile','Home::profileView'); //stránka pro zobrazení profilu
 //ROUTY PRO AUTH
 $routes->get('logAD', 'Auth::loginOAUH'); //routa pro tlačítko pro přesměrování na login Microsoft office - OAUH      
 $routes->get('logout','Auth::logOut'); //Odhlášení pro uživetele přihlášených přes microsoft office = OAUH uživatel
+$routes->post('/registerCompany','Auth::registerCompany'); //Routa, která zpracovává první formulář při registraci firmy.
+$routes->post('/confirmRegister','Auth::completionRegister'); //Routa, která zpracovává data drhého formuláře a zároveň data odesílá do db.
+$routes->post('/loginCompany','Auth::loginCompany'); //Přihlašovací routa pro firmy.
 //ZKUŠEBNÍ ROUTY - PŘI VÝVOJI
 $routes->get('/', 'Auth::callback'); // Routa pro zpracování údajů po přihlášení (Microsoft office - OAUH)   
 $routes->get('azure-users', 'UserAzureSync::getAllUsers'); //routa pro btn - pro script (načtení všech uživatelů z db - azure)
-$routes->get('plus-graduationClass', 'UserAzureSync::updateClassYearGraduation');
-$routes->post('/registerCompany','Auth::registerCompany');
-$routes->post('/confirmRegister','Auth::completionRegister');
-$routes->post('/loginCompany','Auth::loginCompany');
+$routes->get('plus-graduationClass', 'UserAzureSync::updateClassYearGraduation'); //Routa pro přidání jednoho roku pro rok ukončení maturity "mělo by se to dělat jedenkrát za rok o prázninách, takže přes cron" !!! //!!Routa pro cron
