@@ -19,7 +19,21 @@ class Home extends BaseController
         return view('registration', $data);
     }
     public function continuationRegister(){
-        $data = ['title'=> 'Dokončení registrace'];
+        $session = session();
+        if (!$session->has('registration_start') || $session->get('registration_start') !== true) {
+            return redirect()->to(base_url('/registration'));
+        }
+        $companyData = $session->get('company');
+        $data = [
+            'title'=> 'Dokončení registrace',
+            'name_company' => $companyData['name_company'],
+            'ico' => $companyData['ico'],
+            'mail' => $companyData['mail'],
+            'town' => $companyData['town'],
+            'street' => $companyData['street'],
+            'postCode' => $companyData['postCode'],
+            'legal_form' => $companyData['legal_form'],
+        ];
         return view('continuation_register', $data);
     }
     public function offerView(){
