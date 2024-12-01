@@ -5,12 +5,12 @@
     body html{
         background-image: url(<?=base_url('assets/img/background_image/login_background.svg')?>);
         width: 100%;
-        height: 100%;
+        min-height: 100%;
     }
     .login-container{
         width: 100%;
         min-height: 100vh;
-        max-height: 200vh;
+        max-height: auto;
         background-image: url(<?=base_url('assets/img/background_image/login_background.svg')?>);
     }
     .full-screen{
@@ -67,6 +67,7 @@
     }
     .registration-btn{
         color: gray;
+        margin-bottom: 30px;
     }
     .registration-btn:hover{
         color: black;
@@ -98,6 +99,13 @@
     .login-oauh-block-company{
         display: none;
     }
+    .container-rounded-icon{
+        width: 80px;
+        height: 80px;
+        border-radius: 80px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
     input::placeholder{
         font-size: 20px;
     }
@@ -119,7 +127,7 @@
 </style>
 <div class="login-container d-flex align-items-center">
     <div class="container">
-        <div class="d-flex justify-content-center"><h1 class="mt-2">BOOKING PRAXÍ</h1></div>
+        <div class="d-flex justify-content-center"><h1 class="mt-5">BOOKING PRAXÍ</h1></div>
         <div class="d-flex justify-content-center align-items-center mt-4">
             <div class="loginForCompany">
                 <div class="d-flex justify-content-center title-login "><h2>Dokončení registrace</h2></div>
@@ -128,8 +136,8 @@
                     <form action="" style="width: 100%;">
                         <div class="row">
                             <div class="col-12 col-lg-6">
-                                <div class="d-flex justify-content-center"></div><!-- div pro ikonku firmy -->
-                                <div></div><!-- div pro text, napsané malým "firma" -->
+                                <div class="d-flex justify-content-center"><div class="container-rounded-icon d-flex justify-content-center align-items-center"><i class="fa-solid fa-building h3 m-0"></i></div></div><!-- div pro ikonku firmy -->
+                                <p class="text-center h5">Firma</p><!-- div pro text, napsané malým "firma" -->
                                 <div class="m-3 form-floating">
                                     <!-- Název firmy/instituce-->
                                     <input type="text" class="form-control text-center login-input shadow" placeholder="Název firmy/instituce" id="name_company" name="name_company" value="<?=$name_company?>" disabled >
@@ -166,6 +174,8 @@
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6">
+                                <div class="d-flex justify-content-center"><div class="container-rounded-icon d-flex justify-content-center align-items-center"><i class="fa-solid fa-user h3 m-0"></i></div></div><!-- div pro ikonku zástupce osob -->
+                                <p class="text-center h5">Zástupce firmy</p><!-- div pro text, napsané malým "firma" -->
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
                                     <input type="text" class="form-control text-center login-input shadow" placeholder="Jméno" id="name" name="name" >
