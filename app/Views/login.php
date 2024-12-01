@@ -152,8 +152,8 @@
                         <div class="d-flex justify-content-end"><button type="submit" class="btn form-button mt-3 px-5">Přihlásit se</button></div>
                     </form>
                 </div>
-                <div class="d-flex justify-content-center mt-5"><a class="registration-btn" href="">Registrovat se</a></div>
-                <div class=" justify-content-center mt-3 login-oauh-block-company"><a class="login-oauh h5" href="" alt="Přihlášení pro OAUH"><i class="fa-brands fa-microsoft"></i> Přihlásit se jako OAUH</a></div>
+                <div class="d-flex justify-content-center mt-5"><a class="registration-btn" href="<?=base_url('/registration')?>">Registrovat se</a></div>
+                <div class=" justify-content-center mt-3 login-oauh-block-company"><a class="login-oauh h5" href="<?=base_url('/logAD')?>" alt="Přihlášení pro OAUH"><i class="fa-brands fa-microsoft"></i> Přihlásit se jako OAUH</a></div>
             </div>
             <div class="loginForSchool">
                 <div class="d-flex justify-content-center mt-3"><div class="circle-logo d-flex justify-content-center align-items-center"><img class="login-logo" src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" alt=""></div></div>
