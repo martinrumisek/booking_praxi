@@ -23,3 +23,4 @@ $routes->get('logout','Auth::logOut'); //Odhlášení pro uživetele přihláše
 $routes->get('/', 'Auth::callback'); // Routa pro zpracování údajů po přihlášení (Microsoft office - OAUH)   
 $routes->get('azure-users', 'UserAzureSync::getAllUsers'); //routa pro btn - pro script (načtení všech uživatelů z db - azure)
 $routes->get('plus-graduationClass', 'UserAzureSync::updateClassYearGraduation');
+$routes->post('/registerCompany','Auth::registerCompany');
