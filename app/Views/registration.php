@@ -167,9 +167,9 @@
             <div class="d-flex justify-content-center title-registration "><h2>Registrace</h2></div>
                 <!--<div class="d-flex justify-content-center"><p>pro firmy</p></div>-->
                 <div class="mt-1 container d-flex justify-content-center">
-                    <form action="" style="width: 80%;" id="form" novalidate>
+                    <form action="<?=base_url('/registerCompany')?>" method="POST" style="width: 80%;" id="form" novalidate>
                         <div class="mb-3 mt-2 form-floating">
-                            <input type="text" id="name_company" class="form-control text-center registration-input shadow" placeholder="Název firmy/instituce" name="nameCompany" >
+                            <input type="text" id="name_company" class="form-control text-center registration-input shadow" placeholder="Název firmy/instituce" name="name_company" >
                             <label for="name_company" class="h6">Název firmy/instituce</label>
                         </div>
                         <div class="mb-3 form-floating">
