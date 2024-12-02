@@ -58,6 +58,7 @@ class Auth extends Controller
         $isValid = $this->verifyCompany($ico, $nameCompany);
         if (!$isValid) {
             return redirect()->to(base_url('/registration'));
+            //!Je potřeba přidat hlášku, když to přesměruje zpět na registrační stránku, tak aby uživatel věděl důvod
         }
         $hashPasswd = password_hash($passwd1, PASSWORD_DEFAULT);
         $town = $isValid['sidlo']['nazevObce'];
@@ -117,7 +118,27 @@ class Auth extends Controller
         $phonePerson = $this->request->getPost('phone');
         $functionPerson = $this->request->getPost('function');
         $mail = $this->request->getPost('mail');
-
+        if($namePerson == null){
+            return redirect()->to(base_url('/next-step-register'));
+        }
+        if($surnamePerson == null){
+            return redirect()->to(base_url('/next-step-register'));
+        }
+        if($phonePerson == null){
+            return redirect()->to(base_url('/next-step-register'));
+        }
+        if($functionPerson == null){
+            return redirect()->to(base_url('/next-step-register'));
+        }
+        if($mail == null){
+            return redirect()->to(base_url('/next-step-register'));
+        }
+        if($legalForm == 0){
+            return redirect()->to(base_url('/next-step-register'));
+        }
+        if($agreeDocument == null){
+            return redirect()->to(base_url('/next-step-register'));
+        }
         $dataCompany = [
             'name' => $nameCompany,	
             'ico' => $ico,
