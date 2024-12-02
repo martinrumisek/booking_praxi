@@ -109,6 +109,12 @@
     .invalid-input {
       border: 0.5px solid red !important;
     }
+    .tooltip-inner {
+      max-width: none !important;
+      width: auto;  
+      background-color: white;
+      color: red;            
+    }
     input::placeholder{
         font-size: 20px;
     }
@@ -144,36 +150,36 @@
                                 <div class="m-3 form-floating">
                                     <!-- Název firmy/instituce-->
                                     <input type="text" class="form-control text-center login-input shadow" placeholder="Název firmy/instituce" id="name_company" name="name_company" value="<?=$name_company?>" disabled>
-                                    <label for="name_company" class="h5 input-text">Název firmy/instituce</label>
+                                    <label for="name_company" class="h5 input-text">Název firmy/instituce *</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- IČO-->
                                     <input type="number" class="form-control text-center login-input shadow" placeholder="IČO" id="ico" name="ico" value="<?=$ico?>" disabled>
-                                    <label for="ico" class="h5 input-text">IČO</label>
+                                    <label for="ico" class="h5 input-text">IČO *</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- Město/vesnice - sídlo firmy-->
                                     <input type="text" class="form-control text-center login-input shadow" placeholder="Město/vesnice" id="place_company" name="place_company" value="<?=$town?>" disabled>
-                                    <label for="place_company" class="h5 input-text">Město/vesnice</label>
+                                    <label for="place_company" class="h5 input-text">Město/vesnice *</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- Ulice firmy daného města-->
                                     <input type="text" class="form-control text-center login-input shadow" placeholder="Ulice" id="street_company" name="street_company" value="<?=$street?>" disabled>
-                                    <label for="street_company" class="h5 input-text">Ulice</label>
+                                    <label for="street_company" class="h5 input-text">Ulice *</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- PSČ daného města-->
                                     <input type="number" class="form-control text-center login-input shadow" placeholder="PSČ" id="post_code_company" name="post_code_company" value="<?=$postCode?>" disabled>
-                                    <label for="post_code_company" class="h5 input-text">PSČ</label>
+                                    <label for="post_code_company" class="h5 input-text">PSČ *</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!---- (((JE potřeba dodělat, zde bude na výběr))) Subject firmy 'právnická' / 'fyzická osoba'-->
-                                    <select class="form-control text-center login-input shadow" name="select_subject" id="select_subject">
+                                    <select class="form-control text-center login-input shadow" name="select_subject" id="select_subject" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <option value="0"></option>
                                         <option value="1">Fyzická osoba</option>
                                         <option value="2">Právnická osoba</option>
                                     </select>
-                                    <label for="select_subject" class="h5 input-text">Právní subjekt</label>
+                                    <label for="select_subject" class="h5 input-text">Právní forma *</label>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6">
@@ -181,46 +187,46 @@
                                 <p class="text-center h5">Zástupce firmy</p><!-- div pro text, napsané malým "firma" -->
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Jméno" id="name" name="name" >
-                                    <label for="name" class="h5 input-text">Jméno</label>
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Jméno" id="name" name="name" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                    <label for="name" class="h5 input-text">Jméno *</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Přijmení" id="surname" name="surname" >
-                                    <label for="surname" class="h5 input-text">Přijmení</label>
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Přijmení" id="surname" name="surname" data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                                    <label for="surname" class="h5 input-text">Přijmení *</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="tel" class="form-control text-center login-input shadow" placeholder="Mobilní číslo" id="phone" name="phone" oninput="checkPhone()" >
-                                    <label for="phone" class="h5 input-text">Mobilní číslo</label>
+                                    <input type="tel" class="form-control text-center login-input shadow" placeholder="Mobilní číslo" id="phone" name="phone" oninput="checkPhone()" data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                                    <label for="phone" class="h5 input-text">Mobilní číslo *</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Pozice ve firmě" id="function" name="function" >
-                                    <label for="function" class="h5 input-text">Pozice ve firmě</label>
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Pozice ve firmě" id="function" name="function" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                    <label for="function" class="h5 input-text">Pozice ve firmě *</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
-                                    <input type="email" class="form-control text-center login-input shadow" placeholder="E-mail" id="mail" name="mail" value="<?=$mail?>" oninput="checkMail()" >
-                                    <label for="mail" class="h5 input-text">E-mail</label>
+                                    <input type="email" class="form-control text-center login-input shadow" placeholder="E-mail" id="mail" name="mail" value="<?=$mail?>" oninput="checkMail()" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                    <label for="mail" class="h5 input-text">E-mail *</label>
                                 </div>
                                 <div class="m-3 form-floating">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
                                     <input type="text" class="form-control text-center login-input shadow" placeholder="Heslo" id="passwd1" name="passwd1" value="Heslo bylo vytvořeno!" disabled>
-                                    <label for="passwd1" class="h5 input-text">Heslo</label>
+                                    <label for="passwd1" class="h5 input-text">Heslo *</label>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-7">
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="agree_person" name="agree_person" value="1">
-                                    <label class="form-check-label" for="myCheck">Souhlas se zpracováním osobních údajů</label>
+                                    <input class="form-check-input" type="checkbox" id="agree_person" name="agree_person" value="1" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                    <label class="form-check-label" for="myCheck">Souhlas se zpracováním osobních údajů *</label>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-4"><div class="d-flex justify-content-center justify-content-lg-end"><button type="submit" id="submit" class="btn form-button mt-3 mr-3 px-5">Registrovat se</button></div></div>
                         </div>
                     </form>
                 </div>
-                <div class="d-flex justify-content-center mt-5"><a class="registration-btn" href="">registrovat znovu</a></div>
+                <div class="d-flex justify-content-center mt-5"><a class="registration-btn" href="<?=base_url('/registration')?>">registrovat znovu</a></div>
             </div>
         </div>
         <div class="d-flex justify-content-center align-items-center mt-4">
@@ -232,28 +238,48 @@
 </div>
 <script>
     const emailPattern = /^[a-žA-Ž0-9._-]+@[a-žA-Ž0-9.-]+\.[a-žA-Ž]{2,}$/; 
-    const nameInput =document.getElementById('name');
+    const nameInput = document.getElementById('name');
     const surnameInput = document.getElementById('surname');
     const mobileInput = document.getElementById('phone');
     const functionInput = document.getElementById('function');
     const selectInput = document.getElementById('select_subject');
-    const mailInput =document.getElementById('mail');
+    const mailInput = document.getElementById('mail');
     const checkboxInput = document.getElementById('agree_person');
-
+    const tooltipNamePerson = new bootstrap.Tooltip(nameInput, {
+        html: true,
+        title: 'Pole jméno je povinné!',
+        trigger: 'manual',
+    });
     const checkNamePerson = () => {
         if (!nameInput.value.trim()){
             nameInput.classList.add('invalid-input');
+            tooltipNamePerson.show();
         }else{
             nameInput.classList.remove('invalid-input');
+            tooltipNamePerson.hide();
         }
     };
+    nameInput.addEventListener('input', checkNamePerson);
+    const tooltipSurnamePerson = new bootstrap.Tooltip(surnameInput, {
+        html: true,
+        title: 'Pole příjmení je povinné!',
+        trigger: 'manual',
+    });
     const checkSurnamePerson = () => {
         if(!surnameInput.value.trim()){
             surnameInput.classList.add('invalid-input');
+            tooltipSurnamePerson.show();
         }else{
             surnameInput.classList.remove('invalid-input');
+            tooltipSurnamePerson.hide();
         }
     };
+    surnameInput.addEventListener('input', checkSurnamePerson);
+    const tooltipPhonePerson = new bootstrap.Tooltip(mobileInput, {
+        html: true,
+        title: 'Telefonní číslo nesmí být prázdné nebo nemá správný tvar.',
+        trigger: 'manual',
+    });
     const checkPhone = () => {
         const phoneInput = document.getElementById('phone');
         let value = phoneInput.value.replace(/[^+\d]/g, '');
@@ -269,72 +295,148 @@
         const phonePattern = /^(?:\+420|\+421)? ?\d{3} ?\d{3} ?\d{3}$/;
         if (phonePattern.test(phoneInput.value)) {
             phoneInput.classList.remove('invalid-input');
+            tooltipPhonePerson.hide();
         } else {
             phoneInput.classList.add('invalid-input');
+            tooltipPhonePerson.show();
         }
     };
+    const tooltipFunctionPerson = new bootstrap.Tooltip(functionInput, {
+        html: true,
+        title: 'Pole pracovní funkce je povinné!',
+        trigger: 'manual',
+    });
     const checkFunciton = () => {
         if (!functionInput.value.trim()){
             functionInput.classList.add('invalid-input');
+            tooltipFunctionPerson.show();
         }else{
             functionInput.classList.remove('invalid-input');
+            tooltipFunctionPerson.hide();
         }
     };
+    functionInput.addEventListener('input', checkFunciton);
+    const tooltipEmailPerson = new bootstrap.Tooltip(mailInput, {
+        html: true,
+        title: 'Pole E-mail nesmí být správný a musí obsahovat správný tvar.',
+        trigger: 'manual',
+    });
     const checkMail = () => {
         const mail = mailInput.value;
         if(!emailPattern.test(mail)){
             mailInput.classList.add('invalid-input');
+            tooltipEmailPerson.show();
         }else{
             mailInput.classList.remove('invalid-input');
+            tooltipEmailPerson.hide();
         }
     };
+    const tooltipCheckbox = new bootstrap.Tooltip(checkboxInput, {
+        html: true,
+        title: 'Musíte souhlasit se zpracováním dat!',
+        trigger: 'manual',
+    });
     const checkCheckbox = () => { 
         if(!checkboxInput.checked){
             checkboxInput.classList.add('invalid-input');
+            tooltipCheckbox.show();
         }else{
             checkboxInput.classList.remove('invalid-input');
+            tooltipCheckbox.hide();
         }
     };
+    checkboxInput.addEventListener('input', checkCheckbox);
+    const tooltipSelect = new bootstrap.Tooltip(selectInput, {
+        html: true,
+        title: 'Vyberte prosím jednu z možností',
+        trigger: 'manual',
+    });
     const checkSelect = () => {
         if(selectInput.value == "0"){
             selectInput.classList.add('invalid-input');
+            tooltipSelect.show();
         }else{
             selectInput.classList.remove('invalid-input');
+            tooltipSelect.hide();
         }
     };
-    document.querySelector('form').addEventListener('submit', (event) => {
+    document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('form');
+            form.addEventListener('submit', (event) => {
+                let isValid = true;
+                checkNamePerson();
+                if(nameInput.classList.contains('invalid-input')){
+                    isValid = false;
+                }
+                checkSurnamePerson();
+                if(surnameInput.classList.contains('invalid-input')){
+                    isValid = false;
+                }
+                checkPhone();
+                if(mobileInput.classList.contains('invalid-input')){
+                    isValid = false;
+                }
+                checkFunciton();
+                if(functionInput.classList.contains('invalid-input')){
+                    isValid = false;
+                }
+                checkMail();
+                if(mailInput.classList.contains('invalid-input')){
+                    isValid = false;
+                }
+                checkSelect();
+                if(selectInput.classList.contains('invalid-input')){
+                    isValid = false;
+                }
+                checkCheckbox();
+                if(checkboxInput.classList.contains('invalid-input')){
+                    isValid = false;
+                }
+                if (!isValid){
+                    console.log('Formulář není platný');
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
+
+    /*document.querySelector('form').addEventListener('submit', (event) => {
         let isValid = true;
-        checkNamePerson();
-        if(nameInput.classList.contains('invalid-input')){
-            isValid = false;
-        }
-        checkSurnamePerson();
-        if(surnameInput.classList.contains('invalid-input')){
-            isValid = false;
-        }
-        checkPhone();
-        if(phoneInput.classList.contains('invalid-input')){
-            isValid = false;
-        }
-        checkFunciton();
-        if(functionInput.classList.contains('invalid-input')){
-            isValid = false;
-        }
-        checkMail();
-        if(mailInput.classList.contains('invalid-input')){
-            isValid = false;
-        }
-        checkSelect();
-        if(selectInput.classList.contains('invalid-input')){
-            isValid = false;
-        }
-        checkCheckbox();
-        if(checkboxInput.classList.contains('invalid-input')){
-            isValid = false;
-        }
-        if (!isValid){
-            event.preventDefault();
-        }
-    });
+        setTimeout(() => {
+            checkNamePerson();
+            if(nameInput.classList.contains('invalid-input')){
+                isValid = false;
+            }
+            checkSurnamePerson();
+            if(surnameInput.classList.contains('invalid-input')){
+                isValid = false;
+            }
+            checkPhone();
+            if(mobileInput.classList.contains('invalid-input')){
+                isValid = false;
+            }
+            checkFunciton();
+            if(functionInput.classList.contains('invalid-input')){
+                isValid = false;
+            }
+            checkMail();
+            if(mailInput.classList.contains('invalid-input')){
+                isValid = false;
+            }
+            checkSelect();
+            if(selectInput.classList.contains('invalid-input')){
+                isValid = false;
+            }
+            checkCheckbox();
+            if(checkboxInput.classList.contains('invalid-input')){
+                isValid = false;
+            }
+            if (!isValid){
+                console.log('Formulář není platný');
+                event.preventDefault();
+                return false;
+            }
+        },10 );
+    });*/
 </script>
 <?= $this->endSection() ?>
