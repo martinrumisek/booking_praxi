@@ -16,6 +16,14 @@ $routes->get('people','Home::people'); //stránka pro zobrazení lidí z oauh
 $routes->get('company','Home::companyView'); //stránka pro zobrazení firem
 $routes->get('profile','Home::profileView'); //stránka pro zobrazení profilu
 //ROUTY PRO BTN - SCRIPT
+
+//ROUTY PRO DASHBOARD
+$routes->get('dashboard-home','Dashboard::homeView');
+$routes->get('dashboard-deadlines','Dashboard::deadlinesView');
+$routes->get('dashboard-people','Dashboard::peopleView');
+$routes->get('dashboard-skill','Dashboard::skillView');
+$routes->get('dashboard-company','Dashboard::companyView');
+
 //ROUTY PRO AUTH
 $routes->get('logAD', 'Auth::loginOAUH'); //routa pro tlačítko pro přesměrování na login Microsoft office - OAUH      
 $routes->get('logout','Auth::logOut'); //Odhlášení pro uživetele přihlášených přes microsoft office = OAUH uživatel
