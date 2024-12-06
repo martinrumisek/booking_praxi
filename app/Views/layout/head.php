@@ -4,7 +4,7 @@
     <meta name="description" content="Moderní webová aplikace pro efektivní správu praxí na OAUH, která zjednodušuje proces výběru praxí pro studenty">
     <meta name="copyright" content="Obchodní akademie 2025">
     <meta name="keywords" content="správa praxí, správa praxí pro studenty OAUH, webová aplikace pro správu praxí, OAUH, booking praxí, Booking praxí na OAUH, OAUH Booking praxí, oauh booking praxí">
-    <title>Booking praxí - <?=$title?></title>
+    <title><?=$title?> | Booking praxí</title>
     <link rel="shortcut icon" href="<?= base_url('assets/img/logo/logo_oauh_modra.svg')?>" type="image/x-icon">
     <!---Vlastní css soubory---->
     <link rel="stylesheet" href="<?= base_url('assets/style/layout/nav.css')?>">
