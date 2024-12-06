@@ -42,6 +42,7 @@ class Auth extends Controller
         if(!$user || !password_verify($passwd, $user['password'])){
             //když uživatel neexistuje nebo nesprávné heslo
             //!!Je potřeba dodělat hlášku
+            $this->session->set('role',['company']);
             return redirect()->to(base_url('/login'));
         }
         //!!Potřeba uložit data o uživateli do session, některé
@@ -65,7 +66,6 @@ class Auth extends Controller
         $street = $isValid['sidlo']['nazevUlice'].' '.$isValid['sidlo']['cisloDomovni'];
         $postCode = $isValid['sidlo']['psc'];
         $legalForm = $isValid['pravniForma'];
-        $this->session = session();
         $this->session->set('company',[
             'name_company' => $nameCompany,
             'ico' => $ico,
@@ -99,7 +99,6 @@ class Auth extends Controller
         }else{return null;}
     }
     public function completionRegister(){
-        $this->session = session();
         $companyModel = new CompanyModel();
         $representativeCompanyModel = new RepresentativeCompanyModel();
         $passwordSession = $this->session->get('passwdPerson');
@@ -172,7 +171,7 @@ class Auth extends Controller
     public function loginOAUH(){
         //Získaní url a přesměrovaní na stránku microsoft
         $authUrl = $this->provider->getAuthorizationUrl();
-        session()->set('oauth2state', $this->provider->getState());
+        $this->session->set('oauth2state', $this->provider->getState());
         return redirect()->to($authUrl);
     }
     public function callback()
@@ -183,9 +182,9 @@ class Auth extends Controller
             throw new \Exception('Autorizační kód nebyl poskytnut.'); // !!!!Je potřeba ještě změnit. Tak aby se kdyžtak chyba úkládala do sesion.
         }
         $state = $this->request->getVar('state');
-        if (empty($state) || $state !== session()->get('oauth2state')) {
-            session()->remove('oauth2state');
-            throw new \Exception('Neplatný stav.');
+        if (empty($state) || $state !== $this->session->get('oauth2state')) {
+            $this->session->remove('oauth2state');
+            throw new \Exception('Neplatný stav.'); //!Je potřeba změnit
         }
         //Získá token pomoci code, který si vezme z url
             $token = $this->provider->getAccessToken('authorization_code', [
@@ -215,7 +214,20 @@ class Auth extends Controller
         }
 
         // Potřebná data ukládám do session pro další práci s nimi
-        session()->set('user', [
+        $admin = $user['admin'];
+        $spravce = $user['spravce'];
+        if($admin == 1){
+            $role = 'admin';
+        }
+        if($spravce == 1){
+            $role = 'spravce';
+        }
+        if($role == null){
+            $this->session->set('role', [$user['role']]);
+        }else{
+            $this->session->set('role', [$user['role'], $role]);
+        }
+        $this->session->set('user', [
             'id' => $user['id'],
             'jmeno' => $user['name'],
             'prijmeni' => $user['surname'],
@@ -227,7 +239,7 @@ class Auth extends Controller
     }
     //metoda pro odhlašovaní uživatelů přihlášených přes ms office.
     public function logOut(){
-        session()->destroy();
+        $this->session->destroy();
         $logoutUrl = 'https://login.microsoftonline.com/common/oauth2/v2.0/logout';
         return redirect()->to($logoutUrl . '?post_logout_redirect_uri=' . urlencode(base_url('/login')));
     }
