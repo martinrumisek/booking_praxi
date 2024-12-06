@@ -128,7 +128,7 @@
 </div>
 <div class="btn-container d-flex justify-content-center align-items-center"><a href="" class="btn-document-export d-flex justify-content-center align-items-center p-2"><i class="fa-solid fa-file p-2"></i> Smlouva k praxi</a></div>
 <div class="d-flex justify-content-center mt-2"><h3>Oblíbené nabídky</h3></div>
-<div class="d-flex align-items-center container">
+<div class="d-flex align-items-center container d-none">
     <!-- Tlačítko pro předchozí kartu -->
     <a href="#">
         <div class="next-previously d-flex align-items-center justify-content-center"><i class="fa-solid fa-chevron-left"></i></div>

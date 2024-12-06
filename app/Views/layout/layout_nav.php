@@ -111,55 +111,101 @@
         .nav-container:hover ~ .main-content {
             margin-left: 90px;
         }
-        @media (max-height: 800px){
-            .nav-container{
-                width: 50px;
-            }
-            .nav-item{
-                width: 50px;
-                height: 50px;
-            }
-            .nav-logo{
-                width: 25px;
-            }
-            .main-content{
-                margin-left: 50px;
-            }
-        }
-        @media (max-width: 800px){
-        .nav-container{
+        .button-for-nav {
+            display: block;
+            position: fixed; 
+            top: 0px;
+            left: 0px;
             width: 50px;
+            height: 50px;
+            z-index: 9999;
+            background-color: none;
+            border-radius: 0px 0px 30px 0px;
+            }
+        .mobile-btn-nav{
+            display: block;
+            background-color: white;
+            box-shadow: 0px 3px 6px #00000029;
+            z-index: 9999;
+            width: 50px;
+            height: 50px;
+            border-radius: 0px 0px 30px 0px;
         }
-        .nav-item{
+        .nav-logo-mobile{
             width: 50px;
             height: 50px;
         }
-        .nav-logo{
-            width: 25px;
-        }
-        .main-content{
-                margin-left: 50px;
+        @media (min-height: 800px){
+            .button-for-nav{
+               display: none; 
             }
-    }
-    @media (max-height: 620px){
+        }
+        @media (max-height: 800px){
+            .block-nav{
+                visibility: hidden;
+            }
+            .button-for-nav{
+                display: block;
+            }
             .nav-container{
-                width: 40px;
+                display: none;
             }
             .nav-item{
-                width: 40px;
-                height: 40px;
+                width: 0px;
+                height: 0px;
             }
             .nav-logo{
-                width: 19px;
+                width: 0px;
             }
             .main-content{
-                margin-left: 40px;
+                margin-left: 0;
             }
         }
+        @media (min-witdh: 800px){
+            
+        }
+        @media (max-width: 800px){
+        .block-nav{
+            visibility: hidden;
+        }
+        .button-for-nav{
+            display: block;
+        }
+            .nav-container{
+            width: 0px;
+        }
+        .nav-item{
+            width: 0px;
+            height: 0px;
+        }
+        .nav-logo{
+            width: 0px;
+        }
+        .main-content{
+            margin-left: 0;
+        }
+    }
     </style>
     <div class="d-flex">
-        <!----Navigační panel----->
-        <div class="d-block">
+        <!-- Navigační panel pro mobilní zobrazení -->
+        <div class="button-for-nav">
+            <a class="mobile-btn-nav d-flex justify-content-center align-items-center" href="" data-bs-toggle="offcanvas" data-bs-target="#demo"><i class="fa-solid fa-bars"></i></a>
+            <!-- offcanvas - který se otvírá pomocí tlačítka výšše, ale jenom pro mobilní zařízení -->
+            <div class="offcanvas offcanvas-start" id="demo">
+                <div class="offcanvas-header">
+                    <div class="d-flex align-items-center">
+                        <a href="#" class="d-flex align-items-center"><h1 alt="Booking praxí"><img src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" class="nav-logo-mobile" alt="Logo - OAUH"></h1></a>
+                        <p class="nav-text-mobile m-0 p-2 bold h5">BOOKING PRAXÍ</p>
+                    </div>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <!-- Hlavní pole v canvas -->
+                </div>
+            </div>
+        </div>
+        <!----Navigační panel pro pc----->
+        <div class="d-block block-nav">
             <div class="d-block nav-container d-flex sticky-top flex-column">
                 <div class="d-flex align-items-center">
                 <a href="#"><h1 alt="Booking praxí"><img src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" class="nav-logo" alt="Logo - OAUH"></h1></a>
@@ -182,29 +228,5 @@
         <!-----Konec navigačního panelu a začátek hlavního obsahu stránky--------->
         <div class="main-content"><?= $this->renderSection('content')?></div>
     </div>
-    <script>
-        // Práce s profilovým kontejnerem
-        const profileIcon = document.getElementById('profile-icon');
-        const profileContainer = document.querySelector('.nav-profile-container');
-
-        profileIcon.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const isVisible = profileContainer.style.display === 'block';
-            profileContainer.style.display = isVisible ? 'none' : 'block';
-
-            // Zavření po 5s
-            if (!isVisible) {
-                setTimeout(() => {
-                    profileContainer.style.display = 'none';
-                }, 5000); 
-            }
-        });
-        //Zavření kontejneru po kliknutí na stránku, kromě samotného kontejneru.
-        document.addEventListener('click', function(e) {
-            if (!profileContainer.contains(e.target) && !profileIcon.contains(e.target)) {
-                profileContainer.style.display = 'none';
-            }
-        });
-    </script>
 </body>
 </html>
