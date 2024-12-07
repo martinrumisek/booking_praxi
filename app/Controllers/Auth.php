@@ -7,6 +7,8 @@ use League\OAuth2\Client\Provider\GenericProvider;
 use App\Models\UserModel;
 use App\Models\CompanyModel;
 use App\Models\RepresentativeCompanyModel;
+use App\Models\LogCompany;
+use App\Models\LogUser;
 
 class Auth extends Controller
 {
@@ -36,18 +38,41 @@ class Auth extends Controller
 
     public function loginCompany(){
         $representativeCompanyModel = new RepresentativeCompanyModel();
+        $logCompanyModel = new LogCompany();
         $mail = $this->request->getPost('email');
         $passwd = $this->request->getPost('password');
         $user = $representativeCompanyModel->where('mail', $mail)->first();
         if(!$user || !password_verify($passwd, $user['password'])){
             //když uživatel neexistuje nebo nesprávné heslo
             //!!Je potřeba dodělat hlášku
-            $this->session->set('role',['company']);
             return redirect()->to(base_url('/login'));
         }
-        //!!Potřeba uložit data o uživateli do session, některé
-
+        $this->session->set('companyUser',[
+            'idUser' => $user['id'],
+            'idCompany' => $user['Company_id'],
+        ]);
+        $ipAdrese = $this->request->getIPAddress();
+        $data = [
+            'name' => 'Přihlášení',
+            'ip_adrese' => $ipAdrese,
+            'Representative_company_id' => $user['id'],
+        ];
+        $logCompanyModel->insert($data);
+        $this->session->set('role',['company']);
         return redirect()->to(base_url('/home')); //!!Je potřeba dodat správnou url
+    }
+    public function logOutCompany(){
+        $logCompanyModel = new LogCompany();
+        $ipAdrese = $this->request->getIPAddress();
+        $user = $this->session->get('companyUser');
+        $data = [
+            'name'=> 'Odhlášení',
+            'ip_adrese' => $ipAdrese,
+            'Representative_company_id' => $user['idUser'],
+        ];
+        $logCompanyModel->insert($data);
+        $this->session->destroy();
+        return redirect()->to(base_url('/login'));
     }
     public function registerCompany(){
         $nameCompany = $this->request->getPost('name_company');
@@ -198,6 +223,9 @@ class Auth extends Controller
         // Získání $emailu
         $email = $userData['mail'] ?? $userData['userPrincipalName'];
         $userModel = new UserModel();
+        $logUserModel = new LogUser();
+
+        $ipAdrese = $this->request->getIPAddress();
 
         $user = $userModel->where('mail', $email)->first();
         // Zjistím, zda stávající uživatel již není uveden v databázi, a když není, tak ho tam napíší.
@@ -212,15 +240,24 @@ class Auth extends Controller
             $userModel->insert($data);
             $user = $userModel->where('mail', $email)->first();
         }
-
+        $dataLog = [
+            'name' => 'Přihlášení',
+            'ip' => $ipAdrese,
+            'User_id' =>$user['id'],
+        ];
+        $logUserModel->insert($dataLog);
         // Potřebná data ukládám do session pro další práci s nimi
         $admin = $user['admin'];
         $spravce = $user['spravce'];
         if($admin == 1){
             $role = 'admin';
+        }else{
+            $role = null;
         }
         if($spravce == 1){
             $role = 'spravce';
+        }else{
+            $role = null;
         }
         if($role == null){
             $this->session->set('role', [$user['role']]);
@@ -239,6 +276,15 @@ class Auth extends Controller
     }
     //metoda pro odhlašovaní uživatelů přihlášených přes ms office.
     public function logOut(){
+        $logUserModel = new LogUser();
+        $user = $this->session->get('user');
+        $ipAdrese = $this->request->getIPAddress();
+        $data = [
+            'name' => 'Odhlášení',
+            'ip_adrese' => $ipAdrese,
+            'User_id' => $user['id'],
+        ];
+        $logUserModel->insert($data);
         $this->session->destroy();
         $logoutUrl = 'https://login.microsoftonline.com/common/oauth2/v2.0/logout';
         return redirect()->to($logoutUrl . '?post_logout_redirect_uri=' . urlencode(base_url('/login')));
