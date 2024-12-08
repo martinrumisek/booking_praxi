@@ -20,7 +20,7 @@ $routes->get('azure-users', 'UserAzureSync::getAllUsers'); //routa pro btn - pro
 $routes->get('plus-graduationClass', 'UserAzureSync::updateClassYearGraduation'); //Routa pro přidání jednoho roku pro rok ukončení maturity "mělo by se to dělat jedenkrát za rok o prázninách, takže přes cron" !!! //!!Routa pro cron
 //ROUTY PRO DASHBOARD
 $routes->get('dashboard-home','Dashboard::homeView');
-$routes->get('dashboard-deadlines','Dashboard::deadlinesView');
+$routes->get('dashboard-calendar','Dashboard::deadlinesView');
 $routes->get('dashboard-people','Dashboard::peopleView');
 $routes->get('dashboard-skill','Dashboard::skillView');
 $routes->get('dashboard-company','Dashboard::companyView');
