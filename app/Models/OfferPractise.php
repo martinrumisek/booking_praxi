@@ -9,7 +9,9 @@ class OfferPractise extends Model{
     protected $primaryKey = 'id';
     protected $allowedFields = ['name','requirements','description','city','street','post_code','copy_next_year','create_time','edit_time','Practise_id','Practise_manager_id'];
     protected $useTimestamps = true;
+    protected $useSoftDeletes = true;
     protected $createdField = 'create_time'; 
     protected $updatedField = 'edit_time'; 
+    protected $deletedField = 'del_time';
     protected $dateFormat = 'datetime';
 }

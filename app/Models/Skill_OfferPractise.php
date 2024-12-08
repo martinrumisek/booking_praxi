@@ -11,7 +11,9 @@ class Skill_OfferPractise extends Model{
     protected $useAutoIncrement = false;
     protected $allowedFields = ['Skill_id','Offer_practise','create_time','edit_time'];
     protected $useTimestamps = true;
+    protected $useSoftDeletes = true;
     protected $createdField = 'create_time'; 
     protected $updatedField = 'edit_time'; 
+    protected $deletedField = 'del_time';
     protected $dateFormat = 'datetime';
 }

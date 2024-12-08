@@ -9,7 +9,9 @@ class FieldStudy extends Model{
     protected $primaryKey = 'id';
     protected $allowedFields = ['name','shortcut','create_time','edit_time','Type_school_id'];
     protected $useTimestamps = true;
+    protected $useSoftDeletes = true;
     protected $createdField = 'create_time'; 
     protected $updatedField = 'edit_time'; 
+    protected $deletedField = 'del_time';
     protected $dateFormat = 'datetime';
 }
