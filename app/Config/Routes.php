@@ -21,9 +21,12 @@ $routes->get('plus-graduationClass', 'UserAzureSync::updateClassYearGraduation')
 //ROUTY PRO DASHBOARD
 $routes->get('dashboard-home','Dashboard::homeView');
 $routes->get('dashboard-calendar','Dashboard::deadlinesView');
+$routes->get('dashboard-add-date','Dashboard::formDateView');
 $routes->get('dashboard-people','Dashboard::peopleView');
 $routes->get('dashboard-skill','Dashboard::skillView');
 $routes->get('dashboard-company','Dashboard::companyView');
+//ZPRACOVÁNÍ (EDITACE) V DASHBOARDU
+$routes->post('/sent-date-practise','Dashboard::addNewDate');
 
 //ROUTY PRO AUTH
 $routes->get('logAD', 'Auth::loginOAUH'); //routa pro tlačítko pro přesměrování na login Microsoft office - OAUH      
