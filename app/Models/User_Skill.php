@@ -6,8 +6,7 @@ use CodeIgniter\Model;
 
 class User_Skill extends Model{
     protected $table = 'user_has_skill';
-    protected $primaryKey = ['User_id','Skill_id'];
-    protected $useAutoIncrement = false;
+    protected $primaryKey = 'id';
     protected $allowedFields = ['User_id','Skill_id','create_time','edit_time'];
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;

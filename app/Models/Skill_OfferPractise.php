@@ -7,8 +7,7 @@ use Config\Autoload;
 
 class Skill_OfferPractise extends Model{
     protected $table = 'skill_has_offer_practise';
-    protected $primaryKey = ['Skill_id','Offer_practise'];
-    protected $useAutoIncrement = false;
+    protected $primaryKey = 'id';
     protected $allowedFields = ['Skill_id','Offer_practise','create_time','edit_time'];
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
