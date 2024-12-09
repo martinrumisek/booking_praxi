@@ -25,6 +25,7 @@ $routes->get('dashboard-add-date','Dashboard::formDateView');
 $routes->get('dashboard-people','Dashboard::peopleView');
 $routes->get('dashboard-skill','Dashboard::skillView');
 $routes->get('dashboard-company','Dashboard::companyView');
+$routes->get('dashboard-log','Dashboard::logView');
 //ZPRACOVÁNÍ (EDITACE) V DASHBOARDU
 $routes->post('/sent-date-practise','Dashboard::addNewDate');
 

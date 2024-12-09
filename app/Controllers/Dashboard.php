@@ -12,6 +12,8 @@ use App\Models\Practise;
 use App\Models\Class_Practise;
 use App\Models\ClassModel;
 use App\Models\FieldStudy;
+use App\Models\LogCompany;
+use App\Models\LogUser;
 
 class Dashboard extends Controller
 {
@@ -22,6 +24,8 @@ class Dashboard extends Controller
     var $classModel;
     var $fieldStudy;
     var $typeSchool;
+    var $logCompany;
+    var $logUser;
     public function __construct(){
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
@@ -30,6 +34,8 @@ class Dashboard extends Controller
         $this->classModel = new ClassModel();
         $this->fieldStudy = new FieldStudy();
         $this->typeSchool = new TypeSchool();
+        $this->logCompany = new LogCompany();
+        $this->logUser = new LogUser();
     }
     //Metody pro zobrazení viewček
     public function homeView(){
@@ -102,7 +108,27 @@ class Dashboard extends Controller
         ];
         return view('dashboard/dash_skill', $data);
     }
-
+    public function logView(){
+        $userLog = $this->logUser->findAll();
+        $userCompany = $this->logCompany->findAll();
+        if(empty($userLog)){
+            $useAllData = $userCompany;
+        }else if(empty($userCompany)){
+            $useAllData = $userLog;
+        }else{
+            $useAllData = array_merge($userLog, $userCompany);
+        if(!empty($useAllData)){
+            usort($useAllData, function($a, $b) {
+                return strtotime($b['create_time']) - strtotime($a['create_time']);
+            });
+        }
+        }
+        $data= [
+            'title' => 'Administrace',
+            'logs' => $useAllData,
+        ];
+        return view('dashboard/dash_log', $data);
+    }
     //Zpracování (editace) v administraci
     public function addNewDate(){
         $name = $this->request->getPost('name');
