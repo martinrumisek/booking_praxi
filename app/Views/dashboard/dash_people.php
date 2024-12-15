@@ -53,10 +53,10 @@
 
                         <td><?= $user['field']['shortcut'] ?? ''?></td>
                         <td>
-                            <input type="checkbox" name="admin[<?= $user['id'] ?>]" value="1" <?= $user['admin'] ? 'checked' : '' ?> />
+                            <input type="checkbox" class="role-checkbox" data-role="admin" data-user-id="<?= $user['id']?>" <?= $user['admin'] ? 'checked' : '' ?> />
                         </td>
                         <td>
-                            <input type="checkbox" name="spravce[<?= $user['id'] ?>]" value="1" <?= $user['spravce'] ? 'checked' : '' ?> />
+                            <input type="checkbox" class="role-checkbox" data-role="spravce" data-user-id="<?= $user['id']?>" <?= $user['spravce'] ? 'checked' : '' ?> />
                         </td>
                     </tr>  
                     <?php }?>
@@ -66,20 +66,85 @@
         </div>
     </div>
 </div>
-<?php 
-/*foreach($users as $user){
-    echo (($user['name']??'') . ' -  ' . ($user['surname']??''));
-    echo '<br>';
-    echo $user['mail']??'';
-    echo '<br>';
-    echo 'admin' . $user['admin']??'';
-    echo '<br>';
-    if(!empty($user['class'])){
-        echo (($user['class']['class']??''). '.' .($user['class']['letter_class']??''));
-    echo '<br>';
-    echo $user['field']['name']??'';
-    echo '<br>';
-    }
-}*/
-?>
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Potvrzení změny</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+            </div>
+            <div class="modal-body">
+                Opravdu chcete změnit práva tohoto uživatele?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelChange">Ne</button>
+                <button type="button" id="confirmChange" class="btn btn-primary">Ano</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    let userId, role, isChecked;
+
+    // Uloží data z kliknutého checkboxu
+    document.querySelectorAll('.role-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('click', function () {
+            userId = this.getAttribute('data-user-id');
+            role = this.getAttribute('data-role');
+            isChecked = this.checked;
+
+            // Zobrazí modal pro potvrzení
+            const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            confirmModal.show();
+            checkbox.addEventListener('change', function () {
+                if (this.checked) {
+                // Pokud je checkbox pro admin zaškrtnutý, automaticky odškrtneme správce a naopak
+                if (role === 'admin') {
+                    const spravceCheckbox = document.querySelector(`.role-checkbox[data-role="spravce"][data-user-id="${userId}"]`);
+                    if (spravceCheckbox) {
+                        spravceCheckbox.checked = false;
+                    }
+                } else if (role === 'spravce') {
+                    const adminCheckbox = document.querySelector(`.role-checkbox[data-role="admin"][data-user-id="${userId}"]`);
+                    if (adminCheckbox) {
+                        adminCheckbox.checked = false;
+                    }
+                }
+            }
+            });
+        });
+    });
+
+    
+    document.getElementById('confirmChange').addEventListener('click', function () {
+        const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+        confirmModal.hide();
+        fetch('<?=base_url('/sent-new-role-user')?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '<?= csrf_hash() ?>',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                role: role,
+                value: isChecked ? 1 : 0
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Změna proběhla úspěšně.');
+                } else {
+                    alert(data.error);
+                    // Vrátí checkbox do původního stavu
+                    document.querySelector(`.role-checkbox[data-user-id="${userId}"][data-role="${role}"]`).checked = !isChecked;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+});
+</script>
 <?= $this->endSection() ?>

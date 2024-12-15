@@ -102,6 +102,36 @@ class Dashboard extends Controller
         ];
         return view('dashboard/dash_people', $data);
     }
+    public function editUserRole(){
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON(['success' => false, 'error' => 'Neplatný požadavek'])->setStatusCode(400);
+        }
+        $data = $this->request->getJSON();
+        $userId = $data->user_id;
+        $role = $data->role;
+        $value = $data->value;
+        $user = $this->userModel->find($userId);
+        $admin = $user['admin'];
+        $spravce = $user['spravce'];
+        if ($role === 'admin' && $value === 1) {
+            $spravce = 0;
+            $admin = 1;
+        } elseif ($role === 'spravce' && $value === 1) {
+            $admin = 0;
+            $spravce = 1;
+        }else{
+            $admin = 0;
+            $spravce = 0;
+        }
+        $updateUser = ['admin' => $admin, 'spravce' => $spravce];
+        $this->userModel->update($userId, $updateUser);
+        $user = $this->userModel->find($userId);
+        return $this->response->setJSON([
+            'success' => true,
+            'user' => $updateUser,
+        ]);
+        
+    }
     public function skillView(){
         $data= [
             'title' => 'Administrace'
