@@ -218,6 +218,11 @@
         <p>ID: <?= esc($user['id']) ?></p>  <!-- Zobrazení ID -->
         <p>Email: <?= esc($user['email']) ?></p>
         <p>Třída id: <?= esc($user['class']) ?></p>
+        <?php $role = session()->get('role');
+            foreach($role as $s){
+                echo $s;
+            }
+        ?>
     <?php else: ?>
         <p>Uživatel není přihlášen.</p>
     <?php endif; ?>

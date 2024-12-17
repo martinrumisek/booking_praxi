@@ -29,8 +29,10 @@
                         <th scope="col">Rok ukončení studia</th>
                         <th scope="col">Třída</th>
                         <th scope="col">Obor</th>
+                        <?php // if (!empty(session()->get('role')) && in_array('admin', session()->get('role'))): ?>
                         <th scope="col">A</th>
                         <th scope="col">S</th>
+                        <?php // endif; ?>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
@@ -52,12 +54,14 @@
                         <td><?= ($user['class']['class']??''). '.' .($user['class']['letter_class']??''); ?></td>
 
                         <td><?= $user['field']['shortcut'] ?? ''?></td>
+                        <?php // $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)): ?>
                         <td>
                             <input type="checkbox" class="role-checkbox" data-role="admin" data-user-id="<?= $user['id']?>" <?= $user['admin'] ? 'checked' : '' ?> />
                         </td>
                         <td>
                             <input type="checkbox" class="role-checkbox" data-role="spravce" data-user-id="<?= $user['id']?>" <?= $user['spravce'] ? 'checked' : '' ?> />
                         </td>
+                        <?php // endif;?>
                     </tr>  
                     <?php }?>
                 </tbody>
@@ -86,20 +90,15 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     let userId, role, isChecked;
-
-    // Uloží data z kliknutého checkboxu
     document.querySelectorAll('.role-checkbox').forEach(checkbox => {
         checkbox.addEventListener('click', function () {
             userId = this.getAttribute('data-user-id');
             role = this.getAttribute('data-role');
             isChecked = this.checked;
-
-            // Zobrazí modal pro potvrzení
             const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
             confirmModal.show();
             checkbox.addEventListener('change', function () {
                 if (this.checked) {
-                // Pokud je checkbox pro admin zaškrtnutý, automaticky odškrtneme správce a naopak
                 if (role === 'admin') {
                     const spravceCheckbox = document.querySelector(`.role-checkbox[data-role="spravce"][data-user-id="${userId}"]`);
                     if (spravceCheckbox) {
@@ -115,8 +114,6 @@
             });
         });
     });
-
-    
     document.getElementById('confirmChange').addEventListener('click', function () {
         const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
         confirmModal.hide();
@@ -139,7 +136,6 @@
                     console.log('Změna proběhla úspěšně.');
                 } else {
                     alert(data.error);
-                    // Vrátí checkbox do původního stavu
                     document.querySelector(`.role-checkbox[data-user-id="${userId}"][data-role="${role}"]`).checked = !isChecked;
                 }
             })
