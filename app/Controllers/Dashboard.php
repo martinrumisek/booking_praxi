@@ -26,6 +26,8 @@ class Dashboard extends Controller
     var $typeSchool;
     var $logCompany;
     var $logUser;
+    var $companyModel;
+    var $representativeCompanyModel;
     public function __construct(){
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
@@ -36,6 +38,8 @@ class Dashboard extends Controller
         $this->typeSchool = new TypeSchool();
         $this->logCompany = new LogCompany();
         $this->logUser = new LogUser();
+        $this->companyModel = new CompanyModel;
+        $this->representativeCompanyModel = new RepresentativeCompanyModel();
     }
     //Metody pro zobrazení viewček
     public function homeView(){
@@ -45,8 +49,13 @@ class Dashboard extends Controller
         return view('dashboard/dash_home', $data);
     }
     public function companyView(){
+        $companyes = $this->companyModel->findAll();
+        foreach ($companyes as &$company){
+            $company['representative'] = $this->representativeCompanyModel->select('id, degree_before, name, surname, degree_after, mail, phone, function, create_time, Company_id')->where('Company_id', $company['id'])->findAll();
+        }
         $data= [
-            'title' => 'Administrace'
+            'title' => 'Administrace',
+            'companyes' => $companyes,
         ];
         return view('dashboard/dash_company', $data);
     }
