@@ -10,7 +10,7 @@ $routes->get('login', 'Home::login'); //Přihlašovácí stránka
 $routes->get('registration', 'Home::registration'); //stránka pro registraci firmy
 $routes->get('next-step-register','Home::continuationRegister' );
 // ROUTY PRO VIEWČKA
-$routes->get('/home', 'Home::index', ['filter' => 'role:student']); //routa na hlavní stránku
+$routes->get('/home', 'Home::index'/*, ['filter' => 'role:student']*/); //routa na hlavní stránku
 $routes->get('practise_offer', 'Home::offerView'); //stránka pro nabídky praxe
 $routes->get('people','Home::people'); //stránka pro zobrazení lidí z oauh
 $routes->get('company','Home::companyView'); //stránka pro zobrazení firem
