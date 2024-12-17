@@ -251,10 +251,7 @@ class Auth extends Controller
         $spravce = $user['spravce'];
         if($admin == 1){
             $role = 'admin';
-        }else{
-            $role = null;
-        }
-        if($spravce == 1){
+        }elseif($spravce == 1){
             $role = 'spravce';
         }else{
             $role = null;
