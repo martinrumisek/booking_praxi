@@ -14,9 +14,19 @@ class Auth extends Controller
 {
     protected $provider;
     var $session;
+    var $companyModel;
+    var $userModel;
+    var $representativeCompanyModel;
+    var $logCompany;
+    var $logUser;
 
     public function __construct()
     {
+        $this->companyModel = new CompanyModel();
+        $this->userModel = new UserModel();
+        $this->representativeCompanyModel = new RepresentativeCompanyModel();
+        $this->logCompany = new LogCompany();
+        $this->logUser = new LogUser();
         $this->session = session();
         $this->session->keepFlashdata('err');
         // Načítání hodnot z .env souboru přímo v kontroleru
@@ -37,11 +47,9 @@ class Auth extends Controller
     }
 
     public function loginCompany(){
-        $representativeCompanyModel = new RepresentativeCompanyModel();
-        $logCompanyModel = new LogCompany();
         $mail = $this->request->getPost('email');
         $passwd = $this->request->getPost('password');
-        $user = $representativeCompanyModel->where('mail', $mail)->first();
+        $user = $this->representativeCompanyModel->where('mail', $mail)->first();
         if(!$user || !password_verify($passwd, $user['password'])){
             //když uživatel neexistuje nebo nesprávné heslo
             //!!Je potřeba dodělat hlášku
@@ -57,12 +65,11 @@ class Auth extends Controller
             'ip_adrese' => $ipAdrese,
             'Representative_company_id' => $user['id'],
         ];
-        $logCompanyModel->insert($data);
+        $this->logCompany->insert($data);
         $this->session->set('role',['company']);
         return redirect()->to(base_url('/home')); //!!Je potřeba dodat správnou url
     }
     public function logOutCompany(){
-        $logCompanyModel = new LogCompany();
         $ipAdrese = $this->request->getIPAddress();
         $user = $this->session->get('companyUser');
         $data = [
@@ -70,7 +77,7 @@ class Auth extends Controller
             'ip_adrese' => $ipAdrese,
             'Representative_company_id' => $user['idUser'],
         ];
-        $logCompanyModel->insert($data);
+        $this->logCompany->insert($data);
         $this->session->destroy();
         return redirect()->to(base_url('/login'));
     }
@@ -106,6 +113,7 @@ class Auth extends Controller
         $this->session->set('registration_start', true);
         return redirect()->to(base_url('/next-step-register'));
     }
+    //Ověření, zda ičo, které uživatel zadal do formuláře, zda existuje.
     private function verifyCompany($ico){
         $url = "http://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/$ico";
         $header = get_headers($url, 1);
@@ -122,8 +130,6 @@ class Auth extends Controller
         }else{return null;}
     }
     public function completionRegister(){
-        $companyModel = new CompanyModel();
-        $representativeCompanyModel = new RepresentativeCompanyModel();
         $passwordSession = $this->session->get('passwdPerson');
         $companySession = $this->session->get('company');
         $password = $passwordSession['hashPasswd'];
@@ -171,8 +177,8 @@ class Auth extends Controller
             'street' => $streetCompany,
             'post_code' => $postCode,    
         ];
-        $companyModel->insert($dataCompany);
-        $lastIdInsert = $companyModel->getInsertID();
+        $this->companyModel->insert($dataCompany);
+        $lastIdInsert = $this->companyModel->getInsertID();
         $dataPerson = [
             'name' => $namePerson,
             'surname' => $surnamePerson,
@@ -182,7 +188,7 @@ class Auth extends Controller
             'function' => $functionPerson,
             'Company_id' => $lastIdInsert,
         ];
-        $representativeCompanyModel->insert($dataPerson);
+        $this->representativeCompanyModel->insert($dataPerson);
         $this->session->remove('company');
         $this->session->remove('passwdPerson');
         $this->session->set('registration_start', false);
@@ -222,11 +228,9 @@ class Auth extends Controller
 
         // Získání $emailu
         $email = $userData['mail'] ?? $userData['userPrincipalName'];
-        $userModel = new UserModel();
-        $logUserModel = new LogUser();
 
         $ipAdrese = $this->session->get('ip_user');
-        $user = $userModel->where('mail', $email)->first();
+        $user = $this->userModel->where('mail', $email)->first();
         // Zjistím, zda stávající uživatel již není uveden v databázi, a když není, tak ho tam napíší.
         if (!$user) {
             $data = [
@@ -236,15 +240,15 @@ class Auth extends Controller
                 'department' => $userData['department'] ?? '',
                 'job_title' => $userData['jobTitle'] ?? '',
             ];
-            $userModel->insert($data);
-            $user = $userModel->where('mail', $email)->first();
+            $this->userModel->insert($data);
+            $user = $this->userModel->where('mail', $email)->first();
         }
         $dataLog = [
             'name' => 'Přihlášení',
             'ip' => $ipAdrese,
             'User_id' =>$user['id'],
         ];
-        $logUserModel->insert($dataLog);
+        $this->logUser->insert($dataLog);
         // Potřebná data ukládám do session pro další práci s nimi
         $admin = $user['admin'];
         $spravce = $user['spravce'];
@@ -273,7 +277,6 @@ class Auth extends Controller
     }
     //metoda pro odhlašovaní uživatelů přihlášených přes ms office.
     public function logOut(){
-        $logUserModel = new LogUser();
         $user = $this->session->get('user');
         $ipAdrese = $this->request->getIPAddress();
         $data = [
@@ -281,7 +284,7 @@ class Auth extends Controller
             'ip_adrese' => $ipAdrese,
             'User_id' => $user['id'],
         ];
-        $logUserModel->insert($data);
+        $this->logUser->insert($data);
         $this->session->destroy();
         $logoutUrl = 'https://login.microsoftonline.com/common/oauth2/v2.0/logout';
         return redirect()->to($logoutUrl . '?post_logout_redirect_uri=' . urlencode(base_url('/login')));
