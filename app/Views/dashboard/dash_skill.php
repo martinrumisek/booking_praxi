@@ -18,6 +18,8 @@
     <h2>Přehled termínů pro praxe</h2>
     <div class="d-flex m-3">
         <input class="search-input p-2 form-control" type="text" placeholder="Vyhledat">
+        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modalAddCategory">Přidat kategorii</button>
+        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modalAddSkill">Přidat dovednost</button>
     </div>
     <div class="container-fluid">
         <div class="table-responsive">
@@ -50,7 +52,7 @@
                         <td><?= $category['name']?></td>
                         <td><?= $category['create_time']?></td>
                         <td><?= $category['edit_time']?></td>
-                        <td>fce</td>
+                        <td><a href="<?=base_url('/delete-category-skill/'.$category['id'])?>">DEL</a></td>
                     </tr>
                     <?php
                     if(empty($category['skill'])){ ?>
@@ -64,7 +66,7 @@
                         <td><?= $skill['name']?></td>
                         <td><?= $skill['create_time']?></td>
                         <td><?= $skill['edit_time']?></td>
-                        <td>fce</td>
+                        <td><a href="<?=base_url('/delete-skill/'.$skill['id'])?>">DEL</a></td>
                     </tr>
                     <?php } ?>
                     <?php } ?>
@@ -72,5 +74,65 @@
             </table>
         </div>
     </div>
+</div>
+<div class="modal" id="modalAddCategory">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Přidat novou kategorii</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form action="<?= base_url('/add-new-category')?>" method="POST">
+            <input type="text" name="name" placeholder="Název kategorie">
+            <textarea name="description" id=""></textarea>
+            <input type="submit" placeholder="Odeslat">
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal" id="modalAddSkill">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Přidat novou dovednost</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form action="<?= base_url('/add-new-skill')?>" method="POST">
+            <input type="text" name="name" placeholder="Název dovednosti">
+            <textarea name="description" id=""></textarea>
+            <select class="form-select" name="category_id">
+                <option>Vyberte možnost</option>
+                <?php foreach($categoryes as $category){ ?>
+                    <option value="<?= $category['id']?>"><?=$category['name']?></option>
+                <?php } ?>
+            </select>
+            <input type="submit" placeholder="Odeslat">
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
 </div>
 <?= $this->endSection() ?>

@@ -29,6 +29,10 @@ $routes->get('dashboard-log','Dashboard::logView');
 //ZPRACOVÁNÍ (EDITACE) V DASHBOARDU
 $routes->post('/sent-date-practise','Dashboard::addNewDate');
 $routes->post('/sent-new-role-user','Dashboard::editUserRole');
+$routes->post('/add-new-category', 'Dashboard::addCategorySkill');
+$routes->post('/add-new-skill', 'Dashboard::addSkill');
+$routes->get('/delete-category-skill/(:num)', 'Dashboard::deleteCategorySkill/$1');//! Je potřeba udělat změna kvůli bezpečnosti, bude se muset přidat fetch přes javascript!! -- zatím provyzorně
+$routes->get('/delete-skill/(:num)', 'Dashboard::deleteSkill/$1'); //! Je potřeba udělat změna kvůli bezpečnosti, bude se muset přidat fetch přes javascript!! -- zatím provyzorně
 
 //ROUTY PRO AUTH
 $routes->get('logAD', 'Auth::loginOAUH'); //routa pro tlačítko pro přesměrování na login Microsoft office - OAUH      

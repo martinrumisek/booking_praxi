@@ -182,10 +182,19 @@ class Dashboard extends Controller
         }
         $data = [
             'name' => $name,
-            'description' => $description,
+            'descrtiption' => $description,
             'Category_skill_id' => $idCategory,
         ];
         $this->skill->insert($data);
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
+    public function deleteCategorySkill($id){
+        $this->categorySkill->delete($id);
+        $this->skill->where('Category_skill_id', $id)->delete();
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
+    public function deleteSkill($id){
+        $this->skill->delete($id);
         return redirect()->to(base_url('/dashboard-skill'));
     }
     public function logView(){
