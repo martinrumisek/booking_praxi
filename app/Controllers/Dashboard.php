@@ -14,6 +14,8 @@ use App\Models\ClassModel;
 use App\Models\FieldStudy;
 use App\Models\LogCompany;
 use App\Models\LogUser;
+use App\Models\CategorySkill;
+use App\Models\Skill;
 
 class Dashboard extends Controller
 {
@@ -28,6 +30,8 @@ class Dashboard extends Controller
     var $logUser;
     var $companyModel;
     var $representativeCompanyModel;
+    var $skill;
+    var $categorySkill;
     public function __construct(){
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
@@ -40,6 +44,8 @@ class Dashboard extends Controller
         $this->logUser = new LogUser();
         $this->companyModel = new CompanyModel;
         $this->representativeCompanyModel = new RepresentativeCompanyModel();
+        $this->skill = new Skill();
+        $this->categorySkill = new CategorySkill();
     }
     //Metody pro zobrazení viewček
     public function homeView(){
@@ -142,10 +148,45 @@ class Dashboard extends Controller
         
     }
     public function skillView(){
+        $categoryes = $this->categorySkill->findAll();
+        foreach($categoryes as &$category){
+            $category['skill'] = $this->skill->where('Category_skill_id', $category['id'])->findAll();
+        }
         $data= [
-            'title' => 'Administrace'
+            'title' => 'Administrace',
+            'categoryes' => $categoryes,
         ];
         return view('dashboard/dash_skill', $data);
+    }
+    public function addCategorySkill(){
+        $name = $this->request->getPost('name');
+        $description = $this->request->getPost('description');
+        if(empty($name)){
+            //! Je potřeba přidat hlášku pro vrácení, že musí být pole povíné
+            return false;
+        }
+        $data = [
+            'name' => $name,
+            'description' => $description,
+        ];
+        $this->categorySkill->insert($data);
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
+    public function addSkill(){
+        $name = $this->request->getPost('name');
+        $description = $this->request->getPost('description');
+        $idCategory = $this->request->getPost('category_id');
+        if(empty($name && $idCategory)){
+            //! Je potřeba přidat hlášku, která se zobrazí uživateli při vrácení, že nebylo něco vyplněno.
+            return false;
+        }
+        $data = [
+            'name' => $name,
+            'description' => $description,
+            'Category_skill_id' => $idCategory,
+        ];
+        $this->skill->insert($data);
+        return redirect()->to(base_url('/dashboard-skill'));
     }
     public function logView(){
         $userLog = $this->logUser->findAll();
