@@ -149,7 +149,7 @@
                                 <p class="text-center h5">Firma</p><!-- div pro text, napsané malým "firma" -->
                                 <div class="m-3 form-floating">
                                     <!-- Název firmy/instituce-->
-                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Název firmy/instituce" id="name_company" name="name_company" value="<?=$name_company?>" disabled>
+                                    <input type="text" class="form-control text-center login-input shadow" placeholder="Název firmy/instituce" id="name_company" name="name_company" value="<?=$name_company?>">
                                     <label for="name_company" class="h5 input-text">Název firmy/instituce *</label>
                                 </div>
                                 <div class="m-3 form-floating">

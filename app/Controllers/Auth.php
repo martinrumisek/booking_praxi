@@ -75,18 +75,18 @@ class Auth extends Controller
         return redirect()->to(base_url('/login'));
     }
     public function registerCompany(){
-        $nameCompany = $this->request->getPost('name_company');
         $ico = $this->request->getPost('ico');
         $mail = $this->request->getPost('email');
         $passwd1 = $this->request->getPost('passwd1');
         $passwd2 = $this->request->getPost('passwd2');
 
-        $isValid = $this->verifyCompany($ico, $nameCompany);
+        $isValid = $this->verifyCompany($ico);
         if (!$isValid) {
             return redirect()->to(base_url('/registration'));
             //!Je potřeba přidat hlášku, když to přesměruje zpět na registrační stránku, tak aby uživatel věděl důvod
         }
         $hashPasswd = password_hash($passwd1, PASSWORD_DEFAULT);
+        $nameCompany = $isValid['obchodniJmeno'];
         $town = $isValid['sidlo']['nazevObce'];
         $street = $isValid['sidlo']['nazevUlice'].' '.$isValid['sidlo']['cisloDomovni'];
         $postCode = $isValid['sidlo']['psc'];
@@ -106,7 +106,7 @@ class Auth extends Controller
         $this->session->set('registration_start', true);
         return redirect()->to(base_url('/next-step-register'));
     }
-    private function verifyCompany($ico, $nameCompany){
+    private function verifyCompany($ico){
         $url = "http://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/$ico";
         $header = get_headers($url, 1);
         if(strpos($header[0],"404") !== false){
@@ -118,9 +118,7 @@ class Auth extends Controller
         }
         $data = json_decode($response, true);
         if(isset($data["ico"]) && $data["ico"] === $ico){
-            if(isset($data["obchodniJmeno"]) && $data["obchodniJmeno"] === $nameCompany){
-                return $data;
-            }else{return null;}
+            return $data;
         }else{return null;}
     }
     public function completionRegister(){
@@ -197,6 +195,8 @@ class Auth extends Controller
         //Získaní url a přesměrovaní na stránku microsoft
         $authUrl = $this->provider->getAuthorizationUrl();
         $this->session->set('oauth2state', $this->provider->getState());
+        $ipAddress = $this->request->getIPAddress();
+        $this->session->set('ip_user', $ipAddress);
         return redirect()->to($authUrl);
     }
     public function callback()
@@ -225,8 +225,7 @@ class Auth extends Controller
         $userModel = new UserModel();
         $logUserModel = new LogUser();
 
-        $ipAdrese = $this->request->getIPAddress();
-
+        $ipAdrese = $this->session->get('ip_user');
         $user = $userModel->where('mail', $email)->first();
         // Zjistím, zda stávající uživatel již není uveden v databázi, a když není, tak ho tam napíší.
         if (!$user) {
@@ -268,6 +267,7 @@ class Auth extends Controller
             'email' => $user['mail'],
             'class' => $user['Class_id'],
         ]);
+        $this->session->remove('ip_user');
         //Vracím na stránku /routu
         return redirect()->to(base_url('/home'));
     }

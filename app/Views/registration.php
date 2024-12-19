@@ -168,10 +168,10 @@
                 <!--<div class="d-flex justify-content-center"><p>pro firmy</p></div>-->
                 <div class="mt-1 container d-flex justify-content-center">
                     <form action="<?=base_url('/registerCompany')?>" method="POST" style="width: 80%;" id="form" novalidate>
-                        <div class="mb-3 mt-2 form-floating">
+                       <!--  <div class="mb-3 mt-2 form-floating">
                             <input type="text" id="name_company" class="form-control text-center registration-input shadow" placeholder="Název firmy/instituce" name="name_company" >
                             <label for="name_company" class="h6">Název firmy/instituce</label>
-                        </div>
+                        </div>-->
                         <div class="mb-3 form-floating">
                             <input type="number" id="ico" class="form-control text-center registration-input shadow" placeholder="IČO" name="ico" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <label for="ico" class="h6">IČO firmy</label>
@@ -236,14 +236,14 @@
     const mailInput = document.getElementById('mail');
     const icoInput = document.getElementById('ico');
     const nameCompanyInput = document.getElementById('name_company');
-    const checkNameCompany = () => {
+    /*const checkNameCompany = () => {
         if (!nameCompanyInput.value.trim()) {
             nameCompanyInput.classList.add('invalid-input');
         } else {
             nameCompanyInput.classList.remove('invalid-input');
         }
     };
-    nameCompanyInput.addEventListener('input', checkNameCompany);
+    nameCompanyInput.addEventListener('input', checkNameCompany);*/
     const tooltipPassword = new bootstrap.Tooltip(password1Input, {
         html: true,
         title: () => createTooltipContent(password1Input.value),
@@ -333,10 +333,10 @@
     document.querySelector('form').addEventListener('submit', (event) => {
         let isValid = true;
 
-        checkNameCompany();
+       /* checkNameCompany();
         if(nameCompanyInput.classList.contains('invalid-input')){
             isValid = false;
-        }
+        }*/
         checkIcoValidity(); 
         if (icoInput.classList.contains('invalid-input')) {
             isValid = false;
