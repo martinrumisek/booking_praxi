@@ -173,7 +173,6 @@
                                     <label for="post_code_company" class="h5 input-text">PSČ *</label>
                                 </div>
                                 <div class="m-3 form-floating">
-                                    <!---- (((JE potřeba dodělat, zde bude na výběr))) Subject firmy 'právnická' / 'fyzická osoba'-->
                                     <select class="form-control text-center login-input shadow" name="select_subject" id="select_subject" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <option value="0"></option>
                                         <option value="1">Fyzická osoba</option>
@@ -399,44 +398,5 @@
                 }
             });
         });
-
-    /*document.querySelector('form').addEventListener('submit', (event) => {
-        let isValid = true;
-        setTimeout(() => {
-            checkNamePerson();
-            if(nameInput.classList.contains('invalid-input')){
-                isValid = false;
-            }
-            checkSurnamePerson();
-            if(surnameInput.classList.contains('invalid-input')){
-                isValid = false;
-            }
-            checkPhone();
-            if(mobileInput.classList.contains('invalid-input')){
-                isValid = false;
-            }
-            checkFunciton();
-            if(functionInput.classList.contains('invalid-input')){
-                isValid = false;
-            }
-            checkMail();
-            if(mailInput.classList.contains('invalid-input')){
-                isValid = false;
-            }
-            checkSelect();
-            if(selectInput.classList.contains('invalid-input')){
-                isValid = false;
-            }
-            checkCheckbox();
-            if(checkboxInput.classList.contains('invalid-input')){
-                isValid = false;
-            }
-            if (!isValid){
-                console.log('Formulář není platný');
-                event.preventDefault();
-                return false;
-            }
-        },10 );
-    });*/
 </script>
 <?= $this->endSection() ?>
