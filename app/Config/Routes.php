@@ -40,6 +40,7 @@ $routes->get('logout','Auth::logOut'); //Odhlášení pro uživetele přihláše
 $routes->post('/registerCompany','Auth::registerCompany'); //Routa, která zpracovává první formulář při registraci firmy.
 $routes->post('/confirmRegister','Auth::completionRegister'); //Routa, která zpracovává data drhého formuláře a zároveň data odesílá do db.
 $routes->post('/loginCompany','Auth::loginCompany'); //Přihlašovací routa pro firmy.
+$routes->get('/logOutCompany', 'Auth::logOutCompany'); //Odhlášení firmy. //! Je potřeba změnit odhlašování na metodu POST.
 $routes->get('/', 'Auth::callback'); // Routa pro zpracování údajů po přihlášení (Microsoft office - OAUH)   //!Změnit routu, ale je potřeba změnit v microsoft Azure zpětnou url
 //ZKUŠEBNÍ ROUTY - PŘI VÝVOJI
 
