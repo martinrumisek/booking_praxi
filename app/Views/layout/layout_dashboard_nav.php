@@ -82,6 +82,11 @@
             text-decoration: none;
             border: none;
         }
+        a{
+            color: black;
+            text-decoration: none;
+            border: none;
+        }
         .nav-item-icon{
             width: 100%;
             transition: width 0.3s ease;
@@ -122,6 +127,29 @@
             background-color: none;
             border-radius: 0px 0px 30px 0px;
             }
+        .nav-mobile{
+            display: block;
+            background-color: #006DBC;
+        }
+        .nav-icon-mobile{
+            width: 50px;
+            height: 50px;
+            margin-left: 2.5px;
+            margin-right: 2.5px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            background-color: white;
+            box-shadow: 0px 3px 6px #00000029;
+            border-radius: 7px;
+        }
+        .nav-icon-canvas{
+            width: 80%;
+            background-color: white;
+            box-shadow: 0px 3px 6px #00000029;
+            padding: 10px;
+            border-radius: 15px;
+            margin-top: 15px;
+        }
         .mobile-btn-nav{
             display: block;
             background-color: white;
@@ -139,6 +167,9 @@
             .button-for-nav{
                display: none; 
             }
+            .nav-mobile{
+                display:none
+            }
         }
         @media (max-height: 800px){
             .block-nav{
@@ -146,6 +177,9 @@
             }
             .button-for-nav{
                 display: block;
+            }
+            .nav-mobile{
+                display:block;
             }
             .nav-container{
                 display: none;
@@ -159,6 +193,7 @@
             }
             .main-content{
                 margin-left: 0;
+                margin-bottom: 55px;
             }
         }
         @media (min-witdh: 800px){
@@ -170,6 +205,9 @@
         }
         .button-for-nav{
             display: block;
+        }
+        .nav-mobile{
+            display:block
         }
             .nav-container{
             width: 0px;
@@ -183,50 +221,99 @@
         }
         .main-content{
             margin-left: 0;
+            margin-bottom: 55px;
         }
     }
     </style>
+<?php
+    $role = session()->get('role');
+    $isStudent = in_array('student', $role);
+    $isTeacher = in_array('teacher', $role);
+    $isAdmin = in_array('admin', $role);
+    $isSpravce = in_array('spravce', $role);
+    if($isStudent){
+        $backApp = '#student'; //base_url('#'); //? domovský stránka aplikace ,,, ne administrace
+        $profile = '#student'; //base_url('#');
+
+    }
+    if($isTeacher){
+        $backApp = '#teacher'; //base_url('#');
+    }
+    $homeDashboard = '#adminHome';  //base_url('#'); //? administrace
+    $listPractise = '#listPractiseAdmin'; //base_url('#'); //? administrace
+    $people = '#peopleAdmin'; //base_url('#'); //? administrace / uprava lidí
+    $company = '#companyAdmin'; //base_url('#'); //? administrace / uprava firem
+   // $info = '#student'; //base_url('#'); //! Nevím, zda tahle stránka bude existovat
+    $datePractise = '#student'; //base_url('#');
+    $log = '#logAdmin'; //base_url('#');
+    $skill = '#skillAdmin'; //base_url('#');
+    $logOut = base_url('/logout');
+        
+?>
     <div class="d-flex">
-        <!-- Navigační panel pro mobilní zobrazení -->
-        <div class="button-for-nav">
-            <a class="mobile-btn-nav d-flex justify-content-center align-items-center" href="" data-bs-toggle="offcanvas" data-bs-target="#demo"><i class="fa-solid fa-bars"></i></a>
-            <!-- offcanvas - který se otvírá pomocí tlačítka výšše, ale jenom pro mobilní zařízení -->
-            <div class="offcanvas offcanvas-start" id="demo">
-                <div class="offcanvas-header">
-                    <div class="d-flex align-items-center">
-                        <a href="#" class="d-flex align-items-center"><h1 alt="Booking praxí"><img src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" class="nav-logo-mobile" alt="Logo - OAUH"></h1></a>
-                        <p class="nav-text-mobile m-0 p-2 bold h5">BOOKING PRAXÍ</p>
-                    </div>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <!-- Hlavní pole v canvas -->
-                </div>
-            </div>
-        </div>
         <!----Navigační panel pro pc----->
         <div class="d-block block-nav">
             <div class="d-block nav-container d-flex sticky-top flex-column">
                 <div class="d-flex align-items-center">
                 <a href="#"><h1 alt="Booking praxí"><img src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" class="nav-logo" alt="Logo - OAUH"></h1></a>
-                <p class="nav-text m-0 p-2 bold h5">BOOKING PRAXÍ</p>
+                <p class="nav-text m-0 p-2 bold h5">BOOKING PRAXÍ <br> <small>administrace</small></p>
                 </div>
                 <div class="nav-items">
-                    <a class="nav-icon" href="#home"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-house nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Domů</p></div></div></a>
-                    <a class="nav-icon" href="#list_praxe"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nabídky praxe</p></div></div></a>
-                    <a class="nav-icon" href="#people"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-user-group nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Lidé</p></div></div></a>
-                    <a class="nav-icon" href="#company"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-building nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Firmy</p></div></div></a>
-                    <a class="nav-icon" href="#info"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-calendar-days nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Termíny praxí</p></div></div></a>
-                    <a class="nav-icon" href="#setting"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-head-side-virus nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Dovednosti</p></div></div></a>
+                    <a class="nav-icon" href="<?= $backApp?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-regular fa-circle-left nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Zpět</p></div></div></a>
+                    <a class="nav-icon" href="<?= $homeDashboard?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-house nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Domů</p></div></div></a>
+                    <a class="nav-icon" href="<?= $listPractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nabídky praxe</p></div></div></a>
+                    <a class="nav-icon" href="<?= $people?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-user-group nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Lidé</p></div></div></a>
+                    <a class="nav-icon" href="<?= $company?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-building nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Firmy</p></div></div></a>
+                    <a class="nav-icon" href="<?= $datePractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-regular fa-calendar nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Termíny praxí</p></div></div></a>
+                    <a class="nav-icon" href="<?= $skill?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-head-side-virus nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Dovednosti</p></div></div></a>
+                    <a class="nav-icon" href="<?= $log?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-chart-column nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Log uživatelů</p></div></div></a>
+                    <!-- <a class="nav-icon" href="#"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-circle-info nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Informace</p></div></div></a>-->
                 </div>
                 <div class=" mt-auto">
-                    <a class="nav-icon" href="#profile"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-user nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Profil</p></div></div></a>
-                    <a class="nav-icon" href="<?=base_url('/logout')?>"><div class="nav-item nav-item-logout d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-right-from-bracket nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Odhlásit se</p></div></div></a>
+                    <?php if($isStudent){ ?><a class="nav-icon" href="<?= $profile?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-user nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Profil</p></div></div></a><?php }?>
+                    <a class="nav-icon" href="<?= $logOut?>"><div class="nav-item nav-item-logout d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-right-from-bracket nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Odhlásit se</p></div></div></a>
                 </div>
             </div>
         </div>
         <!-----Konec navigačního panelu a začátek hlavního obsahu stránky--------->
         <div class="main-content"><?= $this->renderSection('content')?></div>
+        <!-- Navigační panel pro mobil -->
+        <nav class="navbar navbar-expand-sm fixed-bottom nav-mobile p-0">
+            <div class="container-fluid p-0">
+                <div class="d-flex justify-content-center" style="width:100%">
+                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $homeDashboard?>"><i class="fa-solid fa-house nav-icon h4 m-0"></i></a>
+                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $listPractise?>"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></a>
+                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $datePractise?>"><i class="fa-regular fa-calendar nav-icon h4 m-0"></i></a>
+                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $people?>"><i class="fa-solid fa-user nav-icon h4 m-0"></i></a>
+                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="#nav-mobile-admin"  data-bs-toggle="offcanvas" data-bs-target="#nav-mobile-admin"><i class="fa-solid fa-ellipsis-vertical nav-icon h4 m-0"></i></a>
+                </div>
+            </div>
+        </nav>
+        <div class="offcanvas offcanvas-start" id="nav-mobile-admin" style="width:100%">
+                <div class="offcanvas-header">
+                    <div class="d-flex align-items-center">
+                        <a href="#" class="d-flex align-items-center"><h1 alt="Booking praxí"><img src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" class="nav-logo-mobile" alt="Logo - OAUH"></h1></a>
+                        <p class="nav-text-mobile m-0 p-2 bold h5">BOOKING PRAXÍ <br> <small>administrace</small></p>
+                    </div>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body container d-flex flex-column align-items-center justify-content-center">
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $backApp?>"><div class="flex-shrink-0"><i class="fa-regular fa-circle-left nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Zpět do aplikace</div></a>
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $homeDashboard?>"><div class="flex-shrink-0"><i class="fa-solid fa-house nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Domů</div></a>
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $listPractise?>"><div class="flex-shrink-0"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Nabídka praxe</div></a>
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $people?>"><div class="flex-shrink-0"><i class="fa-solid fa-user-group nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Lidé</div></a>
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $company?>"><div class="flex-shrink-0"><i class="fa-solid fa-building nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Firmy</div></a>
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $datePractise?>"><div class="flex-shrink-0"><i class="fa-regular fa-calendar nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Termíny praxí</div></a>
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $skill?>"><div class="flex-shrink-0"><i class="fa-solid fa-head-side-virus nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Dovednosti</div></a>
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $log?>"><div class="flex-shrink-0"><i class="fa-solid fa-chart-column nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Log Uživatelů</div></a>
+                   
+                </div>
+                <div class="offcanvas-footer container d-flex flex-column align-items-center justify-content-center">
+                    <?php if($isStudent){ ?><a class="nav-icon-canvas d-flex align-items-center" href="<?= $profile?>"><div class="flex-shrink-0"><i class="fa-solid fa-user nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Profil</div></a> <?php } ?>
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $logOut?>"><div class="flex-shrink-0"><i class="fa-solid fa-right-from-bracket nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Odhlásit se</div></a>
+                    <br>
+                </div>
+            </div>
     </div>
 </body>
 </html>
