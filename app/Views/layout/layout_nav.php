@@ -233,7 +233,7 @@
         $people = '#student'; //base_url('#');
         $company = '#student'; //base_url('#');
         $info = '#student'; //base_url('#');
-        $dashboard = '#student'; //base_url('#');
+        $dashboard =  base_url('/dashboard-home');
         $profile = '#student'; //base_url('#');
 
         $logOut = base_url('/logout'); // #student
@@ -244,7 +244,7 @@
         $people = '#teacher'; //base_url('#');
         $company = '#teacher'; //base_url('#');
         $info = '#teacher'; //base_url('#');
-        $dashboard = '#teacher'; //base_url('#');
+        $dashboard = base_url('/dashboard-home');
         //$profile = '#teacher'; //base_url('#'); //! Učitel nebude mít žádný profil, není potřeba mít profil.
 
         $logOut = base_url('/logout'); // #teacher
@@ -255,7 +255,6 @@
         $people = '#company'; //base_url('#');
         $company = '#company'; //base_url('#');
         $info = '#company'; //base_url('#');
-        $dashboard = '#company'; //base_url('#');
         $profile = '#company'; //base_url('#');
 
         $logOut = base_url('/logOutCompany'); // #company
@@ -312,11 +311,8 @@
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $company?>"><div class="flex-shrink-0"><i class="fa-solid fa-building nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Firmy</div></a>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $info?>"><div class="flex-shrink-0"><i class="fa-solid fa-circle-info nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Informace</div></a>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $dashboard?>"><div class="flex-shrink-0"><i class="fa-solid fa-gear nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Nastavení</div></a>
-                </div>
-                <div class="offcanvas-footer container d-flex flex-column align-items-center justify-content-center">
                     <?php if($isStudent || $isCompany){ ?><a class="nav-icon-canvas d-flex align-items-center" href="<?= $profile?>"><div class="flex-shrink-0"><i class="fa-solid fa-user nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Profil</div></a> <?php }?>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $logOut?>"><div class="flex-shrink-0"><i class="fa-solid fa-right-from-bracket nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Odhlásit se</div></a>
-                    <br>
                 </div>
             </div>
     </div>

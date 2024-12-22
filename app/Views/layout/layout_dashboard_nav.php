@@ -18,7 +18,6 @@
             border: 3px solid #f5f5f5;
         }
     .main-content {
-            min-height: 200vh;
             margin-left: 60px; 
             width: 100%;
             transition: margin-left 0.3s ease;
@@ -232,21 +231,21 @@
     $isAdmin = in_array('admin', $role);
     $isSpravce = in_array('spravce', $role);
     if($isStudent){
-        $backApp = '#student'; //base_url('#'); //? domovský stránka aplikace ,,, ne administrace
+        $backApp =  base_url('/home'); //? domovský stránka aplikace ,,, ne administrace
         $profile = '#student'; //base_url('#');
 
     }
     if($isTeacher){
         $backApp = '#teacher'; //base_url('#');
     }
-    $homeDashboard = '#adminHome';  //base_url('#'); //? administrace
-    $listPractise = '#listPractiseAdmin'; //base_url('#'); //? administrace
-    $people = '#peopleAdmin'; //base_url('#'); //? administrace / uprava lidí
-    $company = '#companyAdmin'; //base_url('#'); //? administrace / uprava firem
+    $homeDashboard = base_url('/dashboard-home'); //? administrace
+    $listPractise =  '#';    //base_url('/dashboard-'); //? administrace
+    $people = base_url('/dashboard-people'); //? administrace / uprava lidí
+    $company = base_url('/dashboard-company'); //? administrace / uprava firem
    // $info = '#student'; //base_url('#'); //! Nevím, zda tahle stránka bude existovat
-    $datePractise = '#student'; //base_url('#');
-    $log = '#logAdmin'; //base_url('#');
-    $skill = '#skillAdmin'; //base_url('#');
+    $datePractise = base_url('/dashboard-calendar');
+    $log = base_url('/dashboard-log');
+    $skill = base_url('/dashboard-skill');
     $logOut = base_url('/logout');
         
 ?>
@@ -256,7 +255,7 @@
             <div class="d-block nav-container d-flex sticky-top flex-column">
                 <div class="d-flex align-items-center">
                 <a href="#"><h1 alt="Booking praxí"><img src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" class="nav-logo" alt="Logo - OAUH"></h1></a>
-                <p class="nav-text m-0 p-2 bold h5">BOOKING PRAXÍ <br> <small>administrace</small></p>
+                <p class="nav-text m-0 p-2 bold h5">BOOKING PRAXÍ</p>
                 </div>
                 <div class="nav-items">
                     <a class="nav-icon" href="<?= $backApp?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-regular fa-circle-left nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Zpět</p></div></div></a>
@@ -306,12 +305,8 @@
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $datePractise?>"><div class="flex-shrink-0"><i class="fa-regular fa-calendar nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Termíny praxí</div></a>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $skill?>"><div class="flex-shrink-0"><i class="fa-solid fa-head-side-virus nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Dovednosti</div></a>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $log?>"><div class="flex-shrink-0"><i class="fa-solid fa-chart-column nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Log Uživatelů</div></a>
-                   
-                </div>
-                <div class="offcanvas-footer container d-flex flex-column align-items-center justify-content-center">
                     <?php if($isStudent){ ?><a class="nav-icon-canvas d-flex align-items-center" href="<?= $profile?>"><div class="flex-shrink-0"><i class="fa-solid fa-user nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Profil</div></a> <?php } ?>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $logOut?>"><div class="flex-shrink-0"><i class="fa-solid fa-right-from-bracket nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Odhlásit se</div></a>
-                    <br>
                 </div>
             </div>
     </div>
