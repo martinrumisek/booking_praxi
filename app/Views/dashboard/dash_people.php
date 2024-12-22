@@ -66,8 +66,8 @@
                     <?php }?>
                 </tbody>
             </table>
-            <?= $pager->links() ?>
         </div>
+        <div class="d-flex justify-content-center"><?= $pager->links() ?></div>
     </div>
 </div>
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
