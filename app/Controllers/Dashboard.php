@@ -93,8 +93,8 @@ class Dashboard extends Controller
         return view('dashboard/dash_form_calendar', $data);
     }
     public function peopleView(){
-        $pager = service('pager');
-        $users = $this->userModel->paginate(10);
+        $users = $this->userModel->paginate(20);
+        $pager = $this->userModel->pager;
         foreach($users as &$user){
             $class = $this->classModel->where('id', $user['Class_id'])->first();
             if(!empty($class)){
