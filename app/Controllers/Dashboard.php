@@ -200,6 +200,12 @@ class Dashboard extends Controller
     public function logView(){
         $userLog = $this->logUser->findAll();
         $userCompany = $this->logCompany->findAll();
+        foreach($userLog as &$user){
+            $user['user'] = $this->userModel->where('id', $user['User_id'])->first(); 
+        }
+        foreach($userCompany as &$company){
+            $company['user'] = $this->representativeCompanyModel->where('id', $company['Representative_company_id'])->first();
+        }
         if(empty($userLog)){
             $useAllData = $userCompany;
         }else if(empty($userCompany)){
