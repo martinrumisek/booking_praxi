@@ -85,8 +85,21 @@ class Auth extends Controller
         $ico = $this->request->getPost('ico');
         $mail = $this->request->getPost('email');
         $passwd1 = $this->request->getPost('passwd1');
-        $passwd2 = $this->request->getPost('passwd2');
-
+        $pattern = '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/';
+        if(!preg_match($pattern, $passwd1)){
+            return redirect()->to(base_url('/registration'));
+            //!Je potřeba doplnit chybějící hlášku
+        }
+        $representativeUser = $this->representativeCompanyModel->where('mail', $mail)->first();
+        $companyExist = $this->companyModel->where('ico', $ico)->first();
+        if($representativeUser || $companyExist){
+            return redirect()->to(base_url('/registration'));
+            //!JE potřeba doplnit chybějící hlášku, co se stalo.
+        }
+        if(empty($ico && $mail && $passwd1)){
+            return redirect()->to(base_url('/registration'));
+            //!Je potřeba doplnit chybějící hlášku
+        }
         $isValid = $this->verifyCompany($ico);
         if (!$isValid) {
             return redirect()->to(base_url('/registration'));
@@ -95,7 +108,11 @@ class Auth extends Controller
         $hashPasswd = password_hash($passwd1, PASSWORD_DEFAULT);
         $nameCompany = $isValid['obchodniJmeno'];
         $town = $isValid['sidlo']['nazevObce'];
-        $street = $isValid['sidlo']['nazevUlice'].' '.$isValid['sidlo']['cisloDomovni'];
+        if(empty($isValid['sidlo']['nazevUlice'])){
+            $street = $isValid['sidlo']['nazevObce'] . ' ' . $isValid['sidlo']['cisloDomovni'];
+        }else{
+            $street = $isValid['sidlo']['nazevUlice'].' '.$isValid['sidlo']['cisloDomovni'];
+        }
         $postCode = $isValid['sidlo']['psc'];
         $legalForm = $isValid['pravniForma'];
         $this->session->set('company',[
