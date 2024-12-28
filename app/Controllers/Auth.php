@@ -290,7 +290,7 @@ class Auth extends Controller
         ]);
         $this->session->remove('ip_user');
         //Vracím na stránku /routu
-        return redirect()->to(base_url('/home'));
+        return redirect()->to(base_url('/home-student'));
     }
     //metoda pro odhlašovaní uživatelů přihlášených přes ms office.
     public function logOut(){

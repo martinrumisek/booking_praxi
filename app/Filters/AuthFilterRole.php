@@ -22,7 +22,7 @@ class AuthFilterRole implements FilterInterface
             }
         }
         if(in_array('student', $role)){
-            return redirect()->to(base_url('/home'));
+            return redirect()->to(base_url('/home-student'));
         }elseif(in_array('teacher', $role)){
             return redirect()->to(base_url('/home-teacher'));
         }elseif(in_array('company', $role)){
