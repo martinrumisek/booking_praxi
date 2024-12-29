@@ -198,30 +198,36 @@ class Dashboard extends Controller
         return redirect()->to(base_url('/dashboard-skill'));
     }
     public function logView(){
-        $userLog = $this->logUser->findAll();
-        $userCompany = $this->logCompany->findAll();
-        foreach($userLog as &$user){
-            $user['user'] = $this->userModel->where('id', $user['User_id'])->first(); 
+        $perPage = 20;
+        $currentPage = $this->request->getVar('page') ?? 1;
+        $totalUserLog = $this->logUser->countAllResults();
+        $totalUserCompany = $this->logCompany->countAllResults();
+        $totalRecords = $totalUserLog + $totalUserCompany;
+        $offset = ($currentPage - 1) * $perPage;
+        $userLog = $this->logUser->orderBy('create_time', 'DESC')->findAll($perPage, $offset);
+        $userCompany = $this->logCompany->orderBy('create_time', 'DESC')->findAll($perPage, $offset);
+        foreach ($userLog as &$user) {
+            $user['user'] = $this->userModel->where('id', $user['User_id'])->first();
         }
-        foreach($userCompany as &$company){
+        foreach ($userCompany as &$company) {
             $company['user'] = $this->representativeCompanyModel->where('id', $company['Representative_company_id'])->first();
         }
-        if(empty($userLog)){
-            $useAllData = $userCompany;
-        }else if(empty($userCompany)){
-            $useAllData = $userLog;
-        }else{
-            $useAllData = array_merge($userLog, $userCompany);
-        if(!empty($useAllData)){
-            usort($useAllData, function($a, $b) {
+        $useAllData = array_merge($userLog, $userCompany);
+
+        if (!empty($useAllData)) {
+            usort($useAllData, function ($a, $b) {
                 return strtotime($b['create_time']) - strtotime($a['create_time']);
             });
         }
-        }
-        $data= [
+        $pager = service('pager');
+        $pager->makeLinks($currentPage, $perPage, $totalRecords);
+
+        $data = [
             'title' => 'Administrace',
-            'logs' => $useAllData,
+            'logs' => array_slice($useAllData, 0, $perPage), // Data na aktuální stránku
+            'pager' => $pager,
         ];
+
         return view('dashboard/dash_log', $data);
     }
     //Zpracování (editace) v administraci
