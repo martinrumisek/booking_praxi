@@ -231,12 +231,12 @@
     $isAdmin = in_array('admin', $role);
     $isSpravce = in_array('spravce', $role);
     if($isStudent){
-        $backApp =  base_url('/home'); //? domovský stránka aplikace ,,, ne administrace
+        $backApp =  base_url('/home-student'); //? domovský stránka aplikace ,,, ne administrace
         $profile = '#student'; //base_url('#');
 
     }
     if($isTeacher){
-        $backApp = '#teacher'; //base_url('#');
+        $backApp = base_url('/home-teacher');
     }
     $homeDashboard = base_url('/dashboard-home'); //? administrace
     $listPractise =  '#';    //base_url('/dashboard-'); //? administrace

@@ -8,7 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 // ROUTY PRO VIEWČKA (PŘIHLAŠOVACÍ & REGISTROVACÍ)
 $routes->get('login', 'Home::login'); //Přihlašovácí stránka
 $routes->get('registration', 'Home::registration'); //stránka pro registraci firmy
-$routes->get('next-step-register','Home::continuationRegister' );
+$routes->get('next-step-register','Auth::continuationRegister' );
 // ROUTY PRO VIEWČKA
 $routes->get('/home-student', 'Home::index', ['filter' => 'role:student']); //routa na hlavní stránku
 $routes->get('practise_offer', 'Home::offerView'); //stránka pro nabídky praxe

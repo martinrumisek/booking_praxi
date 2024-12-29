@@ -88,6 +88,14 @@
         -webkit-line-clamp: 5;
     }
 </style>
+<?php 
+$role = session()->get('role');
+if(in_array('admin', $role)){
+    $viewRole = "admin";
+}else if(in_array('spravce', $role)){
+    $viewrole = "správce";
+}
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-lg-6 p-0">
@@ -95,12 +103,12 @@
                 <div class="p-5 container">
                     <div class="d-md-flex d-block">
                         <div class="d-flex justify-content-center align-items-center"><div class="icon-user d-flex align-items-center justify-content-center"><i class="fa-regular fa-user h1"></i></div></div>
-                        <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h3">Martin Rumíšek</div><div><span class="text-wrap">žák, admin</span></div></div></div>
+                        <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h3"><?= $user['name'] . ' ' . $user['surname']. ', ' . $class['class'] . '.' . $class['letter_class'] ?></div><div><span class="text-wrap">Žák<?php if(!empty($viewRole)){ echo ' , ' . $viewRole;} ?></span></div></div></div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-12 col-md-6"><div class="h5 mt-2">Obor</div><div class="">Informační technologie</div></div>
-                        <div class="col-12 col-md-6"><div class="h5 mt-2">Telefonní číslo</div><div class="">Není uvedeno</div></div>
-                        <div class="col-12 col-md-6"><div class="h5 mt-2">E-mail</div><div class="">rumisek_martin@oauh.cz</div></div>
+                        <div class="col-12 col-md-6"><div class="h5 mt-2">Obor</div><div class=""><?= $fieldStudy['name'] ?></div></div>
+                        <div class="col-12 col-md-6"><div class="h5 mt-2">Telefonní číslo</div><div class=""><?php if(empty($user['phone'])){echo "Není uvedeno";}else{echo $user['phone'];} ?></div></div>
+                        <div class="col-12 col-md-6"><div class="h5 mt-2">E-mail</div><div class=""><?= $user['mail'] ?></div></div>
                     </div>
                     <div class="d-flex justify-content-center aling-items-center p-3"><div><a href="#"><div>Zobrazit více</div><div class="d-flex justify-content-center"><i class="fa-solid fa-chevron-down"></i></div></a></div></div>
                 </div>
@@ -109,6 +117,7 @@
         <div class="col-12 col-lg-6">
                 <div class="container-company">
                     <div class="p-5 container">
+                        <?php foreach($practise as $practiss){ if(!empty($practis) || $practiss['accepted'] == 1){ ?>
                         <div class="d-md-flex d-block">
                             <div class="d-flex justify-content-center align-items-center"><div class="icon-company d-flex align-items-center justify-content-center"><i class="fa-solid fa-building h1"></i></div></div>
                              <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h4">Název firmy/instituce</div><span>Indorama Ventures Company Moravia a.s.</span><br><span class="fw-bold">IČO: </span><span>234324533</span></div></div>
@@ -121,6 +130,7 @@
                             <div class="col-12 col-md-6"><div class="h5 mt-2">Termín 1</div><div class="">12.04 - 30.4.2024</div></div>
                             <div class="col-12 col-md-6"><div class="h5 mt-2">Termín 2</div><div class="">02.06 - 10.06.2024</div></div>
                         </div>
+                        <?php }}?>
                     </div>
                 </div>
             </div>
@@ -213,17 +223,5 @@
         <div class="next-previously d-flex align-items-center justify-content-center"><i class="fa-solid fa-chevron-right"></i></div>
     </a>
 </div>
-<?php if (session()->has('user')): ?>
-        <h2>Uživatel: <?= esc($user['jmeno']) ?> <?= esc($user['prijmeni']) ?></h2>
-        <p>ID: <?= esc($user['id']) ?></p>  <!-- Zobrazení ID -->
-        <p>Email: <?= esc($user['email']) ?></p>
-        <p>Třída id: <?= esc($user['class']) ?></p>
-        <?php $role = session()->get('role');
-            foreach($role as $s){
-                echo $s;
-            }
-        ?>
-    <?php else: ?>
-        <p>Uživatel není přihlášen.</p>
-    <?php endif; ?>
+
 <?= $this->endSection() ?>
