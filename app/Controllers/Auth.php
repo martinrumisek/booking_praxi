@@ -146,6 +146,24 @@ class Auth extends Controller
             return $data;
         }else{return null;}
     }
+    public function continuationRegister(){
+        $session = session();
+        if (!$session->has('registration_start') || $session->get('registration_start') !== true) {
+            return redirect()->to(base_url('/registration'));
+        }
+        $companyData = $session->get('company');
+        $data = [
+            'title'=> 'Dokončení registrace',
+            'name_company' => $companyData['name_company'],
+            'ico' => $companyData['ico'],
+            'mail' => $companyData['mail'],
+            'town' => $companyData['town'],
+            'street' => $companyData['street'],
+            'postCode' => $companyData['postCode'],
+            'legal_form' => $companyData['legal_form'],
+        ];
+        return view('continuation_register', $data);
+    }
     public function completionRegister(){
         $passwordSession = $this->session->get('passwdPerson');
         $companySession = $this->session->get('company');
