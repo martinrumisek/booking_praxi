@@ -31,6 +31,8 @@ $routes->post('/sent-date-practise','Dashboard::addNewDate', ['filter' => 'role:
 $routes->post('/sent-new-role-user','Dashboard::editUserRole', ['filter' => 'role:admin,spravce']);
 $routes->post('/add-new-category', 'Dashboard::addCategorySkill', ['filter' => 'role:admin,spravce']);
 $routes->post('/add-new-skill', 'Dashboard::addSkill', ['filter' => 'role:admin,spravce']);
+$routes->post('/edit-category', 'Dashboard::editCategorySkill', ['filter' => 'role:admin,spravce']);
+$routes->post('/edit-skill', 'Dashboard::editSkill', ['filter' => 'role:admin,spravce']);
 $routes->get('/delete-category-skill/(:num)', 'Dashboard::deleteCategorySkill/$1', ['filter' => 'role:admin,spravce']);//! Je potřeba udělat změna kvůli bezpečnosti, bude se muset přidat fetch přes javascript!! -- zatím provyzorně
 $routes->get('/delete-skill/(:num)', 'Dashboard::deleteSkill/$1', ['filter' => 'role:admin,spravce']); //! Je potřeba udělat změna kvůli bezpečnosti, bude se muset přidat fetch přes javascript!! -- zatím provyzorně
 

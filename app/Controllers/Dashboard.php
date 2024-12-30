@@ -182,10 +182,40 @@ class Dashboard extends Controller
         }
         $data = [
             'name' => $name,
-            'descrtiption' => $description,
+            'description' => $description,
             'Category_skill_id' => $idCategory,
         ];
         $this->skill->insert($data);
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
+    public function editCategorySkill(){
+        $id = $this->request->getPost('id');
+        $name = $this->request->getPost('name');
+        $description = $this->request->getPost('description');
+        if(empty($id && $name)){
+            return redirect()->to(base_url('/dashboard-skill'));
+        }
+        $data = [
+            'name' => $name,
+            'description' => $description,
+        ];
+        $this->categorySkill->update($id, $data);
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
+    public function editSkill(){
+        $id = $this->request->getPost('id');
+        $name = $this->request->getPost('name');
+        $description = $this->request->getPost('description');
+        $categoryId = $this->request->getPost('category_id');
+        if(empty($id && $name && $categoryId)){
+            return redirect()->to(base_url('/dashboard-skill'));
+        }
+        $data = [
+            'name' => $name,
+            'description' => $description,
+            'Category_skill_id' => $categoryId,
+        ];
+        $this->skill->update($id, $data);
         return redirect()->to(base_url('/dashboard-skill'));
     }
     public function deleteCategorySkill($id){
