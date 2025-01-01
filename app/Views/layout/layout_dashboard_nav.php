@@ -18,7 +18,7 @@
             border: 3px solid #f5f5f5;
         }
     .main-content {
-            margin-left: 60px; 
+            padding-left: 60px; 
             width: 100%;
             transition: margin-left 0.3s ease;
         }
