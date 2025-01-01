@@ -209,6 +209,7 @@
                 </tbody>
             </table>
         </div>
+        <div class="d-flex justify-content-center"><?= $pager->links() ?></div>
     </div>
 </div>
 <!-- Modal pro přidávání kategorií dovedností -->
