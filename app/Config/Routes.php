@@ -35,6 +35,9 @@ $routes->post('/edit-category', 'Dashboard::editCategorySkill', ['filter' => 'ro
 $routes->post('/edit-skill', 'Dashboard::editSkill', ['filter' => 'role:admin,spravce']);
 $routes->get('/delete-category-skill/(:num)', 'Dashboard::deleteCategorySkill/$1', ['filter' => 'role:admin,spravce']);//! Je potřeba udělat změna kvůli bezpečnosti, bude se muset přidat fetch přes javascript!! -- zatím provyzorně
 $routes->get('/delete-skill/(:num)', 'Dashboard::deleteSkill/$1', ['filter' => 'role:admin,spravce']); //! Je potřeba udělat změna kvůli bezpečnosti, bude se muset přidat fetch přes javascript!! -- zatím provyzorně
+$routes->post('/add-practiseManager', 'Dashboard::addPractiseManager' , ['filter' => 'role:admin,spravce']);
+$routes->post('/edit-practiseManager', 'Dashboard::editPractiseManager', ['filter' => 'role:admin,spravce']);
+$routes->get('/postEmail', 'Dashboard::sentEmail');
 
 //ROUTY PRO AUTH
 $routes->get('logAD', 'Auth::loginOAUH'); //routa pro tlačítko pro přesměrování na login Microsoft office - OAUH      

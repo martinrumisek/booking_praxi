@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\PractiseManager;
 use App\Models\TypeSchool;
 use CodeIgniter\Controller;
 use App\Models\UserModel;
@@ -32,6 +33,7 @@ class Dashboard extends Controller
     var $representativeCompanyModel;
     var $skill;
     var $categorySkill;
+    var $practiseManager;
     public function __construct(){
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
@@ -46,6 +48,7 @@ class Dashboard extends Controller
         $this->representativeCompanyModel = new RepresentativeCompanyModel();
         $this->skill = new Skill();
         $this->categorySkill = new CategorySkill();
+        $this->practiseManager = new PractiseManager();
     }
     //Metody pro zobrazení viewček
     public function homeView(){
@@ -57,7 +60,8 @@ class Dashboard extends Controller
     public function companyView(){
         $companyes = $this->companyModel->findAll();
         foreach ($companyes as &$company){
-            $company['representative'] = $this->representativeCompanyModel->select('id, degree_before, name, surname, degree_after, mail, phone, function, create_time, Company_id')->where('Company_id', $company['id'])->findAll();
+            $company['representative'] = $this->representativeCompanyModel->where('Company_id', $company['id'])->findAll();
+            $company['practiseManager'] = $this->practiseManager->where('Company_id', $company['id'])->findAll();
         }
         $data= [
             'title' => 'Administrace',
@@ -148,85 +152,19 @@ class Dashboard extends Controller
         
     }
     public function skillView(){
-        $categoryes = $this->categorySkill->findAll();
+        $categoryes = $this->categorySkill->paginate(10);
+        $pager = $this->categorySkill->pager;
         foreach($categoryes as &$category){
             $category['skill'] = $this->skill->where('Category_skill_id', $category['id'])->findAll();
         }
         $data= [
             'title' => 'Administrace',
             'categoryes' => $categoryes,
+            'pager' => $pager,
         ];
         return view('dashboard/dash_skill', $data);
     }
-    public function addCategorySkill(){
-        $name = $this->request->getPost('name');
-        $description = $this->request->getPost('description');
-        if(empty($name)){
-            //! Je potřeba přidat hlášku pro vrácení, že musí být pole povíné
-            return false;
-        }
-        $data = [
-            'name' => $name,
-            'description' => $description,
-        ];
-        $this->categorySkill->insert($data);
-        return redirect()->to(base_url('/dashboard-skill'));
-    }
-    public function addSkill(){
-        $name = $this->request->getPost('name');
-        $description = $this->request->getPost('description');
-        $idCategory = $this->request->getPost('category_id');
-        if(empty($name && $idCategory)){
-            //! Je potřeba přidat hlášku, která se zobrazí uživateli při vrácení, že nebylo něco vyplněno.
-            return false;
-        }
-        $data = [
-            'name' => $name,
-            'description' => $description,
-            'Category_skill_id' => $idCategory,
-        ];
-        $this->skill->insert($data);
-        return redirect()->to(base_url('/dashboard-skill'));
-    }
-    public function editCategorySkill(){
-        $id = $this->request->getPost('id');
-        $name = $this->request->getPost('name');
-        $description = $this->request->getPost('description');
-        if(empty($id && $name)){
-            return redirect()->to(base_url('/dashboard-skill'));
-        }
-        $data = [
-            'name' => $name,
-            'description' => $description,
-        ];
-        $this->categorySkill->update($id, $data);
-        return redirect()->to(base_url('/dashboard-skill'));
-    }
-    public function editSkill(){
-        $id = $this->request->getPost('id');
-        $name = $this->request->getPost('name');
-        $description = $this->request->getPost('description');
-        $categoryId = $this->request->getPost('category_id');
-        if(empty($id && $name && $categoryId)){
-            return redirect()->to(base_url('/dashboard-skill'));
-        }
-        $data = [
-            'name' => $name,
-            'description' => $description,
-            'Category_skill_id' => $categoryId,
-        ];
-        $this->skill->update($id, $data);
-        return redirect()->to(base_url('/dashboard-skill'));
-    }
-    public function deleteCategorySkill($id){
-        $this->categorySkill->delete($id);
-        $this->skill->where('Category_skill_id', $id)->delete();
-        return redirect()->to(base_url('/dashboard-skill'));
-    }
-    public function deleteSkill($id){
-        $this->skill->delete($id);
-        return redirect()->to(base_url('/dashboard-skill'));
-    }
+    
     public function logView(){
         $perPage = 20;
         $currentPage = $this->request->getVar('page') ?? 1;
@@ -295,5 +233,81 @@ class Dashboard extends Controller
             }
         }
         return redirect()->to(base_url('dashboard-calendar'));
+    }
+    public function addPractiseManager(){
+        $degreeBefore = $this->request->getPost('degree_before');
+        $name = $this->request->getPost('name');
+        $surname = $this->request->getPost('surname');
+        $degreeAfter = $this->request->getPost('degree_after');
+        $phone = $this->request->getPost('phone');
+        $mail = $this->request->getPost('mail');
+        $positionWork = $this->request->getPost('position_work');
+        $companyId = $this->request->getPost('companyId');
+        if(empty($name && $surname && $phone && $mail && $companyId)){
+            return redirect()->to(base_url('dashboard-company'));
+        }
+        $data = [
+            'degree_before' => $degreeBefore,
+            'name' => $name,
+            'surname' => $surname,
+            'degree_after' => $degreeAfter,
+            'mail' => $mail,
+            'phone' => $phone,
+            'position_works' => $positionWork,
+            'Company_id' => $companyId,
+        ];
+        $this->practiseManager->insert($data);
+        return redirect()->to(base_url('dashboard-company'));
+    }
+    public function editPractiseManager(){
+        $id = $this->request->getPost('id');
+        $degreeBefore = $this->request->getPost('degree_before');
+        $name = $this->request->getPost('name');
+        $surname = $this->request->getPost('surname');
+        $degreeAfter = $this->request->getPost('degree_after');
+        $phone = $this->request->getPost('phone');
+        $mail = $this->request->getPost('mail');
+        $positionWork = $this->request->getPost('position_work');
+        $companyId = $this->request->getPost('companyId');
+        if(empty($name && $surname && $phone && $mail && $companyId && $id)){
+            return redirect()->to(base_url('dashboard-company'));
+        }
+        $data = [
+            'degree_before' => $degreeBefore,
+            'name' => $name,
+            'surname' => $surname,
+            'degree_after' => $degreeAfter,
+            'mail' => $mail,
+            'phone' => $phone,
+            'position_works' => $positionWork,
+            'Company_id' => $companyId,
+        ];
+        $this->practiseManager->update($id, $data);
+        return redirect()->to(base_url('dashboard-company'));
+    }
+
+    public function sentEmail(){
+        $email = service('email');
+        $email->setTo('rumisek_martin@oauh.cz');
+        $email->setSubject('Test Email');
+        $email->setMailType('html');
+        $logoUrl = base_url('assets/img/logo/logo_oauh_modra.svg');
+        $htmlMessage = '
+    <h1>Toto je testovací e-mail</h1>
+    <p style="color: blue;">Tento e-mail obsahuje <strong>HTML formátování</strong>.</p>
+    <br>
+    <p>Ahojky!</p>
+    <br>
+    <br>
+    <br>
+    <img src="'. $logoUrl .'" alt="Logo - OAUH">
+';
+        $email->setMessage($htmlMessage);
+        if ($email->send()) {
+            echo "E-mail byl úspěšně odeslán!";
+        } else {
+            echo "Email se nepodařilo odeslat.";
+            print_r($email->printDebugger(['headers']));
+        }
     }
 }
