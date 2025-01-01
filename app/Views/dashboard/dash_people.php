@@ -10,15 +10,43 @@
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
     }
+    .search-input:focus{
+        border:1px solid #006DBC;
+        outline: none;
+    }
     tr{
         white-space: nowrap;
+    }
+    .btn-search{
+        margin-left: 10px;
+        border-radius: 100%;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .btn-search:hover{
+        background-color: #006DBC;
+        color: white;
     }
 </style>
 <div class="container-fluid">
     <h2>Přehled termínů pro praxe</h2>
-    <div class="d-flex m-3">
-        <input class="search-input p-2 form-control" type="text" placeholder="Vyhledat">
+    <form action="" method="POST">
+    <div class="d-flex flex-wrap justify-content-between m-3">
+            <div class="d-flex">
+                <input class="search-input p-2 mt-2" id="search-input" type="text" placeholder="Vyhledat uživatele">
+                <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <div>
+                <select class="search-input mt-2" id="">
+                    <option selected disabled>Seřadit podle</option>
+                    <option value="1">Od přihlášení po odhlášení</option>
+                    <option value="2">Od odhlášení po přihlášení</option>
+                    <option value="3">Datum sestupně</option>
+                    <option value="4">Datum vzestupně</option>
+                </select>
+            </div>
     </div>
+    </form>
     <div class="container-fluid">
         <div class="table-responsive">
             <table class="table table-striped table-sm">
