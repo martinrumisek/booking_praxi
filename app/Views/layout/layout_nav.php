@@ -108,7 +108,7 @@
             opacity: 1;
         }
         .nav-container:hover ~ .main-content {
-            margin-left: 90px;
+            padding-left: 90px;
         }
         .button-for-nav {
             display: block;
@@ -186,7 +186,7 @@
                 width: 0px;
             }
             .main-content{
-                margin-left: 0;
+                padding-left: 0;
                 margin-bottom: 55px;
             }
         }
@@ -214,7 +214,7 @@
             width: 0px;
         }
         .main-content{
-            margin-left: 0;
+            padding-left: 0;
             margin-bottom: 55px;
         }
     }
