@@ -109,9 +109,62 @@
         border:1px solid #006DBC;
         outline: none;
     }
+    input:disabled{
+      box-shadow: 0px 1px 1px #00000029;
+      color: #006DBC;
+    }
+    input.checkbox{
+      background-color: transparent;
+      box-shadow: none;
+      height: auto;
+    }
+    textarea{
+      height: 80px;
+      resize: none;
+      overflow: auto;
+      border-radius: 10px;
+      background-color: white;
+      border: none;
+      box-shadow: 0px 3px 6px #00000029;
+      padding: 8px;
+    }
+    textarea:focus{
+        border:1px solid #006DBC;
+        outline: none;
+    }
+    p.text-checkbox{
+      margin-left: 5px;
+      padding-left: 10px;
+    }
     .btn-create:hover{
         background-color: #006DBC;
         color: white;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"] {
+    -moz-appearance: textfield;
+    }
+    select{
+      border: none;
+      height: 40px;
+      padding: 8px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0px 3px 6px #00000029;
+    }
+    select:focus{
+       border:1px solid #006DBC;
+        outline: none;
+    }
+    .del-icon:hover{
+      color:red;
+    }
+    .edite-icon:hover{
+      color:gray;
     }
 </style>
 <div class="container-fluid">
@@ -152,7 +205,7 @@
                             <td class="text-center"></td>
                             <td class="text-center"></td>
                             <td><?= date('d.m.Y H:i:s', strtotime($company['create_time'])) ?></td>
-                            <td><div class="d-flex"><a class="icon-edit" href="#modalEditCompany" data-bs-toggle="modal" data-bs-target="#modalEditCompany"><i class="fa-solid fa-pencil"></i></a><a class="icon-edit" href="#"><i class="fa-solid fa-eye"></i></a><a class="icon-edit" href="#"><i class="fa-solid fa-trash"></i></a></div></td>
+                            <td><div class="d-flex"><a class="icon-edit" href="#modalEditCompany" data-bs-toggle="modal" data-bs-target="#modalEditCompany" data-id-company="<?= $company['id'] ?>" data-name-company="<?= $company['name'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit" href="#"><i class="fa-solid fa-eye edite-icon"></i></a><a class="icon-edit" href="<?= base_url('/delete-company/'.$company['id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
                         </tr>
                         <?php foreach($company['representative'] as $representativeCompany){?>
                             <!-- Zde je potřeba přidat barvu, pro každé zastápce firmy, bude jiná barva řádku, firma = bíla, všechny zástupci firmy budou pod ní a budou mít světle šedou -->
@@ -164,7 +217,7 @@
                                 <td class="users"><?= $representativeCompany['phone']?></td>
                                 <td class="users"><?= $representativeCompany['function']?></td>
                                 <td class="users"><?= date('d.m.Y H:i:s', strtotime($representativeCompany['create_time'])) ?></td>
-                                <td class="users"><div class="d-flex"><a class="icon-edit text-white" href="#modalEditRepresentativeCompany" data-bs-toggle="modal" data-bs-target="#modalEditRepresentativeCompany"><i class="fa-solid fa-pencil"></i></a><a class="icon-edit text-white" href="#"><i class="fa-solid fa-key"></i></a><a class="icon-edit text-white" href="#"><i class="fa-solid fa-trash"></i></a></div></td>
+                                <td class="users"><div class="d-flex"><a class="icon-edit text-white" href="#modalEditRepresentativeCompany" data-bs-toggle="modal" data-bs-target="#modalEditRepresentativeCompany" data-id-representativeCompany="<?= $representativeCompany['id'] ?>" data-degreeBefore-representativeCompany="<?= $representativeCompany['degree_before'] ?>" data-name-representativeCompany="<?= $representativeCompany['name'] ?>" data-surname-representativeCompany="<?= $representativeCompany['surname'] ?>" data-degreeAfter-representativeCompany="<?= $representativeCompany['degree_after'] ?>" data-mail-representativeCompany="<?= $representativeCompany['mail'] ?>" data-phone-representativeCompany="<?= $representativeCompany['phone'] ?>"data-positionWorks-representativeCompany="<?= $representativeCompany['function'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit text-white" href="#" data-bs-toggle="modal" data-bs-target="#modalEditPasswordUser" data-id-passwordUser="<?= $representativeCompany['id'] ?>"><i class="fa-solid fa-key edite-icon"></i></a><a class="icon-edit text-white" href="<?= base_url('/delete-representativeCompany/'.$representativeCompany['id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
                             </tr>
                         <?php }?>
                         <?php if(empty($company['practiseManager'])){?>
@@ -179,32 +232,47 @@
                                 <td class="practise-manager"><?= $practiseManager['phone'] ?></td>
                                 <td class="practise-manager"><?= $practiseManager['position_works'] ?></td>
                                 <td class="practise-manager"><?= date('d.m.Y H:i:s', strtotime($practiseManager['create_time'])) ?></td>
-                                <td class="practise-manager"><div class="d-flex"><a class="icon-edit text-white" href="#modalEditPractiseManager" data-bs-toggle="modal" data-bs-target="#modalEditPractiseManager" data-id-practiseManager="<?= $practiseManager['id'] ?>" data-degreeBefore-practiseManager="<?= $practiseManager['degree_before'] ?>" data-name-practiseManager="<?= $practiseManager['name'] ?>" data-surname-practiseManager="<?= $practiseManager['surname'] ?>" data-degreeAfter-practiseManager="<?= $practiseManager['degree_after'] ?>" data-phone-practiseManager="<?= $practiseManager['phone'] ?>" data-mail-practiseManager="<?= $practiseManager['mail'] ?>" data-positionWorks-practiseManager="<?= $practiseManager['position_works'] ?>" data-companyId-practiseManager="<?= $practiseManager['Company_id'] ?>"><i class="fa-solid fa-pencil"></i></a><a class="icon-edit text-white" href="#"><i class="fa-solid fa-trash"></i></a></div></td>
+                                <td class="practise-manager"><div class="d-flex"><a class="icon-edit text-white" href="#modalEditPractiseManager" data-bs-toggle="modal" data-bs-target="#modalEditPractiseManager" data-id-practiseManager="<?= $practiseManager['id'] ?>" data-degreeBefore-practiseManager="<?= $practiseManager['degree_before'] ?>" data-name-practiseManager="<?= $practiseManager['name'] ?>" data-surname-practiseManager="<?= $practiseManager['surname'] ?>" data-degreeAfter-practiseManager="<?= $practiseManager['degree_after'] ?>" data-phone-practiseManager="<?= $practiseManager['phone'] ?>" data-mail-practiseManager="<?= $practiseManager['mail'] ?>" data-positionWorks-practiseManager="<?= $practiseManager['position_works'] ?>" data-companyId-practiseManager="<?= $practiseManager['Company_id'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit text-white" href="<?= base_url('/delete-practiseManager/'.$practiseManager['id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
                             </tr>
                         <?php } ?>
                             <tr id="company-<?= $company['id'] ?>" class="collapse">
-                                <td colspan="8" class="add-user"><div class="d-flex justify-content-center flex-row flex-wrap"><a href="#modalAddPractiseManager" class="btn-add-user" data-bs-toggle="modal" data-bs-target="#modalAddPractiseManager" data-companyId-practiseManager="<?= $company['id'] ?>"><i class="fa-solid fa-user-plus"></i> Přidat vedoucího</a><a href="#modalAddRepresentativeCompany" class="btn-add-user" data-bs-toggle="modal" data-bs-target="#modalAddRepresentativeCompany"><i class="fa-solid fa-user-plus"></i> Přidat zástupce</a></div></td>
+                                <td colspan="8" class="add-user"><div class="d-flex justify-content-center flex-row flex-wrap"><a href="#modalAddPractiseManager" class="btn-add-user" data-bs-toggle="modal" data-bs-target="#modalAddPractiseManager" data-companyId-practiseManager="<?= $company['id'] ?>"><i class="fa-solid fa-user-plus"></i> Přidat vedoucího</a><a href="#modalAddRepresentativeCompany" class="btn-add-user" data-bs-toggle="modal" data-bs-target="#modalAddRepresentativeCompany" data-companyId-representativeCompany="<?= $company['id'] ?>"><i class="fa-solid fa-user-plus"></i> Přidat zástupce</a></div></td>
                             </tr>
                     <?php }?>
                 </tbody>
             </table>
         </div>
+        <div class="d-flex justify-content-center"><?= $pager->links() ?></div>
     </div>
 </div>
 <!-- Modaly pro editaci a přidávání -->
 <div>
     <!-- přidání firmy -->
 <div class="modal" id="modalAddCompany">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header d-flex justify-content-between">
         <h4 class="modal-title">Přidat novou firmu</h4>
         <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('')?>" method="POST">
+        <form action="<?= base_url('add-new-company')?>" method="POST">
             <div class="container d-flex flex-column">
-                
+              <textarea name="nameCompany" class="m-1" placeholder="Název firmy (není povinné)"></textarea>
+              <input class="m-1" placeholder="IČO" name="ico" type="number">
+              <select class=" m-1" id="edit-skill-categoryId" name="category_id" placeholder="Vyberte možnost" value="Vyberte možnost">
+                <option>Vyberte možnost</option>
+                <option value="1">Fyzická osoba</option>
+                <option value="2">Pravnická osoba</option>
+              </select>
+              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno zást."></div>
+              <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení zást."><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
+              <input type="mail" class="m-1" name="mail" placeholder="E-mail zást.">
+              <input class="m-1" placeholder="Tel. č. zást." name="phone" type="tel">
+              <input class="m-1" placeholder="Pracovní pozice zást." name="position_work" type="text">
+              <input class="m-1" placeholder="Heslo" name="passwd1" type="password" id="passwd1">
+              <input class="m-1" placeholder="Potvrzení hesla" name="passwd2" type="password" id="passwd2">
+              <div class="d-flex aling-items-center"><input class="checkbox" type="checkbox" value="1" name="checkbox" id="checkbox-passwd-hidden"><p class="m-0 text-checkbox">Heslo si vytvoří uživatel</p></div>
             </div>
       </div>
       <div class="modal-footer">
@@ -216,16 +284,17 @@
 </div>
     <!-- editace firmy -->
 <div class="modal" id="modalEditCompany">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header d-flex justify-content-between">
         <h4 class="modal-title">Upravit firmu</h4>
         <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('')?>" method="POST">
+        <form action="<?= base_url('/edit-company')?>" method="POST">
             <div class="container d-flex flex-column">
-                
+              <textarea name="name" class="m-1" placeholder="Název firmy" id="edit-company-name"></textarea>
+              <input class="m-1" placeholder="id - firma" name="id" type="hidden" id="edit-company-id">
             </div>
       </div>
       <div class="modal-footer">
@@ -290,16 +359,24 @@
 </div>
     <!-- přidání zást. pro firmu -->
 <div class="modal" id="modalAddRepresentativeCompany">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header d-flex justify-content-between">
         <h4 class="modal-title">Vytvořit zástupce pro firmu</h4>
         <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('')?>" method="POST">
+        <form action="<?= base_url('/add-representativeCompany')?>" method="POST">
             <div class="container d-flex flex-column">
-                
+              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
+              <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
+              <input type="mail" class="m-1" name="mail" placeholder="E-mail">
+              <input class="m-1" placeholder="Tel. č" name="phone" type="tel">
+              <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text">
+              <input class="m-1" placeholder="Heslo" name="passwd1" type="password" id="passwd1AddPass">
+              <input class="m-1" placeholder="Potvrzení hesla" name="passwd2" type="password" id="passwd2AddPass">
+              <div class="d-flex aling-items-center"><input class="checkbox" type="checkbox" value="1" name="checkbox" id="checkboxAddPass"><p class="m-0 text-checkbox">Heslo si vytvoří uživatel</p></div>
+              <input class="m-1" id="add-representativeCompany-companyId" name="companyId" type="hidden">
             </div>
       </div>
       <div class="modal-footer">
@@ -309,18 +386,47 @@
     </div>
   </div>
 </div>
+<!-- editace hesla pro uživatele -->
+<div class="modal" id="modalEditPasswordUser">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">Změna hesla uživatele</h4>
+        <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
+      </div>
+      <div class="modal-body">
+        <form action="<?= base_url('/edit-user-password')?>" method="POST">
+            <div class="container d-flex flex-column">
+              <input class="m-1" placeholder="Nové heslo" name="passwd1" type="password" id="passwd1EditPass">
+              <input class="m-1" placeholder="Potvrzení hesla" name="passwd2" type="password" id="passwd2EditPass">
+              <div class="d-flex aling-items-center"><input class="checkbox" type="checkbox" value="1" name="checkbox" id="checkboxEditPass"><p class="m-0 text-checkbox">Heslo si vytvoří uživatel</p></div>
+              <input class="m-1" name="id" id="edit-passwordUser-id" type="hidden">
+            </div>
+      </div>
+      <div class="modal-footer">
+        <input class="btn-create" type="submit" placeholder="Obnovit" value="Obnovit">
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
     <!-- editace zást. pro firmu -->
 <div class="modal" id="modalEditRepresentativeCompany">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header d-flex justify-content-between">
         <h4 class="modal-title">Upravit zástupce firmy</h4>
         <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('')?>" method="POST">
+        <form action="<?= base_url('/edit-representativeCompany')?>" method="POST">
             <div class="container d-flex flex-column">
-                
+                <div class="d-flex"><input id="edit-representativeCompany-degreeBefore" class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="edit-representativeCompany-name" placeholder="Jméno"></div>
+                <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení" id="edit-representativeCompany-surname"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za" id="edit-representativeCompany-degreeAfter"></div>
+                <input type="mail" class="m-1" name="mail" placeholder="E-mail" id="edit-representativeCompany-mail">
+                <input class="m-1" placeholder="Tel. č" name="phone" type="tel" id="edit-representativeCompany-phone">
+                <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text" id="edit-representativeCompany-positionWorks">
+                <input class="m-1" id="edit-representativeCompany-id" name="id" type="hidden">
             </div>
       </div>
       <div class="modal-footer">
@@ -332,6 +438,68 @@
 </div>
 </div>
 <script>
+const checkboxPasswdHidden = document.getElementById('checkbox-passwd-hidden');
+const passwd1 = document.getElementById('passwd1');
+const passwd2 = document.getElementById('passwd2');
+checkboxPasswdHidden.addEventListener('change', function(){
+  if(this.checked){
+    passwd1.setAttribute('disabled', 'true');
+    passwd2.setAttribute('disabled', 'true');
+    passwd1.value = 'Heslo nezadáváte!'
+    passwd2.value = 'Heslo nezadáváte!'
+    passwd1.type = 'text';
+    passwd2.type = 'text';
+  }else{
+    passwd1.removeAttribute('disabled');
+    passwd2.removeAttribute('disabled');
+    passwd1.value = ''
+    passwd2.value = ''
+    passwd1.type = 'password';
+    passwd2.type = 'password';
+  }
+});
+//editPassword
+const checkboxEditPass = document.getElementById('checkboxEditPass');
+const passwd1EditPass = document.getElementById('passwd1EditPass');
+const passwd2EditPass = document.getElementById('passwd2EditPass');
+checkboxEditPass.addEventListener('change', function(){
+  if(this.checked){
+    passwd1EditPass.setAttribute('disabled', 'true');
+    passwd2EditPass.setAttribute('disabled', 'true');
+    passwd1EditPass.value = 'Heslo nezadáváte!'
+    passwd2EditPass.value = 'Heslo nezadáváte!'
+    passwd1EditPass.type = 'text';
+    passwd2EditPass.type = 'text';
+  }else{
+    passwd1EditPass.removeAttribute('disabled');
+    passwd2EditPass.removeAttribute('disabled');
+    passwd1EditPass.value = ''
+    passwd2EditPass.value = ''
+    passwd1EditPass.type = 'password';
+    passwd2EditPass.type = 'password';
+  }
+});
+//addRepresentativeCompany
+const checkboxAddPass = document.getElementById('checkboxAddPass');
+const passwd1AddPass = document.getElementById('passwd1AddPass');
+const passwd2AddPass = document.getElementById('passwd2AddPass');
+checkboxAddPass.addEventListener('change', function(){
+  if(this.checked){
+    passwd1AddPass.setAttribute('disabled', 'true');
+    passwd2AddPass.setAttribute('disabled', 'true');
+    passwd1AddPass.value = 'Heslo nezadáváte!'
+    passwd2AddPass.value = 'Heslo nezadáváte!'
+    passwd1AddPass.type = 'text';
+    passwd2AddPass.type = 'text';
+  }else{
+    passwd1AddPass.removeAttribute('disabled');
+    passwd2AddPass.removeAttribute('disabled');
+    passwd1AddPass.value = ''
+    passwd2AddPass.value = ''
+    passwd1AddPass.type = 'password';
+    passwd2AddPass.type = 'password';
+  }
+});
 document.addEventListener('DOMContentLoaded', function () {
   const modalEditCategory = document.getElementById('modalAddPractiseManager');
   if (modalEditCategory) {
@@ -340,6 +508,30 @@ document.addEventListener('DOMContentLoaded', function () {
       if (button) {
         const companyId = button.getAttribute('data-companyId-practiseManager') || '';
         document.getElementById('add-practiseManager-companyId').value = companyId;
+      }
+    });
+  }
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const modalEditCategory = document.getElementById('modalEditPasswordUser');
+  if (modalEditCategory) {
+    modalEditCategory.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      if (button) {
+        const id = button.getAttribute('data-id-passwordUser') || '';
+        document.getElementById('edit-passwordUser-id').value = id;
+      }
+    });
+  }
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const modalEditCategory = document.getElementById('modalAddRepresentativeCompany');
+  if (modalEditCategory) {
+    modalEditCategory.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      if (button) {
+        const companyId = button.getAttribute('data-companyId-representativeCompany') || '';
+        document.getElementById('add-representativeCompany-companyId').value = companyId;
       }
     });
   }
@@ -368,6 +560,46 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('edit-practiseManager-phone').value = phone;
         document.getElementById('edit-practiseManager-positionWorks').value = positionWorks;
         document.getElementById('edit-practiseManager-companyId').value = companyId;
+      }
+    });
+  }
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const modalEditCategory = document.getElementById('modalEditRepresentativeCompany');
+  if (modalEditCategory) {
+    modalEditCategory.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      if (button) {
+        const id = button.getAttribute('data-id-representativeCompany') || '';
+        const degreeBefore = button.getAttribute('data-degreeBefore-representativeCompany') || '';
+        const name = button.getAttribute('data-name-representativeCompany') || '';
+        const surname = button.getAttribute('data-surname-representativeCompany') || '';
+        const degreeAfter = button.getAttribute('data-degreeAfter-representativeCompany') || '';
+        const mail = button.getAttribute('data-mail-representativeCompany') || '';
+        const phone = button.getAttribute('data-phone-representativeCompany') || '';
+        const positionWorks = button.getAttribute('data-positionWorks-representativeCompany') || '';
+        document.getElementById('edit-representativeCompany-id').value = id;
+        document.getElementById('edit-representativeCompany-degreeBefore').value = degreeBefore;
+        document.getElementById('edit-representativeCompany-name').value = name;
+        document.getElementById('edit-representativeCompany-surname').value = surname;
+        document.getElementById('edit-representativeCompany-degreeAfter').value = degreeAfter;
+        document.getElementById('edit-representativeCompany-mail').value = mail;
+        document.getElementById('edit-representativeCompany-phone').value = phone;
+        document.getElementById('edit-representativeCompany-positionWorks').value = positionWorks;
+      }
+    });
+  }
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const modalEditCategory = document.getElementById('modalEditCompany');
+  if (modalEditCategory) {
+    modalEditCategory.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      if (button) {
+        const id = button.getAttribute('data-id-company') || '';
+        const name = button.getAttribute('data-name-company') || '';
+        document.getElementById('edit-company-id').value = id;
+        document.getElementById('edit-company-name').value = name;
       }
     });
   }
