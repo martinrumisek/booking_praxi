@@ -27,6 +27,18 @@
         background-color: #006DBC;
         color: white;
     }
+    .all-user{
+        margin-left: 5px;
+        margin-right: 5px;
+        padding: 10px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+        border-radius: 30px;
+    }
+    .all-user:hover{
+        color:white;
+        background-color: #006DBC;
+    }
 </style>
 <div class="container-fluid">
     <h2>Přehled termínů pro praxe</h2>
@@ -36,7 +48,7 @@
                 <input class="search-input p-2 mt-2" id="search-input" type="text" placeholder="Vyhledat uživatele">
                 <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-            <div>
+            <div class="flex">
                 <select class="search-input mt-2" id="">
                     <option selected disabled>Seřadit podle</option>
                     <option value="1">Od přihlášení po odhlášení</option>
@@ -44,9 +56,10 @@
                     <option value="3">Datum sestupně</option>
                     <option value="4">Datum vzestupně</option>
                 </select>
+                </form>
+                <a class="all-user" href="<?= base_url('/azure-users') ?>">Načíst uživatele</a>
             </div>
     </div>
-    </form>
     <div class="container-fluid">
         <div class="table-responsive">
             <table class="table table-striped table-sm">
