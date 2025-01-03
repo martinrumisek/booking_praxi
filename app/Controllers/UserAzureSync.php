@@ -16,6 +16,7 @@ class UserAzureSync extends Controller
         $usersData = $this->getUsers($accessToken);
         $this->saveUsers($usersData);
         $this->userToCLass();
+        return redirect()->to(base_url('/dashboard-people'));
     }
 
     // Získní přístupové tokenu, tak abych mohl pracovat s daty uživatelů
@@ -117,7 +118,6 @@ class UserAzureSync extends Controller
                 'job_title' => $jobTitle,
                 'department' => $department,
                 'role' => $role,
-                'phone' => '',
             ];
             $userExist = $userModel->where('mail', $mail)->first();
             if ($userExist) {
