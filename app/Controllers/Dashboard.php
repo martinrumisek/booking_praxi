@@ -259,6 +259,7 @@ class Dashboard extends Controller
         $pager = $this->logCompany->pager;
         foreach($companyLogs as &$companyLog){
             $companyLog['user'] = $this->representativeCompanyModel->where('id', $companyLog['Representative_company_id'])->first();
+            $companyLog['company'] = $this->companyModel->where('id', $companyLog['user']['Company_id'])->first();
         }
         $data = [
             'title' => 'Administrace',

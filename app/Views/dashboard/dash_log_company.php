@@ -30,6 +30,13 @@
         background-color: #006DBC;
         color: white;
     }
+    td.name{
+        min-width: 80px;
+        max-width: 150px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 </style>
 <div class="container-fluid">
     <h2>Historie aktivity uživatelů</h2>
@@ -59,13 +66,14 @@
                         <th scope="col">IP</th>
                         <th scope="col">Provedeno</th>
                         <th scope="col">Uživatel</th>
+                        <th scope="col">Firma</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider" id="log-table">
                     <?php 
                     if(empty($logs)){?>
                         <tr>
-                            <td colspan="7" class="text-center">Nikdo nebyl v aplikaci ještě přihlášen</td>
+                            <td colspan="5" class="text-center">Nikdo nebyl v aplikaci ještě přihlášen</td>
                         </tr>
                     <?php
                     }
@@ -80,6 +88,7 @@
                             <?= date('d.m.Y H:i:s', strtotime($log['create_time'])) ?>
                         </td>
                         <td><?= $log['user']['name'] . ' ' . $log['user']['surname']?></td>
+                        <td class="name"><?= $log['company']['name']?></td>
                     </tr>  
                     <?php }?>
                 </tbody>
