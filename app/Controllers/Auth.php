@@ -3,12 +3,14 @@
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
+use CodeIgniter\I18n\Time;
 use League\OAuth2\Client\Provider\GenericProvider;
 use App\Models\UserModel;
 use App\Models\CompanyModel;
 use App\Models\RepresentativeCompanyModel;
 use App\Models\LogCompany;
 use App\Models\LogUser;
+use App\Models\ResetPassword;
 
 class Auth extends Controller
 {
@@ -19,7 +21,7 @@ class Auth extends Controller
     var $representativeCompanyModel;
     var $logCompany;
     var $logUser;
-
+    var $resetPassword;
     public function __construct()
     {
         $this->companyModel = new CompanyModel();
@@ -27,6 +29,7 @@ class Auth extends Controller
         $this->representativeCompanyModel = new RepresentativeCompanyModel();
         $this->logCompany = new LogCompany();
         $this->logUser = new LogUser();
+        $this->resetPassword = new ResetPassword();
         $this->session = session();
         $this->session->keepFlashdata('err');
         // Načítání hodnot z .env souboru přímo v kontroleru
@@ -323,5 +326,139 @@ class Auth extends Controller
         $this->session->destroy();
         $logoutUrl = 'https://login.microsoftonline.com/common/oauth2/v2.0/logout';
         return redirect()->to($logoutUrl . '?post_logout_redirect_uri=' . urlencode(base_url('/login')));
+    }
+    public function resetPassword(){
+        $secretCode = $this->request->getGet('code');
+        $idCode = $this->request->getGet('idcode');
+        $id = $this->request->getGet('id');
+        if(empty($secretCode && $idCode && $id)){
+            log_message('info', 'Chyba v získání údajů');
+            return redirect()->to(base_url('/login'));
+        }
+        $user = $this->representativeCompanyModel->find($id);
+        if(empty($user)){
+            return redirect()->to(base_url('/login'));
+        }
+        if(!password_verify($user['mail'], $idCode)){
+            log_message('info', 'Chyba mail');
+            return redirect()->to(base_url('/login'));
+        }
+        $resetPasswd = $this->resetPassword->where('Representative_company_id', $user['id'])->find();
+        if(empty($resetPasswd)){
+            return redirect()->to(base_url('/login'));
+        }
+        foreach($resetPasswd as $resetPassword){
+            if(!password_verify($secretCode, $resetPassword['token'])){
+                log_message('info', 'Chyba TOKEN');
+                return redirect()->to(base_url('/login'));
+            }
+            $experied = $resetPassword['expires_at'];
+            $nowTime = Time::now();
+            if($experied < $nowTime){
+                log_message('info', 'Chyba čas'. $experied . '    '. $nowTime);
+                return redirect()->to(base_url('/login'));
+            }
+        }
+        $data = [
+            'title' => 'Nové heslo',
+            'user' => $user,
+        ];
+
+        return view('reset_password', $data);
+    }
+    public function newPassword(){
+        $id = $this->request->getPost('id');
+        $passwd1 = $this->request->getPost('passwd1');
+        $passwd2 = $this->request->getPost('passwd2');
+        if(empty($id && $passwd1 && $passwd2)){
+            return redirect()->back();
+        }
+        if($passwd1 !== $passwd2){
+            return redirect()->back();
+        }
+        $passwordHash = password_hash($passwd1, PASSWORD_DEFAULT);
+        $data = [
+            'password' => $passwordHash,
+        ];
+        $this->representativeCompanyModel->update($id, $data);
+        $dataUse = [
+            'use' => 1,
+        ];
+        $resetPasswd = $this->resetPassword->where('Representative_company_id', $id)->first();
+        $this->resetPassword->update($resetPasswd['id'], $dataUse);
+        $this->resetPassword->delete($resetPasswd['id']);
+        return redirect()->to(base_url('/login'));
+    }
+    public function forgotPassword(){
+        $mail = $this->request->getPost('mail');
+        $user = $this->representativeCompanyModel->where('mail', $mail)->first();
+        $resetPasswd = $this->resetPassword->where('Representative_company_id', $user['id'])->find();
+        $nowTime = Time::now();
+        $expire = $nowTime->addHours(1);
+        foreach($resetPasswd as $resetPassword){
+            if($resetPassword['expires_at'] > $nowTime){
+                return redirect()->to(base_url('/login'));
+            }
+        }
+        if(empty($user && $mail)){
+            return redirect()->to(base_url('/login'));
+        }
+        $secretCode = bin2hex(random_bytes(16));
+        $hashMail = password_hash($mail, PASSWORD_DEFAULT);
+        $linkReset = base_url('/reset-password?code='.urlencode($secretCode).'&idcode='.urlencode($hashMail).'&id='.$user['id']);
+        $messageHtml = '
+        <h1>Obnovení hesla k aplikaci Booking praxí</h1>
+        <p>Vážený uživateli,</p>
+        <p>obdrželi jsme žádost o obnovení hesla k Vašemu účtu v aplikaci Booking praxí. Pokud jste tuto žádost neodeslali, prosím ignorujte tento e-mail.</p>
+        <p>Pro obnovení hesla klikněte na následující odkaz. Odkaz je platný jednu hodinu od doručení tohoto e-mailu:</p>
+        <br>
+        <a href="' . $linkReset . '" style="background-color: #007BFF; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-family: Arial, sans-serif;">Obnovit heslo</a>
+        <br>
+        <br>
+        <p>Pokud odkaz nefunguje, zkopírujte následující URL do svého prohlížeče:</p>
+        <p>' . $linkReset . '</p>
+        <br>
+        <p>V případě, že se obnovení hesla nezdaří nebo máte jakékoliv dotazy, kontaktujte prosím správce aplikace Booking praxí.</p>
+        <br>
+        <p>Děkujeme za Vaši spolupráci.</p>
+        ';
+        $subjectEmail = 'Obnovení hesla - Booking praxí';
+        $this->sentEmail($mail, $messageHtml, $subjectEmail);
+        $hashSecretCode = password_hash($secretCode, PASSWORD_DEFAULT);
+        $dataResetPass = [
+                'token' => $hashSecretCode,
+                'expires_at' => $expire,
+                'use' => 0,
+                'Representative_company_id' => $user['id'],
+            ] ;
+        $this->resetPassword->insert($dataResetPass);
+        return redirect()->to(base_url('/login'));
+    }
+    private function sentEmail($mail, $messageHtml, $subjectEmail){
+        $email = service('email');
+        $email->setTo($mail);
+        $email->setSubject($subjectEmail);
+        $email->setMailType('html');
+        $logoUrl = 'https://www.oauh.cz/www/web/images/logo.png';
+        $htmlMessage = $messageHtml . '
+        <br>
+        <br>
+        <br>
+        <div style="text-align: center; font-family: Arial, sans-serif; color: #555; border-top: 1px solid #ddd; padding-top: 20px;">
+        <img src="'. $logoUrl .'" alt="Logo OAUH" style="max-width: 150px; margin-bottom: 10px;">
+        <h6 style="margin: 5px 0; font-size: 16px; color: #333;">OAUH - Booking praxí</h6>
+        <p style="margin: 5px 0; font-size: 14px; color: #666;">Web: <a href="https://www.oauh.cz" style="color: #007BFF; text-decoration: none;">www.oauh.cz</a></p>
+        <p style="margin: 5px 0; font-size: 14px; color: #666;">Tel.: +420 572 433 011</p>
+        <p style="margin: 5px 0; font-size: 14px; color: #666;">E-mail: <a href="mailto:info@oauh.cz" style="color: #007BFF; text-decoration: none;">info@oauh.cz</a></p>
+        <p style="margin: 5px 0; font-size: 14px; color: #666;">IČO: 60371731 | DIČ: CZ60371731</p>
+        <p style="margin: 15px 0 0; font-size: 12px; color: #999;">&copy; ' . date('Y') . ' OAUH. Všechna práva vyhrazena.</p>
+        </div>
+        ';
+        $email->setMessage($htmlMessage);
+        if ($email->send()) {
+
+        } else {
+
+        }
     }
 }

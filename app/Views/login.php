@@ -117,6 +117,42 @@
     input::placeholder{
         font-size: 20px;
     }
+    input{
+      border: none;
+      height: 40px;
+      padding: 8px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0px 3px 6px #00000029;
+    }
+    input:focus{
+        border:1px solid #006DBC;
+        outline: none;
+    }
+    .modal-header{
+      background-color: #006DBC;
+      color: white;
+      box-shadow: 0px 3px 6px #00000029;
+    }
+    .modal-footer{
+      background-color: white;
+      color: white;
+      box-shadow: 0px 3px 6px #00000029;
+      border-top: 1px solid #006DBC;
+    }
+    .btn-close-modal{
+      background-color: #006DBC;
+      color: white;
+      border: none;
+      border-radius: 100%;
+    }
+    .btn-close-modal:hover{
+      color: red;
+    }
+    .btn-create:hover{
+        background-color: #006DBC;
+        color: white;
+    }
     @media (max-width: 990px){
         .loginForSchool{
             display:none;
@@ -153,6 +189,7 @@
                     </form>
                 </div>
                 <div class="d-flex justify-content-center mt-5"><a class="registration-btn" href="<?=base_url('/registration')?>">Registrovat se</a></div>
+                <div class="d-flex justify-content-center mt-5"><a class="registration-btn" href="#modalForgotPassword" data-bs-toggle="modal" data-bs-target="#modalForgotPassword">Zapomenuté heslo</a></div>
                 <div class=" justify-content-center mt-3 login-oauh-block-company"><a class="login-oauh h5" href="<?=base_url('/logAD')?>" alt="Přihlášení pro OAUH"><i class="fa-brands fa-microsoft"></i> Přihlásit se jako OAUH</a></div>
             </div>
             <div class="loginForSchool">
@@ -167,6 +204,26 @@
             <div class=" d-flex align-items-center justify-content-center m-2 h2 bg-white shadow soc-icon"><a href="https://www.oauh.cz/" aria-label="Webová stránka - OAUH"><i class="fa-solid fa-globe"></i></a></div>
         </div>
     </div>
+</div>
+<div class="modal" id="modalForgotPassword">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">Zapomenuté heslo</h4>
+        <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
+      </div>
+      <div class="modal-body">
+        <form action="<?= base_url('/forgot-password')?>" method="POST">
+            <div class="container d-flex flex-column">
+              <input type="mail" class="m-1" name="mail" placeholder="E-mail">
+            </div>
+      </div>
+      <div class="modal-footer">
+        <input class="btn-create" type="submit" placeholder="Uložit" value="Odeslat">
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
 <script>
     const passwordInput = document.getElementById('password');
