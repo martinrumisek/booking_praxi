@@ -348,23 +348,20 @@ class Auth extends Controller
             return redirect()->to(base_url('/login'));
         }
         foreach($resetPasswd as $resetPassword){
-            if(!password_verify($secretCode, $resetPassword['token'])){
-                log_message('info', 'Chyba TOKEN');
-                return redirect()->to(base_url('/login'));
-            }
             $experied = $resetPassword['expires_at'];
             $nowTime = Time::now();
-            if($experied < $nowTime){
-                log_message('info', 'Chyba čas'. $experied . '    '. $nowTime);
-                return redirect()->to(base_url('/login'));
+            if($experied > $nowTime){
+                if(password_verify($secretCode, $resetPassword['token'])){
+                    $data = [
+                        'title' => 'Nové heslo',
+                        'user' => $user,
+                    ];
+            
+                    return view('reset_password', $data);
+                }
             }
         }
-        $data = [
-            'title' => 'Nové heslo',
-            'user' => $user,
-        ];
-
-        return view('reset_password', $data);
+        return redirect()->to(base_url('/login'));
     }
     public function newPassword(){
         $id = $this->request->getPost('id');
