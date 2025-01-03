@@ -127,6 +127,75 @@ class Dashboard extends Controller
         ];
         return view('dashboard/dash_people', $data);
     }
+    public function addCategorySkill(){
+        $name = $this->request->getPost('name');
+        $description = $this->request->getPost('description');
+        if(empty($name)){
+            //! Je potřeba přidat hlášku pro vrácení, že musí být pole povíné
+            return false;
+        }
+        $data = [
+            'name' => $name,
+            'description' => $description,
+        ];
+        $this->categorySkill->insert($data);
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
+    public function addSkill(){
+        $name = $this->request->getPost('name');
+        $description = $this->request->getPost('description');
+        $idCategory = $this->request->getPost('category_id');
+        if(empty($name && $idCategory)){
+            //! Je potřeba přidat hlášku, která se zobrazí uživateli při vrácení, že nebylo něco vyplněno.
+            return false;
+        }
+        $data = [
+            'name' => $name,
+            'description' => $description,
+            'Category_skill_id' => $idCategory,
+        ];
+        $this->skill->insert($data);
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
+    public function editCategorySkill(){
+        $id = $this->request->getPost('id');
+        $name = $this->request->getPost('name');
+        $description = $this->request->getPost('description');
+        if(empty($id && $name)){
+            return redirect()->to(base_url('/dashboard-skill'));
+        }
+        $data = [
+            'name' => $name,
+            'description' => $description,
+        ];
+        $this->categorySkill->update($id, $data);
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
+    public function editSkill(){
+        $id = $this->request->getPost('id');
+        $name = $this->request->getPost('name');
+        $description = $this->request->getPost('description');
+        $categoryId = $this->request->getPost('category_id');
+        if(empty($id && $name && $categoryId)){
+            return redirect()->to(base_url('/dashboard-skill'));
+        }
+        $data = [
+            'name' => $name,
+            'description' => $description,
+            'Category_skill_id' => $categoryId,
+        ];
+        $this->skill->update($id, $data);
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
+    public function deleteCategorySkill($id){
+        $this->categorySkill->delete($id);
+        $this->skill->where('Category_skill_id', $id)->delete();
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
+    public function deleteSkill($id){
+        $this->skill->delete($id);
+        return redirect()->to(base_url('/dashboard-skill'));
+    }
     public function editUserRole(){
         if (!$this->request->isAJAX()) {
             return $this->response->setJSON(['success' => false, 'error' => 'Neplatný požadavek'])->setStatusCode(400);
