@@ -172,37 +172,31 @@ class Dashboard extends Controller
     }
     
     public function logView(){
-        $perPage = 20;
-        $currentPage = $this->request->getVar('page') ?? 1;
-        $totalUserLog = $this->logUser->countAllResults();
-        $totalUserCompany = $this->logCompany->countAllResults();
-        $totalRecords = $totalUserLog + $totalUserCompany;
-        $offset = ($currentPage - 1) * $perPage;
-        $userLog = $this->logUser->orderBy('create_time', 'DESC')->findAll($perPage, $offset);
-        $userCompany = $this->logCompany->orderBy('create_time', 'DESC')->findAll($perPage, $offset);
-        foreach ($userLog as &$user) {
-            $user['user'] = $this->userModel->where('id', $user['User_id'])->first();
+        $userLogs = $this->logUser->orderBy('create_time', 'DESC')->paginate(20);
+        $pager = $this->logUser->pager;
+        foreach($userLogs as &$userLog){
+            $userLog['user'] = $this->userModel->where('id', $userLog['User_id'])->first();
         }
-        foreach ($userCompany as &$company) {
-            $company['user'] = $this->representativeCompanyModel->where('id', $company['Representative_company_id'])->first();
-        }
-        $useAllData = array_merge($userLog, $userCompany);
-
-        if (!empty($useAllData)) {
-            usort($useAllData, function ($a, $b) {
-                return strtotime($b['create_time']) - strtotime($a['create_time']);
-            });
-        }
-        $pager = service('pager');
-        $pager->makeLinks($currentPage, $perPage, $totalRecords);
-
         $data = [
             'title' => 'Administrace',
-            'logs' => array_slice($useAllData, 0, $perPage), // Data na aktuální stránku
+            'logs' => $userLogs,
             'pager' => $pager,
         ];
 
         return view('dashboard/dash_log', $data);
+    }
+    public function logViewCompany(){
+        $companyLogs = $this->logCompany->orderBy('create_time', 'DESC')->paginate(20);
+        $pager = $this->logCompany->pager;
+        foreach($companyLogs as &$companyLog){
+            $companyLog['user'] = $this->representativeCompanyModel->where('id', $companyLog['Representative_company_id'])->first();
+        }
+        $data = [
+            'title' => 'Administrace',
+            'logs' => $companyLogs,
+            'pager' => $pager,
+        ];
+        return view('dashboard/dash_log_company', $data);
     }
     //Zpracování (editace) v administraci
     public function addNewDate(){

@@ -245,6 +245,7 @@
    // $info = '#student'; //base_url('#'); //! Nevím, zda tahle stránka bude existovat
     $datePractise = base_url('/dashboard-calendar');
     $log = base_url('/dashboard-log');
+    $logCompany = base_url('/dashboard-log-company');
     $skill = base_url('/dashboard-skill');
     $logOut = base_url('/logout');
         
@@ -266,6 +267,7 @@
                     <a class="nav-icon" href="<?= $datePractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-regular fa-calendar nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Termíny praxí</p></div></div></a>
                     <a class="nav-icon" href="<?= $skill?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-head-side-virus nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Dovednosti</p></div></div></a>
                     <a class="nav-icon" href="<?= $log?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-chart-column nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Log uživatelů</p></div></div></a>
+                    <a class="nav-icon" href="<?= $logCompany?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-chart-column nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Log firem</p></div></div></a>
                     <!-- <a class="nav-icon" href="#"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-circle-info nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Informace</p></div></div></a>-->
                 </div>
                 <div class=" mt-auto">
@@ -304,7 +306,8 @@
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $company?>"><div class="flex-shrink-0"><i class="fa-solid fa-building nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Firmy</div></a>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $datePractise?>"><div class="flex-shrink-0"><i class="fa-regular fa-calendar nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Termíny praxí</div></a>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $skill?>"><div class="flex-shrink-0"><i class="fa-solid fa-head-side-virus nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Dovednosti</div></a>
-                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $log?>"><div class="flex-shrink-0"><i class="fa-solid fa-chart-column nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Log Uživatelů</div></a>
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $log?>"><div class="flex-shrink-0"><i class="fa-solid fa-chart-column nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Log uživatelů</div></a>
+                    <a class="nav-icon-canvas d-flex align-items-center" href="<?= $logCompany?>"><div class="flex-shrink-0"><i class="fa-solid fa-chart-column nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Log firem</div></a>
                     <?php if($isStudent){ ?><a class="nav-icon-canvas d-flex align-items-center" href="<?= $profile?>"><div class="flex-shrink-0"><i class="fa-solid fa-user nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Profil</div></a> <?php } ?>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $logOut?>"><div class="flex-shrink-0"><i class="fa-solid fa-right-from-bracket nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Odhlásit se</div></a>
                 </div>

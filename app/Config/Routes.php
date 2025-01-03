@@ -27,6 +27,7 @@ $routes->get('dashboard-people','Dashboard::peopleView', ['filter' => 'role:admi
 $routes->get('dashboard-skill','Dashboard::skillView', ['filter' => 'role:admin,spravce']);
 $routes->get('dashboard-company','Dashboard::companyView', ['filter' => 'role:admin,spravce']);
 $routes->get('dashboard-log','Dashboard::logView', ['filter' => 'role:admin,spravce']);
+$routes->get('dashboard-log-company','Dashboard::logViewCompany', ['filter' => 'role:admin,spravce']);
 //ZPRACOVÁNÍ (EDITACE) V DASHBOARDU
 $routes->post('/sent-date-practise','Dashboard::addNewDate', ['filter' => 'role:admin,spravce']);
 $routes->post('/sent-new-role-user','Dashboard::editUserRole', ['filter' => 'role:admin,spravce']);
