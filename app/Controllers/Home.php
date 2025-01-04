@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use CodeIgniter\I18n\Time;
 use App\Models\OfferPractise;
 use App\Models\PractiseManager;
 use App\Models\TypeSchool;
@@ -19,6 +20,7 @@ use App\Models\Skill;
 use App\Models\User_OfferPractise;
 class Home extends BaseController
 {
+    var $session;
     var $userModel;
     var $practiseModel;
     var $datePractiseModel;
@@ -36,6 +38,7 @@ class Home extends BaseController
     var $practiseManagerModel;
     var $offerPractise;
     public function __construct(){
+        $this->session = session();
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
         $this->class_practiseModel = new Class_Practise();
@@ -53,9 +56,8 @@ class Home extends BaseController
         $this->practiseManagerModel = new PractiseManager();
         $this->offerPractise = new OfferPractise();
     }
-    public function index(): string
-    {
-        $userSession = session()->get('user');
+    public function homeStudent(){
+        $userSession = $this->session->get('user');
         $user = $this->userModel->find($userSession['id']);
         $userClass = $this->classModel->find($user['Class_id']);
         $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_id']);
@@ -70,6 +72,40 @@ class Home extends BaseController
         }
         $data = ['title' => 'Hlavní stránka', 'user' => $user, 'class' => $userClass, 'fieldStudy' => $userFieldStudy, 'practise' => $userPractiseOffers,];
         return view('home_student', $data);
+    }
+    public function homeCompany(){
+        $nowDate = date('Y-m-d');
+        $userSession = $this->session->get('companyUser');
+        $representativeCompany = $this->representativeCompanyModel->find($userSession['idUser']);
+        $company = $this->companyModel->find($userSession['idCompany']);
+        $practises = $this->practiseModel->findAll();
+        $count['practise'] = 0;
+        foreach($practises as $practise){
+            if($nowDate <= $practise['end_new_offer']){
+                $count['practise'] = $count['practise'] + 1;
+            }
+        }
+        $users = $this->userModel->findAll();
+        $count['userStudent'] = 0;
+        foreach($users as $user){
+            if($user['Class_id'] !== null){
+                $count['userStudent'] = $count['userStudent'] + 1;
+            }
+        }
+        $count['companyCount'] = 0;
+        $allCompanyes = $this->companyModel->findAll();
+        foreach($allCompanyes as $allCompany){
+            if($allCompany['register_company'] == 1){
+                $count['companyCount'] = $count['companyCount'] + 1;
+            }
+        }
+        $data = [
+            'title' => 'Hlavní stránka',
+            'company' => $company,
+            'user' => $representativeCompany,
+            'count' => $count,
+        ];
+        return view('company/home_company', $data);
     }
     public function login(){
         $data = ['title' => 'Přihlášení'];

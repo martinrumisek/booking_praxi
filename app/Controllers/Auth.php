@@ -11,6 +11,7 @@ use App\Models\RepresentativeCompanyModel;
 use App\Models\LogCompany;
 use App\Models\LogUser;
 use App\Models\ResetPassword;
+use App\Controllers\Email;
 
 class Auth extends Controller
 {
@@ -22,6 +23,7 @@ class Auth extends Controller
     var $logCompany;
     var $logUser;
     var $resetPassword;
+    var $email;
     public function __construct()
     {
         $this->companyModel = new CompanyModel();
@@ -70,7 +72,7 @@ class Auth extends Controller
         ];
         $this->logCompany->insert($data);
         $this->session->set('role',['company']);
-        return redirect()->to(base_url('/home')); //!!Je potřeba dodat správnou url
+        return redirect()->to(base_url('/home-student')); //!!Je potřeba dodat správnou url
     }
     public function logOutCompany(){
         $ipAdrese = $this->request->getIPAddress();
@@ -424,7 +426,7 @@ class Auth extends Controller
         <p>Děkujeme za Vaši spolupráci.</p>
         ';
         $subjectEmail = 'Obnovení hesla - Booking praxí';
-        $this->sentEmail($mail, $messageHtml, $subjectEmail);
+        $this->email->sentEmail($mail, $messageHtml, $subjectEmail);
         $hashSecretCode = password_hash($secretCode, PASSWORD_DEFAULT);
         $dataResetPass = [
                 'token' => $hashSecretCode,
@@ -434,32 +436,5 @@ class Auth extends Controller
             ] ;
         $this->resetPassword->insert($dataResetPass);
         return redirect()->to(base_url('/login'));
-    }
-    private function sentEmail($mail, $messageHtml, $subjectEmail){
-        $email = service('email');
-        $email->setTo($mail);
-        $email->setSubject($subjectEmail);
-        $email->setMailType('html');
-        $logoUrl = 'https://www.oauh.cz/www/web/images/logo.png';
-        $htmlMessage = $messageHtml . '
-        <br>
-        <br>
-        <br>
-        <div style="text-align: center; font-family: Arial, sans-serif; color: #555; border-top: 1px solid #ddd; padding-top: 20px;">
-        <img src="'. $logoUrl .'" alt="Logo OAUH" style="max-width: 150px; margin-bottom: 10px;">
-        <h6 style="margin: 5px 0; font-size: 16px; color: #333;">OAUH - Booking praxí</h6>
-        <p style="margin: 5px 0; font-size: 14px; color: #666;">Web: <a href="https://www.oauh.cz" style="color: #007BFF; text-decoration: none;">www.oauh.cz</a></p>
-        <p style="margin: 5px 0; font-size: 14px; color: #666;">Tel.: +420 572 433 011</p>
-        <p style="margin: 5px 0; font-size: 14px; color: #666;">E-mail: <a href="mailto:info@oauh.cz" style="color: #007BFF; text-decoration: none;">info@oauh.cz</a></p>
-        <p style="margin: 5px 0; font-size: 14px; color: #666;">IČO: 60371731 | DIČ: CZ60371731</p>
-        <p style="margin: 15px 0 0; font-size: 12px; color: #999;">&copy; ' . date('Y') . ' OAUH. Všechna práva vyhrazena.</p>
-        </div>
-        ';
-        $email->setMessage($htmlMessage);
-        if ($email->send()) {
-
-        } else {
-
-        }
     }
 }
