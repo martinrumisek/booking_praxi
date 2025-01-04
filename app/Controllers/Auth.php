@@ -179,8 +179,10 @@ class Auth extends Controller
         $postCode = $companySession['postCode'];
         $legalForm = $this->request->getPost('select_subject');
         $agreeDocument = $this->request->getPost('agree_person');
+        $degreeBefore = $this->request->getPost('degree_before');
         $namePerson = $this->request->getPost('name');
         $surnamePerson = $this->request->getPost('surname');
+        $degreeAfter = $this->request->getPost('degree_after');
         $phonePerson = $this->request->getPost('phone');
         $functionPerson = $this->request->getPost('function');
         $mail = $this->request->getPost('mail');
@@ -218,8 +220,10 @@ class Auth extends Controller
         $this->companyModel->insert($dataCompany);
         $lastIdInsert = $this->companyModel->getInsertID();
         $dataPerson = [
+            'degree_before' => $degreeBefore,
             'name' => $namePerson,
             'surname' => $surnamePerson,
+            'degree_after' => $degreeAfter,
             'mail' => $mail,
             'password' => $password,
             'phone' => $phonePerson,
