@@ -19,6 +19,7 @@ use App\Models\LogUser;
 use App\Models\CategorySkill;
 use App\Models\Skill;
 use App\Models\ResetPassword;
+use App\Controllers\Email;
 
 class Dashboard extends Controller
 {
@@ -37,6 +38,7 @@ class Dashboard extends Controller
     var $categorySkill;
     var $practiseManager;
     var $resetPassword;
+    var $email;
     public function __construct(){
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
@@ -53,6 +55,7 @@ class Dashboard extends Controller
         $this->categorySkill = new CategorySkill();
         $this->practiseManager = new PractiseManager();
         $this->resetPassword = new ResetPassword();
+        $this->email = new Email();
     }
     //Metody pro zobrazení viewček
     public function homeView(){
@@ -78,6 +81,7 @@ class Dashboard extends Controller
     public function deadlinesView(){
         
         $practises = $this->practiseModel->findAll();
+        $schoolClass = $this->classModel->findAll();
         foreach($practises as &$practise){
             $practise['dates'] = $this->datePractiseModel->where('Practise_id', $practise['id'])->findAll();
             $practise['class'] = [];
@@ -90,6 +94,7 @@ class Dashboard extends Controller
         $data= [
             'title' => 'Administrace',
             'practises' => $practises,
+            'schoolClass' => $schoolClass,
         ];
         return view('dashboard/dash_calendar', $data);
     }
@@ -224,7 +229,7 @@ class Dashboard extends Controller
             'success' => true,
             'user' => $updateUser,
         ]);
-        
+
     }
     public function skillView(){
         $categoryes = $this->categorySkill->paginate(10);
@@ -273,23 +278,30 @@ class Dashboard extends Controller
         $name = $this->request->getPost('name');
         $description = $this->request->getPost('description');
         $dateEndNewOffer = $this->request->getPost('end-new-offer');
-        $file = $this->request->getPost('contract-file');
+        $file = $this->request->getFile('contract-file');
         $dates = $this->request->getPost('dates');
         $classes = $this->request->getPost('classes');
-
+        if(empty($file)){
+            log_message('info','chyba v souboru1');
+            return redirect()->to(base_url('dashboard-calendar'));
+        }
+        if($file->getClientMimeType() !== 'application/pdf'){
+            log_message('info','chyba v souboru2');
+            return redirect()->to(base_url('dashboard-calendar'));
+        }
+        $fileName = $file->getName();
         $dataPractise = [
             'name' => $name,
             'description'=> $description,
             'end_new_offer' => $dateEndNewOffer,
-            'contract_file' => $file,
+            'contract_file' => $fileName,
         ];
-        $this->practiseModel->insert($dataPractise);
-        $lastInsertId = $this->practiseModel->getInsertID();
+        $id = $this->practiseModel->insert($dataPractise);
         foreach($dates as $date){
             $dataDate = [
                 'date_from' => $date['date-from'],
                 'date_to' => $date['date-to'],
-                'Practise_id' => $lastInsertId,
+                'Practise_id' => $id,
             ];
             $this->datePractiseModel->insert($dataDate);
         }
@@ -297,11 +309,13 @@ class Dashboard extends Controller
             foreach ($classes as $class) {
                 $dataClass = [
                     'Class_id' => $class,
-                    'Practise_id' => $lastInsertId,
+                    'Practise_id' => $id,
                 ];
                 $this->class_practiseModel->insert($dataClass);
             }
         }
+        $path = FCPATH . 'assets/document';
+        $file->move($path, $fileName);
         return redirect()->to(base_url('dashboard-calendar'));
     }
     public function addPractiseManager(){
@@ -410,7 +424,7 @@ class Dashboard extends Controller
             <p>Děkujeme za spolupráci.</p>
             ';
             $subjectEmail = 'Informace o vytvoření účtu - Booking praxí';
-            $this->sentEmail($mail, $messageHtml, $subjectEmail);
+            $this->email->sentEmail($mail, $messageHtml, $subjectEmail);
         }
         if(!empty($checkbox)){
             $nowTime = Time::now();
@@ -570,7 +584,7 @@ class Dashboard extends Controller
             <p>Děkujeme za spolupráci.</p>
             ';
             $subjectEmail = 'Registrace firmy a vytvoření účtu - Booking praxí';
-            $this->sentEmail($mail, $messageHtml, $subjectEmail);
+            $this->email->sentEmail($mail, $messageHtml, $subjectEmail);
             $nowTime = Time::now();
             $expire = $nowTime->addHours(1);
             $hashSecretCode = password_hash($secretCode, PASSWORD_DEFAULT);
@@ -647,7 +661,7 @@ class Dashboard extends Controller
             <p>Děkujeme za Vaši spolupráci.</p>
             ';
             $subjectEmail = 'Obnovení hesla - Booking praxí';
-            $this->sentEmail($mail, $messageHtml, $subjectEmail);
+            $this->email->sentEmail($mail, $messageHtml, $subjectEmail);
             $hashSecretCode = password_hash($secretCode, PASSWORD_DEFAULT);
             $dataResetPass = [
                     'token' => $hashSecretCode,
@@ -702,32 +716,5 @@ class Dashboard extends Controller
         }
         $this->practiseManager->delete($id);
         return redirect()->to(base_url('dashboard-company'));
-    }
-    private function sentEmail($mail, $messageHtml, $subjectEmail){
-        $email = service('email');
-        $email->setTo($mail);
-        $email->setSubject($subjectEmail);
-        $email->setMailType('html');
-        $logoUrl = 'https://www.oauh.cz/www/web/images/logo.png';
-        $htmlMessage = $messageHtml . '
-        <br>
-        <br>
-        <br>
-        <div style="text-align: center; font-family: Arial, sans-serif; color: #555; border-top: 1px solid #ddd; padding-top: 20px;">
-        <img src="'. $logoUrl .'" alt="Logo OAUH" style="max-width: 150px; margin-bottom: 10px;">
-        <h6 style="margin: 5px 0; font-size: 16px; color: #333;">OAUH - Booking praxí</h6>
-        <p style="margin: 5px 0; font-size: 14px; color: #666;">Web: <a href="https://www.oauh.cz" style="color: #007BFF; text-decoration: none;">www.oauh.cz</a></p>
-        <p style="margin: 5px 0; font-size: 14px; color: #666;">Tel.: +420 572 433 011</p>
-        <p style="margin: 5px 0; font-size: 14px; color: #666;">E-mail: <a href="mailto:info@oauh.cz" style="color: #007BFF; text-decoration: none;">info@oauh.cz</a></p>
-        <p style="margin: 5px 0; font-size: 14px; color: #666;">IČO: 60371731 | DIČ: CZ60371731</p>
-        <p style="margin: 15px 0 0; font-size: 12px; color: #999;">&copy; ' . date('Y') . ' OAUH. Všechna práva vyhrazena.</p>
-        </div>
-        ';
-        $email->setMessage($htmlMessage);
-        if ($email->send()) {
-
-        } else {
-
-        }
     }
 }
