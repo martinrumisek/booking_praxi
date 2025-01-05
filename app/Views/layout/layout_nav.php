@@ -233,7 +233,7 @@
         $company = '#student'; //base_url('#');
         $info = '#student'; //base_url('#');
         $dashboard =  base_url('/dashboard-home');
-        $profile = '#student'; //base_url('#');
+        $profile = base_url('/profile');
 
         $logOut = base_url('/logout'); // #student
     }

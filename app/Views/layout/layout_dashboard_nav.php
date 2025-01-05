@@ -232,7 +232,7 @@
     $isSpravce = in_array('spravce', $role);
     if($isStudent){
         $backApp =  base_url('/home-student'); //? domovský stránka aplikace ,,, ne administrace
-        $profile = '#student'; //base_url('#');
+        $profile =  base_url('/profile');
 
     }
     if($isTeacher){

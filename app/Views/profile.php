@@ -64,8 +64,8 @@
             <div class="d-flex justify-content-center">
                 <div class="profile-icon d-flex justify-content-center align-items-center"><i class="fa-solid fa-user h1"></i></div>
             </div>
-            <div class="d-flex justify-content-center mt-3 profile-name"><h2 class="text-white">Martin Rumíšek</h2></div>
-            <div class="d-flex justify-content-center mt-3 profile-name"><h3 class="text-white">4.B</h3></div>
+            <div class="d-flex justify-content-center mt-3 profile-name"><h2 class="text-white"><?= $user['name'] . ' ' . $user['surname'] ?></h2></div>
+            <div class="d-flex justify-content-center mt-3 profile-name"><h3 class="text-white"><?= $class['class'] . '.' . $class['letter_class'] ?></h3></div>
             <div class="d-flex justify-content-center soc-icon align-items-end">
                 <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
                 <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
@@ -83,20 +83,20 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 col-lg-6 p-2">
-                    <h5>obor:</h5>
-                    <p>Informační technologie</p>
+                    <h5>Obor</h5>
+                    <p><?php if(empty($fieldStudy['name'])){echo 'Není uvedeno';}else{echo $fieldStudy['name'];} ?></p>
                 </div>
                 <div class="col-12 col-lg-6 p-2">
-                    <h5>obor:</h5>
-                    <p>Informační technologie</p>
+                    <h5>Telefonní číslo</h5>
+                    <p><?php if(empty($user['phone'])){echo 'Není uvedeno';}else{echo $user['phone'];} ?></p>
                 </div>
                 <div class="col-12 col-lg-6 p-2">
-                    <h5>obor:</h5>
-                    <p>Informační technologie</p>
+                    <h5>Datum narození</h5>
+                    <p><?php if(empty($user['date_birthday'])){echo 'Není uvedeno';}else{echo $user['date_birthday'];} ?></p>
                 </div>
                 <div class="col-12 col-lg-6 p-2">
-                    <h5>obor:</h5>
-                    <p>Informační technologie</p>
+                    <h5>E-mail</h5>
+                    <p> <?= $user['mail'] ?></p>
                 </div>
             </div>
         </div>

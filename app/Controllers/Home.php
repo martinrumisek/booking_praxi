@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\User_Skill;
 use CodeIgniter\I18n\Time;
 use App\Models\OfferPractise;
 use App\Models\PractiseManager;
@@ -18,6 +19,7 @@ use App\Models\LogUser;
 use App\Models\CategorySkill;
 use App\Models\Skill;
 use App\Models\User_OfferPractise;
+use App\Models\User_Skill;
 class Home extends BaseController
 {
     var $session;
@@ -37,8 +39,13 @@ class Home extends BaseController
     var $user_practiseModel;
     var $practiseManagerModel;
     var $offerPractise;
+    var $userSession;
+    var $companyUser;
+    var $user_skill;
     public function __construct(){
         $this->session = session();
+        $this->userSession = $this->session->get('user');
+        $this->companyUser = $this->session->get('companyUser');
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
         $this->class_practiseModel = new Class_Practise();
@@ -55,14 +62,14 @@ class Home extends BaseController
         $this->user_practiseModel = new User_OfferPractise();
         $this->practiseManagerModel = new PractiseManager();
         $this->offerPractise = new OfferPractise();
+        $this->user_skill = new User_Skill();
     }
     public function homeStudent(){
-        $userSession = $this->session->get('user');
-        $user = $this->userModel->find($userSession['id']);
+        $user = $this->userModel->find($this->userSession['id']);
         $userClass = $this->classModel->find($user['Class_id']);
         $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_id']);
         //$practise = $this->user_practiseModel->select('user_practise.*, practise_offer.*, practise_manager.*, company.*, practise.*, date_practise.*')->join('practise_offer', 'practise_offer.id = user_practise.Offer_practise_id')->join('practise_manager', 'practise_manager.id = practise_offer.Practise_manager_id')->join('company', 'company.id = practise_manager.Company_id')->join('practise', 'practise.id = practise_offer.Practise_id')->join('date_practise', 'date_practise.Practise_id = practise.id', 'left')->where('user_practise.User_id', $user['id'])->findAll();
-        $userPractiseOffers = $this->user_practiseModel->where('User_id', $user['id'])->findAll();
+        $userPractiseOffers = $this->user_practiseModel->where('User_id', value: $user['id'])->findAll();
         foreach($userPractiseOffers as &$userPractiseOffer){
             $userPractiseOffer['practiseOffer'] = $this->offerPractise->find($userPractiseOffer['Offer_practise_id']);
             $userPractiseOffer['practiseManager'] = $this->practiseManagerModel->find($userPractiseOffer['practiseOffer']['Practise_manager_id']);
@@ -75,9 +82,8 @@ class Home extends BaseController
     }
     public function homeCompany(){
         $nowDate = date('Y-m-d');
-        $userSession = $this->session->get('companyUser');
-        $representativeCompany = $this->representativeCompanyModel->find($userSession['idUser']);
-        $company = $this->companyModel->find($userSession['idCompany']);
+        $representativeCompany = $this->representativeCompanyModel->find($this->userSession['idUser']);
+        $company = $this->companyModel->find($this->userSession['idCompany']);
         $practises = $this->practiseModel->findAll();
         $count['practise'] = 0;
         foreach($practises as $practise){
@@ -128,7 +134,22 @@ class Home extends BaseController
         return view ('company', $data);
     }
     public function profileView(){
-        $data = ['title' => 'Profil'];
+        $id = $this->userSession['id'];
+        $user = $this->userModel->find($id);
+        $userClass = $this->classModel->find($user['Class_id']);
+        $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_id']);
+        $categoryes = $this->categorySkill->findAll();
+        $skillAndUser = $this->user_skill->where('User_id', $id);
+        foreach($categoryes as &$category){
+            
+        }
+        $data = [
+            'title' => 'Profil',
+            'user' => $user,
+            'class' => $userClass,
+            'fieldStudy' => $userFieldStudy,
+            'categoryes' => $categoryes,
+        ];
         return view ('profile', $data);
     }
 }
