@@ -236,7 +236,7 @@
         $home = base_url('/home-student');
         $listPractise = '#student'; //base_url('#');
         $people = base_url('/people');
-        $company = '#student'; //base_url('#');
+        $company = base_url('/company');
         $info = '#student'; //base_url('#');
         $dashboard =  base_url('/dashboard-home');
         $profile = base_url('/profile');

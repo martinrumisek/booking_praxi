@@ -144,7 +144,18 @@ class Home extends BaseController
         return view ('people', $data);
     }
     public function companyView(){
-        $data = ['title' => 'Firmy'];
+        $search = $this->request->getGet('search');
+        if(empty($search)){
+            $companyes = $this->companyModel->where('register_company', 1)->paginate(8);
+        }else{
+            $companyes = $this->companyModel->where('register_company', 1)->groupStart()->like('name', $search)->orLike('city', $search)->orLike('street', $search)->orLike('post_code', $search)->groupEnd()->paginate(8);
+        }
+        $pager = $this->companyModel->pager;
+        $data = [
+            'title' => 'Firmy',
+            'companyes' => $companyes,
+            'pager' => $pager,
+        ];
         return view ('company', $data);
     }
     public function profileView(){
