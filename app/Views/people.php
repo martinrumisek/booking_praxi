@@ -10,6 +10,20 @@
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
     }
+    .search-input:focus{
+        border:1px solid #006DBC;
+        outline: none;
+    }
+    .btn-search{
+        margin-left: 10px;
+        border-radius: 100%;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .btn-search:hover{
+        color:white;
+        background-color: #006DBC;
+    }
     .card-people{
         width: 280px;
         height: 280px;
@@ -38,8 +52,13 @@
     }
 </style>
 <div class="container-fluid">
-    <div class="d-flex m-3">
-        <input class="search-input p-2 form-control" type="text" placeholder="Vyhledat">
+<form action="" method="GET">
+    <div class="d-flex flex-wrap justify-content-between m-3">
+            <div class="d-flex">
+                <input class="search-input p-2 mt-2" name="search" id="search-input" type="text" placeholder="Vyhledat uživatele">
+                <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+        </form>
     </div>
     <div class="d-flex flex-wrap justify-content-center">
         <!-- Začátek karty -->

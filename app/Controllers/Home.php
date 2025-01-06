@@ -125,7 +125,12 @@ class Home extends BaseController
         return view ('practise_offer', $data);
     }
     public function people(){
-        $users = $this->userModel->where('role', 'student')->paginate(20);
+        $search = $this->request->getGet('search');
+        if(empty($search)){
+            $users = $this->userModel->where('role', 'student')->paginate(20);
+        }else{
+            $users = $this->userModel->where('role', 'student')->groupStart()->like('name', $search)->orLike('surname', $search)->groupEnd()->paginate(20);
+        }
         $pager = $this->userModel->pager;
         foreach($users as &$user){
             $user['class'] = $this->classModel->where('id', $user['Class_id'])->first();
