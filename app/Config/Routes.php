@@ -16,7 +16,8 @@ $routes->get('/home-company', 'Home::homeCompany', ['filter' => 'role:company'])
 $routes->get('practise_offer', 'Home::offerView'); //stránka pro nabídky praxe
 $routes->get('people','Home::people'); //stránka pro zobrazení lidí z oauh
 $routes->get('company','Home::companyView'); //stránka pro zobrazení firem
-$routes->get('profile','Home::profileView'); //stránka pro zobrazení profilu
+$routes->get('profile','Home::profileView', ['filter' => 'role:student']); //stránka pro zobrazení profilu
+$routes->get('profile/(:num)','Home::allProfileView/$1', ['filter' => 'role:student']);
 //ROUTY PRO BTN - SCRIPT
 $routes->get('azure-users', 'UserAzureSync::getAllUsers'); //routa pro btn - pro script (načtení všech uživatelů z db - azure)
 $routes->get('plus-graduationClass', 'UserAzureSync::updateClassYearGraduation'); //Routa pro přidání jednoho roku pro rok ukončení maturity "mělo by se to dělat jedenkrát za rok o prázninách, takže přes cron" !!! //!!Routa pro cron
