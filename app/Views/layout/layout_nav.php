@@ -235,7 +235,7 @@
     if($isStudent){
         $home = base_url('/home-student');
         $listPractise = '#student'; //base_url('#');
-        $people = '#student'; //base_url('#');
+        $people = base_url('/people');
         $company = '#student'; //base_url('#');
         $info = '#student'; //base_url('#');
         $dashboard =  base_url('/dashboard-home');
