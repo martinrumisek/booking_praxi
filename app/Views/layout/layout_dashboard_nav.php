@@ -20,11 +20,12 @@
     .main-content {
             padding-left: 60px; 
             width: 100%;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.5s ease;
         }
         .nav-text {
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
+            text-wrap: nowrap;
         }
         .nav-logo{
             margin-top: 16px;
@@ -42,7 +43,7 @@
             height: 100vh;
             z-index: 999;
             background-color: white;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
             background-color: #FFFFFF 0% 0% no-repeat padding-box;
             box-shadow: 0px 3px 6px #00000029;
             opacity: 1;
@@ -60,7 +61,7 @@
             text-decoration: none;
             position: relative;
             z-index: 999;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
         }
         .nav-item:hover{
             background-color: #006DBC;
@@ -88,12 +89,14 @@
         }
         .nav-item-icon{
             width: 100%;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
         }
         .nav-item-text{
             width: 0.1%;
             opacity: 0;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
+            overflow: hidden;
+            text-wrap: nowrap;
         }
         .nav-container:hover {
             width: 250px;
@@ -161,6 +164,10 @@
         .nav-logo-mobile{
             width: 50px;
             height: 50px;
+        }
+        a{
+        text-decoration: none;
+        color: black;
         }
         @media (min-height: 800px){
             .button-for-nav{

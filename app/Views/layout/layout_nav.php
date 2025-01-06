@@ -24,7 +24,9 @@
         }
         .nav-text {
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
+            text-wrap: nowrap;
+            overflow: hidden;
         }
         .nav-logo{
             margin-top: 16px;
@@ -42,13 +44,17 @@
             height: 100vh;
             z-index: 999;
             background-color: white;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
             background-color: #FFFFFF 0% 0% no-repeat padding-box;
             box-shadow: 0px 3px 6px #00000029;
             opacity: 1;
         }
         .nav-items{
             margin-top: 43px;
+        }
+        a{
+            text-decoration: none;
+            color: black;
         }
         .nav-item{
             width: 60px;
@@ -60,7 +66,7 @@
             text-decoration: none;
             position: relative;
             z-index: 999;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
         }
         .nav-item:hover{
             background-color: #006DBC;
@@ -83,12 +89,12 @@
         }
         .nav-item-icon{
             width: 100%;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
         }
         .nav-item-text{
             width: 0.1%;
             opacity: 0;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
         }
         .nav-container:hover {
             width: 250px;
@@ -227,7 +233,7 @@
     $isAdmin = in_array('admin', $role);
     $isSpravce = in_array('spravce', $role);
     if($isStudent){
-        $home = '#student'; //base_url('#');
+        $home = base_url('/home-student');
         $listPractise = '#student'; //base_url('#');
         $people = '#student'; //base_url('#');
         $company = '#student'; //base_url('#');
