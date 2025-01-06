@@ -19,7 +19,6 @@ use App\Models\LogUser;
 use App\Models\CategorySkill;
 use App\Models\Skill;
 use App\Models\User_OfferPractise;
-use App\Models\User_Skill;
 class Home extends BaseController
 {
     var $session;
@@ -126,7 +125,17 @@ class Home extends BaseController
         return view ('practise_offer', $data);
     }
     public function people(){
-        $data = ['title' => 'Žáci'];
+        $users = $this->userModel->where('role', 'student')->paginate(20);
+        $pager = $this->userModel->pager;
+        foreach($users as &$user){
+            $user['class'] = $this->classModel->where('id', $user['Class_id'])->first();
+            $user['fieldStudy'] = $this->fieldStudy->where('id', $user['class']['Field_study_id'])->first();
+        }   
+        $data = [
+            'title' => 'Žáci',
+            'users' => $users,
+            'pager' => $pager,
+        ];
         return view ('people', $data);
     }
     public function companyView(){
@@ -139,9 +148,26 @@ class Home extends BaseController
         $userClass = $this->classModel->find($user['Class_id']);
         $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_id']);
         $categoryes = $this->categorySkill->findAll();
-        $skillAndUser = $this->user_skill->where('User_id', $id);
         foreach($categoryes as &$category){
-            
+            $category['skill'] = $this->skill->join('User_has_Skill', 'Skill.id = User_has_Skill.Skill_id')->where('User_has_Skill.User_id', $id)->where('Skill.Category_skill_id', $category['id'])->find();
+        }
+        $data = [
+            'title' => 'Profil',
+            'user' => $user,
+            'class' => $userClass,
+            'fieldStudy' => $userFieldStudy,
+            'categoryes' => $categoryes,
+        ];
+        return view ('profile', $data);
+    }
+    public function allProfileView($idUser){
+        $id = $idUser;
+        $user = $this->userModel->find($id);
+        $userClass = $this->classModel->find($user['Class_id']);
+        $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_id']);
+        $categoryes = $this->categorySkill->findAll();
+        foreach($categoryes as &$category){
+            $category['skill'] = $this->skill->join('User_has_Skill', 'Skill.id = User_has_Skill.Skill_id')->where('User_has_Skill.User_id', $id)->where('Skill.Category_skill_id', $category['id'])->find();
         }
         $data = [
             'title' => 'Profil',

@@ -43,43 +43,28 @@
     </div>
     <div class="d-flex flex-wrap justify-content-center">
         <!-- Začátek karty -->
-        <div class="card-people m-4">
-            <div class="d-flex mt-2 justify-content-center">
-                <div class="card-icon-people d-flex align-items-center justify-content-center"><i class="fa-regular fa-user h4"></i></div>
-            </div>
-            <div class="d-flex justify-content-center mt-1"><p class="fw-bold h5">Martin Rumíšek</p></div>
-            <div class="d-flex m-2 justify-content-between p-2">
-                <div class="d-flex">
-                    <p class="fw-bold p-2">Třída:</p>
-                    <p class="p-2">4.B</p>
-                </div>
-                <div class="d-flex">
-                    <p class="fw-bold p-2">Obor:</p>
-                    <p class="p-2">IT</p>
-                </div>
-            </div>
-            <div class="d-flex justify-content-center mt-2 text-center"><a class="d-flex justify-content-center align-items-center btn-show-profile" href="#profile_rumisek">Zobrazit</a></div>
-        </div>
-        <!-- Konec karty -->
-        <?php for ($i=0; $i < 20; $i++) { ?>
+         <?php foreach($users as $user){ ?>
             <div class="card-people m-4">
             <div class="d-flex mt-2 justify-content-center">
                 <div class="card-icon-people d-flex align-items-center justify-content-center"><i class="fa-regular fa-user h4"></i></div>
             </div>
-            <div class="d-flex justify-content-center mt-1"><p class="fw-bold h5">Martin Rumíšek</p></div>
+            <div class="d-flex justify-content-center mt-1"><p class="fw-bold h5"><?= $user['name'] . ' ' . $user['surname'] ?></p></div>
             <div class="d-flex m-2 justify-content-between p-2">
                 <div class="d-flex">
                     <p class="fw-bold p-2">Třída:</p>
-                    <p class="p-2">4.B</p>
+                    <p class="p-2"><?= $user['class']['class'] . '.' . $user['class']['letter_class'] ?></p>
                 </div>
                 <div class="d-flex">
                     <p class="fw-bold p-2">Obor:</p>
-                    <p class="p-2">IT</p>
+                    <p class="p-2"><?= $user['fieldStudy']['shortcut'] ?></p>
                 </div>
             </div>
-            <div class="d-flex justify-content-center mt-2 text-center"><a class="d-flex justify-content-center align-items-center btn-show-profile" href="#profile_rumisek">Zobrazit</a></div>
+          <div class="d-flex justify-content-center mt-2 text-center"><a class="d-flex justify-content-center align-items-center btn-show-profile" href="<?= base_url('/profile/'.$user['id']) ?>">Zobrazit</a></div>
         </div>
-        <?php }?>
+        <?php } ?>
+       
+        <!-- Konec karty -->
     </div>
+    <div class="d-flex justify-content-center"><?= $pager->links() ?></div>
 </div>
 <?= $this->endSection() ?>

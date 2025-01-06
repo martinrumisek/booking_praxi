@@ -4,7 +4,7 @@
 <style>
     .container-profil{
         width: 100%;
-        height: 500px;
+        height: 550px;
         background: #006DBC 0% 0% no-repeat padding-box;
         box-shadow: 0px 3px 6px #00000029;
         border-radius: 0px 279px 246px 0px;
@@ -57,7 +57,33 @@
         background-color: white;
         box-shadow:0px 3px 6px #00000029;
     }
+    .btn-repair{
+        border-radius: 30px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+        padding: 14px;
+    }
+    .btn-repair:hover{
+        color:white;
+        background-color: #006DBC;
+    }
 </style>
+<?php 
+ $role = session()->get('role');
+ $userSession = session()->get('user');
+ $companySession = session()->get('companyUser');
+ $isStudent = in_array('student', $role);
+ $isCompany = in_array('company', $role);
+ $isAdmin = in_array('admin', $role);
+ $isSpravce = in_array('spravce', $role);
+ if($isStudent){
+     $userId = $userSession['id'];
+
+ }
+ if($isCompany){
+     $companyId = $companySession['id'];
+ }
+?>
 <div class="container-fluid row p-0 m-0">
     <div class="col-12 col-lg-5 p-0">
         <div class="container-profil">
@@ -66,7 +92,7 @@
             </div>
             <div class="d-flex justify-content-center mt-3 profile-name"><h2 class="text-white"><?= $user['name'] . ' ' . $user['surname'] ?></h2></div>
             <div class="d-flex justify-content-center mt-3 profile-name"><h3 class="text-white"><?= $class['class'] . '.' . $class['letter_class'] ?></h3></div>
-            <div class="d-flex justify-content-center soc-icon align-items-end">
+            <div class="d-flex flex-wrap justify-content-center soc-icon align-items-end">
                 <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
                 <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
                 <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
@@ -98,6 +124,9 @@
                     <h5>E-mail</h5>
                     <p> <?= $user['mail'] ?></p>
                 </div>
+                <?php if($isAdmin || $isSpravce || $userId == $user['id']){ ?>
+                <div class="col-12 mt-5 d-flex justify-content-center"><a class="btn-repair d-flex justify-conentent-center align-items-center h5" href="##zkouška"><i class="fa-solid fa-gear p-2"></i>Upravit profil</a></div>
+                <?php } ?> 
             </div>
         </div>
     </div>
@@ -105,43 +134,30 @@
 <div class="m-4 d-flex justify-content-center"><h2>Dovednosti</h2></div>
 <div class="container">
     <div class="row">
-        <div class="col-12 col-md-6 col-lg-4 mt-2 d-flex justify-content-center">
+        <?php foreach($categoryes as $category){ if(!empty($category['skill'])){ ?>
+            <div class="col-12 col-md-6 col-lg-4 mt-2 d-flex justify-content-center">
             <div class="card" style="width: 20rem;">
                 <div class="card-top d-flex justify-content-center align-items-center">
-                    <div class="card-title p-2 h4">Programovací jazyky</div>
+                    <div class="card-title p-2 h4"><?= $category['name'] ?></div>
                 </div>
                 <hr class="custom-line">
                 <div class="card-body">
-                    
+                    <?php foreach($category['skill'] as $skill){ ?>
+                        <ul>
+                            <li><?= $skill['name'] ?></li>
+                        </ul>
+                    <?php } ?>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-4 mt-2 d-flex justify-content-center">
-            <div class="card" style="width: 20rem;">
-                <div class="card-top d-flex justify-content-center align-items-center">
-                    <div class="card-title p-2 h4">Programovací jazyky</div>
-                </div>
-                <hr class="custom-line">
-                <div class="card-body">
-                    
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4 mt-2 d-flex justify-content-center">
-            <div class="card" style="width: 20rem;">
-                <div class="card-top d-flex justify-content-center align-items-center">
-                    <div class="card-title p-2 h4">Programovací jazyky</div>
-                </div>
-                <hr class="custom-line">
-                <div class="card-body">
-                    
-                </div>
-            </div>
-        </div>
+        <?php }} ?>
     </div>
 </div>
+<?php if(empty($user['description'])){echo '<br>';} ?>
+<?php if(!empty($user['description'])){ ?>
 <div class="m-4 d-flex justify-content-center"><h2>O mně</h2></div>
 <div class="container profile-text">
-    
+    <div><?= $user['description'] ?></div>
 </div>
+<?php } ?>
 <?= $this->endSection() ?>
