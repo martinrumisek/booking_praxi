@@ -126,10 +126,11 @@ class Home extends BaseController
     }
     public function people(){
         $search = $this->request->getGet('search');
+        $search = urldecode($search);
         if(empty($search)){
             $users = $this->userModel->where('role', 'student')->paginate(20);
         }else{
-            $users = $this->userModel->where('role', 'student')->groupStart()->like('name', $search)->orLike('surname', $search)->groupEnd()->paginate(20);
+            $users = $this->userModel->join('Class', 'User.Class_id = Class.id')->where('role', 'student')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(Class.class, '.', Class.letter_class)", $search)->groupEnd()->paginate(20);
         }
         $pager = $this->userModel->pager;
         foreach($users as &$user){
@@ -140,11 +141,13 @@ class Home extends BaseController
             'title' => 'Žáci',
             'users' => $users,
             'pager' => $pager,
+            'search' => $search,
         ];
         return view ('people', $data);
     }
     public function companyView(){
         $search = $this->request->getGet('search');
+        $search = urldecode($search);
         if(empty($search)){
             $companyes = $this->companyModel->where('register_company', 1)->paginate(8);
         }else{
@@ -155,6 +158,7 @@ class Home extends BaseController
             'title' => 'Firmy',
             'companyes' => $companyes,
             'pager' => $pager,
+            'search' => $search,
         ];
         return view ('company', $data);
     }

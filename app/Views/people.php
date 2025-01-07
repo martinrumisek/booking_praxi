@@ -55,7 +55,7 @@
 <form action="" method="GET">
     <div class="d-flex flex-wrap justify-content-between m-3">
             <div class="d-flex">
-                <input class="search-input p-2 mt-2" name="search" id="search-input" type="text" placeholder="Vyhledat uživatele">
+                <input class="search-input p-2 mt-2" name="search" id="search-input" type="text" placeholder="Vyhledat uživatele" <?php if(!empty($search)){?> value="<?= $search ?>" <?php } ?>>
                 <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </form>
