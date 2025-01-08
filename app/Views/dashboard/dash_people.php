@@ -62,19 +62,19 @@
 </style>
 <div class="container-fluid">
     <h2>Přehled termínů pro praxe</h2>
-    <form action="" method="POST">
+    <form action="" id="formSearch" method="GET">
     <div class="d-flex flex-wrap justify-content-between m-3">
             <div class="d-flex">
-                <input class="search-input p-2 mt-2" id="search-input" type="text" placeholder="Vyhledat uživatele">
+                <input class="search-input p-2 mt-2" name="search" id="search-input" type="text" placeholder="Vyhledat uživatele" <?php if(!empty($search)){?> value="<?= $search ?>" <?php } ?>>
                 <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
             <div class="flex">
-                <select class="search-input mt-2" id="">
-                    <option selected disabled>Seřadit podle</option>
-                    <option value="1">Od přihlášení po odhlášení</option>
-                    <option value="2">Od odhlášení po přihlášení</option>
-                    <option value="3">Datum sestupně</option>
-                    <option value="4">Datum vzestupně</option>
+                <select class="search-input mt-2" id="orderSelect" name="oder">
+                    <option <?php if(empty($oder)){?> selected <?php } ?> value="">Seřadit podle</option>
+                    <option <?php if(!empty($oder) && $oder == 1){?> selected <?php } ?> value="1">Seřadit podle A-Z</option>
+                    <option <?php if(!empty($oder) && $oder == 2){?> selected <?php } ?> value="2">Seřadit podle Z-A</option>
+                    <option <?php if(!empty($oder) && $oder == 3){?> selected <?php } ?> value="3">Seřadit podle třídy (sestupně)</option>
+                    <option <?php if(!empty($oder) && $oder == 4){?> selected <?php } ?> value="4">Seřadit podle třídy (vzestupně)</option>
                 </select>
                 </form>
                 <a class="all-user" href="#modalLoadAllUser" data-bs-toggle="modal" data-bs-target="#modalLoadAllUser">Načíst uživatele</a>
@@ -259,6 +259,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
+document.getElementById('orderSelect').addEventListener('change', function () {
+        document.getElementById('formSearch').submit();
+    });
 </script>
 <?= $this->endSection() ?>

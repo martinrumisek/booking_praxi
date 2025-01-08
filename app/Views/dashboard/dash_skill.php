@@ -148,10 +148,12 @@
 <div class="container-fluid">
     <h2 class="mt-2">Přehled dovedností</h2>
     <div class="d-flex flex-wrap justify-content-between m-3">
-        <div class="d-flex">
-          <input class="search-input p-2 mt-2" type="text" placeholder="Vyhledat">
+    <form action="" method="get">    
+    <div class="d-flex">
+          <input class="search-input p-2 mt-2" type="text" name="search" placeholder="Vyhledat" <?php if(!empty($search)){?> value="<?= $search ?>" <?php } ?>>
           <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
+        </form>
         <div class="d-flex">
           <button type="button" class="btn-add-skill mt-2" data-bs-toggle="modal" data-bs-target="#modalAddCategory">Přidat kategorii</button>
           <button type="button" class="btn-add-categorySkill mt-2" data-bs-toggle="modal" data-bs-target="#modalAddSkill">Přidat dovednost</button>

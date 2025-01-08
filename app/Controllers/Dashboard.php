@@ -80,7 +80,7 @@ class Dashboard extends Controller
     }
     public function deadlinesView(){
         
-        $practises = $this->practiseModel->findAll();
+        $practises = $this->practiseModel->orderBy('create_time', 'DESC')->findAll();
         $schoolClass = $this->classModel->findAll();
         foreach($practises as &$practise){
             $practise['dates'] = $this->datePractiseModel->where('Practise_id', $practise['id'])->findAll();
@@ -108,7 +108,25 @@ class Dashboard extends Controller
         return view('dashboard/dash_form_calendar', $data);
     }
     public function peopleView(){
-        $users = $this->userModel->paginate(20);
+        $search = $this->request->getGet('search');
+        $search = urldecode($search);
+        $oder = $this->request->getGet('oder');
+        if(empty($search || $oder)){
+            $users = $this->userModel->orderBy('surname, name', 'ASC')->paginate(20);
+        }else{
+            if($oder == 1 || empty($oder) || $oder > 4 || $oder < 1){
+                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->orderBy('surname, name', 'ASC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
+            }
+            if($oder == 2){
+                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->orderBy('surname, name', 'DESC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
+            }
+            if($oder == 3){
+                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->orderBy('Class.class, Class.letter_class', 'ASC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
+            }
+            if($oder == 4){
+                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->orderBy('Class.class, Class.letter_class', 'DESC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
+            }
+        }
         $pager = $this->userModel->pager;
         foreach($users as &$user){
             $class = $this->classModel->where('id', $user['Class_id'])->first();
@@ -129,6 +147,8 @@ class Dashboard extends Controller
             'title' => 'Administrace',
             'users' => $users,
             'pager' => $pager,
+            'oder' => $oder,
+            'search' => $search,
         ];
         return view('dashboard/dash_people', $data);
     }
@@ -232,7 +252,9 @@ class Dashboard extends Controller
 
     }
     public function skillView(){
-        $categoryes = $this->categorySkill->paginate(10);
+        $search = $this->request->getGet('search');
+        $search = urldecode($search);
+        $categoryes = $this->categorySkill->orderBy('create_time', 'DESC')->groupStart()->like('name', $search)->groupEnd()->paginate(10);
         $pager = $this->categorySkill->pager;
         foreach($categoryes as &$category){
             $category['skill'] = $this->skill->where('Category_skill_id', $category['id'])->findAll();
@@ -241,6 +263,7 @@ class Dashboard extends Controller
             'title' => 'Administrace',
             'categoryes' => $categoryes,
             'pager' => $pager,
+            'search' => $search,
         ];
         return view('dashboard/dash_skill', $data);
     }
