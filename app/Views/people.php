@@ -78,7 +78,7 @@
                     <p class="p-2"><?= $user['fieldStudy']['shortcut'] ?></p>
                 </div>
             </div>
-          <div class="d-flex justify-content-center mt-2 text-center"><a class="d-flex justify-content-center align-items-center btn-show-profile" href="<?= base_url('/profile/'.$user['id']) ?>">Zobrazit</a></div>
+          <div class="d-flex justify-content-center mt-2 text-center"><a class="d-flex justify-content-center align-items-center btn-show-profile" href="<?= base_url('/profile/'.$user['user_id']) ?>">Zobrazit</a></div>
         </div>
         <?php } ?>
        

@@ -128,9 +128,9 @@ class Home extends BaseController
         $search = $this->request->getGet('search');
         $search = urldecode($search);
         if(empty($search)){
-            $users = $this->userModel->where('role', 'student')->paginate(20);
+            $users = $this->userModel->select('User.*, User.id AS user_id')->where('role', 'student')->paginate(20);
         }else{
-            $users = $this->userModel->join('Class', 'User.Class_id = Class.id')->where('role', 'student')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(Class.class, '.', Class.letter_class)", $search)->groupEnd()->paginate(20);
+            $users = $this->userModel->join('Class', 'User.Class_id = Class.id')->select('User.*, Class.*, Class.id AS class_id, User.id AS user_id ')->where('role', 'student')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(Class.class, '.', Class.letter_class)", $search)->groupEnd()->paginate(20);
         }
         $pager = $this->userModel->pager;
         foreach($users as &$user){
