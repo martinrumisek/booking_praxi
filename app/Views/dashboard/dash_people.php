@@ -75,6 +75,7 @@
                     <option <?php if(!empty($oder) && $oder == 2){?> selected <?php } ?> value="2">Seřadit podle Z-A</option>
                     <option <?php if(!empty($oder) && $oder == 3){?> selected <?php } ?> value="3">Seřadit podle třídy (sestupně)</option>
                     <option <?php if(!empty($oder) && $oder == 4){?> selected <?php } ?> value="4">Seřadit podle třídy (vzestupně)</option>
+                    <option <?php if(!empty($oder) && $oder == 5){?> selected <?php } ?> value="5">Zobrazit první admin a správce</option>
                 </select>
                 </form>
                 <a class="all-user" href="#modalLoadAllUser" data-bs-toggle="modal" data-bs-target="#modalLoadAllUser">Načíst uživatele</a>
@@ -117,10 +118,10 @@
                         <td><?= $user['field']['shortcut'] ?? ''?></td>
                         <?php // $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)): ?>
                         <td>
-                            <input type="checkbox" class="role-checkbox" data-role="admin" data-user-id="<?= $user['id']?>" <?= $user['admin'] ? 'checked' : '' ?> />
+                            <input type="checkbox" class="role-checkbox" data-role="admin" data-user-id="<?= $user['user_id']?>" <?= $user['admin'] ? 'checked' : '' ?> />
                         </td>
                         <td>
-                            <input type="checkbox" class="role-checkbox" data-role="spravce" data-user-id="<?= $user['id']?>" <?= $user['spravce'] ? 'checked' : '' ?> />
+                            <input type="checkbox" class="role-checkbox" data-role="spravce" data-user-id="<?= $user['user_id']?>" <?= $user['spravce'] ? 'checked' : '' ?> />
                         </td>
                         <?php // endif;?>
                     </tr>  

@@ -112,19 +112,22 @@ class Dashboard extends Controller
         $search = urldecode($search);
         $oder = $this->request->getGet('oder');
         if(empty($search || $oder)){
-            $users = $this->userModel->orderBy('surname, name', 'ASC')->paginate(20);
+            $users = $this->userModel->select('User.*, Class.*, User.id AS user_id')->orderBy('surname, name', 'ASC')->paginate(20);
         }else{
-            if($oder == 1 || empty($oder) || $oder > 4 || $oder < 1){
-                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->orderBy('surname, name', 'ASC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
+            if($oder == 1 || empty($oder) || $oder > 5 || $oder < 1){
+                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('surname, name', 'ASC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
             }
             if($oder == 2){
-                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->orderBy('surname, name', 'DESC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
+                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('surname, name', 'DESC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
             }
             if($oder == 3){
-                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->orderBy('Class.class, Class.letter_class', 'ASC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
+                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('Class.class, Class.letter_class', 'ASC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
             }
             if($oder == 4){
-                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->orderBy('Class.class, Class.letter_class', 'DESC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
+                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('Class.class, Class.letter_class', 'DESC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
+            }
+            if($oder == 5){
+                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('admin, spravce', 'DESC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
             }
         }
         $pager = $this->userModel->pager;
@@ -269,6 +272,8 @@ class Dashboard extends Controller
     }
     
     public function logView(){
+        $search = $this->request->getGet('search');
+        $search = urldecode($search);
         $userLogs = $this->logUser->orderBy('create_time', 'DESC')->paginate(20);
         $pager = $this->logUser->pager;
         foreach($userLogs as &$userLog){

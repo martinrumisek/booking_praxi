@@ -33,7 +33,7 @@
 </style>
 <div class="container-fluid">
     <h2>Historie aktivity uživatelů</h2>
-    <form action="" method="POST">
+    <form action="" method="GET" id="form-oder">
     <div class="d-flex flex-wrap justify-content-between m-3">
             <div class="d-flex">
                 <input class="search-input p-2 mt-2" id="search-input" type="text" placeholder="Vyhledat uživatele">
