@@ -6,12 +6,12 @@ use CodeIgniter\Model;
 
 class DatePractise extends Model{
     protected $table = 'date_practise';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['date_from','date_to','create_time','edit_time','Practise_id'];
+    protected $primaryKey = 'date_id';
+    protected $allowedFields = ['date_date_from','date_date_to','date_create_time','date_edit_time', 'date_del_time','Practise_practise_id'];
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
-    protected $createdField = 'create_time'; 
-    protected $updatedField = 'edit_time'; 
-    protected $deletedField = 'del_time';
+    protected $createdField = 'date_create_time'; 
+    protected $updatedField = 'date_edit_time'; 
+    protected $deletedField = 'date_del_time';
     protected $dateFormat = 'datetime';
 }

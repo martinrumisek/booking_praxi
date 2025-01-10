@@ -6,12 +6,12 @@ use CodeIgniter\Model;
 
 class Skill extends Model{
     protected $table = 'skill';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['name','description','create_time','edit_time','Category_skill_id'];
+    protected $primaryKey = 'skill_id';
+    protected $allowedFields = ['skill_name','skill_description','skill_create_time','skill_edit_time', 'skill_del_time','Category_skill_category_id'];
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
-    protected $createdField = 'create_time'; 
-    protected $updatedField = 'edit_time'; 
-    protected $deletedField = 'del_time';
+    protected $createdField = 'skill_create_time'; 
+    protected $updatedField = 'skill_edit_time'; 
+    protected $deletedField = 'skill_del_time';
     protected $dateFormat = 'datetime';
 }

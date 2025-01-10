@@ -6,12 +6,12 @@ use CodeIgniter\Model;
 
 class FieldStudy extends Model{
     protected $table = 'field_study';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['name','shortcut','create_time','edit_time','Type_school_id'];
+    protected $primaryKey = 'field_id';
+    protected $allowedFields = ['field_name','field_shortcut','field_create_time','field_edit_time', 'field_del_time','Type_school_type_id'];
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
-    protected $createdField = 'create_time'; 
-    protected $updatedField = 'edit_time'; 
-    protected $deletedField = 'del_time';
+    protected $createdField = 'field_create_time'; 
+    protected $updatedField = 'field_edit_time'; 
+    protected $deletedField = 'field_del_time';
     protected $dateFormat = 'datetime';
 }

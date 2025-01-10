@@ -7,12 +7,12 @@ use CodeIgniter\Model;
 class RepresentativeCompanyModel extends Model
 {
     protected $table = 'representative_company';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['degree_before','name', 'surname','degree_after', 'mail', 'password', 'phone','function','create_time','edit_time', 'Company_id'];
+    protected $primaryKey = 'representative_id';
+    protected $allowedFields = ['representative_degree_before','representative_name', 'representative_surname','representative_degree_after', 'representative_mail', 'representative_password', 'representative_phone','representative_function','representative_create_time','representative_edit_time', 'representative_del_time', 'Company_company_id'];
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
-    protected $createdField = 'create_time'; 
-    protected $updatedField = 'edit_time';  
-    protected $deletedField = 'del_time';
+    protected $createdField = 'representative_create_time'; 
+    protected $updatedField = 'representative_edit_time';  
+    protected $deletedField = 'representative_del_time';
     protected $dateFormat = 'datetime';    
 }

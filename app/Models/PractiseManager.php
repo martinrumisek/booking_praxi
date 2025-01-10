@@ -6,12 +6,12 @@ use CodeIgniter\Model;
 
 class PractiseManager extends Model{
     protected $table = 'practise_manager';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['degree_before','name','surname','degree_after','mail','phone','position_works','create_time','edit_time','Company_id'];
+    protected $primaryKey = 'manager_id';
+    protected $allowedFields = ['manager_degree_before','manager_name','manager_surname','manager_degree_after','manager_mail','manager_phone','manager_position_works','manager_create_time','manager_edit_time', 'manager_del_time','Company_company_id'];
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
-    protected $createdField = 'create_time'; 
-    protected $updatedField = 'edit_time'; 
-    protected $deletedField = 'del_time';
+    protected $createdField = 'manager_create_time'; 
+    protected $updatedField = 'manager_edit_time'; 
+    protected $deletedField = 'manager_del_time';
     protected $dateFormat = 'datetime';
 }

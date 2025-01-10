@@ -6,10 +6,12 @@ use CodeIgniter\Model;
 
 class ResetPassword extends Model{
     protected $table = 'reset_password';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['token','expires_at','create_time','edit_time','use','Representative_company_id'];
+    protected $primaryKey = 'reset_id';
+    protected $allowedFields = ['reset_token','reset_expires_at','reset_create_time','reset_edit_time', 'reset_del_time','reset_use','Representative_company_representative_id'];
     protected $useTimestamps = true;
-    protected $createdField = 'create_time'; 
-    protected $updatedField = 'edit_time'; 
+    protected $useSoftDeletes = true;
+    protected $createdField = 'reset_create_time'; 
+    protected $updatedField = 'reset_edit_time';
+    protected $deletedField = 'reset_del_time';
     protected $dateFormat = 'datetime';
 }
