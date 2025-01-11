@@ -90,8 +90,8 @@
             <div class="d-flex justify-content-center">
                 <div class="profile-icon d-flex justify-content-center align-items-center"><i class="fa-solid fa-user h1"></i></div>
             </div>
-            <div class="d-flex justify-content-center mt-3 profile-name"><h2 class="text-white"><?= $user['name'] . ' ' . $user['surname'] ?></h2></div>
-            <div class="d-flex justify-content-center mt-3 profile-name"><h3 class="text-white"><?= $class['class'] . '.' . $class['letter_class'] ?></h3></div>
+            <div class="d-flex justify-content-center mt-3 profile-name"><h2 class="text-white"><?= $user['user_name'] . ' ' . $user['user_surname'] ?></h2></div>
+            <div class="d-flex justify-content-center mt-3 profile-name"><h3 class="text-white"><?= $class['class_class'] . '.' . $class['class_letter_class'] ?></h3></div>
             <div class="d-flex flex-wrap justify-content-center soc-icon align-items-end">
                 <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
                 <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
@@ -110,21 +110,21 @@
             <div class="row">
                 <div class="col-12 col-lg-6 p-2">
                     <h5>Obor</h5>
-                    <p><?php if(empty($fieldStudy['name'])){echo 'Není uvedeno';}else{echo $fieldStudy['name'];} ?></p>
+                    <p><?php if(empty($fieldStudy['field_name'])){echo 'Není uvedeno';}else{echo $fieldStudy['field_name'];} ?></p>
                 </div>
                 <div class="col-12 col-lg-6 p-2">
                     <h5>Telefonní číslo</h5>
-                    <p><?php if(empty($user['phone'])){echo 'Není uvedeno';}else{echo $user['phone'];} ?></p>
+                    <p><?php if(empty($user['user_phone'])){echo 'Není uvedeno';}else{echo $user['user_phone'];} ?></p>
                 </div>
                 <div class="col-12 col-lg-6 p-2">
                     <h5>Datum narození</h5>
-                    <p><?php if(empty($user['date_birthday'])){echo 'Není uvedeno';}else{echo $user['date_birthday'];} ?></p>
+                    <p><?php if(empty($user['user_date_birthday'])){echo 'Není uvedeno';}else{echo $user['user_date_birthday'];} ?></p>
                 </div>
                 <div class="col-12 col-lg-6 p-2">
                     <h5>E-mail</h5>
-                    <p> <?= $user['mail'] ?></p>
+                    <p> <?= $user['user_mail'] ?></p>
                 </div>
-                <?php if($isAdmin || $isSpravce || $userId == $user['id']){ ?>
+                <?php if($isAdmin || $isSpravce || $userId == $user['user_id']){ ?>
                 <div class="col-12 mt-5 d-flex justify-content-center"><a class="btn-repair d-flex justify-conentent-center align-items-center h5" href="##zkouška"><i class="fa-solid fa-gear p-2"></i>Upravit profil</a></div>
                 <?php } ?> 
             </div>
@@ -138,13 +138,13 @@
             <div class="col-12 col-md-6 col-lg-4 mt-2 d-flex justify-content-center">
             <div class="card" style="width: 20rem;">
                 <div class="card-top d-flex justify-content-center align-items-center">
-                    <div class="card-title p-2 h4"><?= $category['name'] ?></div>
+                    <div class="card-title p-2 h4"><?= $category['category_name'] ?></div>
                 </div>
                 <hr class="custom-line">
                 <div class="card-body">
                     <?php foreach($category['skill'] as $skill){ ?>
                         <ul>
-                            <li><?= $skill['name'] ?></li>
+                            <li><?= $skill['skill_name'] ?></li>
                         </ul>
                     <?php } ?>
                 </div>
@@ -153,11 +153,11 @@
         <?php }} ?>
     </div>
 </div>
-<?php if(empty($user['description'])){echo '<br>';} ?>
-<?php if(!empty($user['description'])){ ?>
+<?php if(empty($user['user_description'])){echo '<br>';} ?>
+<?php if(!empty($user['user_description'])){ ?>
 <div class="m-4 d-flex justify-content-center"><h2>O mně</h2></div>
 <div class="container profile-text">
-    <div><?= $user['description'] ?></div>
+    <div><?= $user['user_description'] ?></div>
 </div>
 <?php } ?>
 <?= $this->endSection() ?>

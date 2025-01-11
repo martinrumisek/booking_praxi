@@ -80,15 +80,15 @@
                     foreach($logs as $log){
                     ?>
                       <tr>
-                        <th class="nowrap" scope="row"><?php if($log['name'] == 'Přihlášení'){echo '<i class="fa-solid fa-key"></i>  ';}else{echo '<i class="fa-solid fa-right-to-bracket"></i>  ';} ?><?= $log['name']?></th>
+                        <th class="nowrap" scope="row"><?php if($log['log_company_name'] == 'Přihlášení'){echo '<i class="fa-solid fa-key"></i>  ';}else{echo '<i class="fa-solid fa-right-to-bracket"></i>  ';} ?><?= $log['log_company_name']?></th>
                         <td>
-                            <?= $log['ip_adrese'] ?>
+                            <?= $log['log_company_ip_adrese'] ?>
                         </td>
                         <td>
-                            <?= date('d.m.Y H:i:s', strtotime($log['create_time'])) ?>
+                            <?= date('d.m.Y H:i:s', strtotime($log['log_company_create_time'])) ?>
                         </td>
-                        <td><?= $log['user']['name'] . ' ' . $log['user']['surname']?></td>
-                        <td class="name"><?= $log['company']['name']?></td>
+                        <td><?= $log['user']['representative_name'] . ' ' . $log['user']['representative_surname']?></td>
+                        <td class="name"><?= $log['company']['company_name']?></td>
                     </tr>  
                     <?php }?>
                 </tbody>

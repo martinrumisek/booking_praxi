@@ -178,7 +178,7 @@
                             <label for="passw2" class="h6">Potvrzení hesla</label>
                             <button type="button" class="toggle-pass2"><i class="fa-regular fa-eye" id="toggle-icon2"></i></button>
                         </div>
-                        <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                        <input type="hidden" name="id" value="<?= $user['representative_id'] ?>">
                         <div class="d-flex justify-content-end"><button type="submit" id="submit" class="btn form-button mt-3 px-5">Uložit nové heslo</button></div>
                     </form>
                 </div>

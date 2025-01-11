@@ -65,42 +65,35 @@ class Home extends BaseController
     }
     public function homeStudent(){
         $user = $this->userModel->find($this->userSession['id']);
-        $userClass = $this->classModel->find($user['Class_id']);
-        $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_id']);
+        $userClass = $this->classModel->find($user['Class_class_id']);
+        $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_field_id']);
         //$practise = $this->user_practiseModel->select('user_practise.*, practise_offer.*, practise_manager.*, company.*, practise.*, date_practise.*')->join('practise_offer', 'practise_offer.id = user_practise.Offer_practise_id')->join('practise_manager', 'practise_manager.id = practise_offer.Practise_manager_id')->join('company', 'company.id = practise_manager.Company_id')->join('practise', 'practise.id = practise_offer.Practise_id')->join('date_practise', 'date_practise.Practise_id = practise.id', 'left')->where('user_practise.User_id', $user['id'])->findAll();
-        $userPractiseOffers = $this->user_practiseModel->where('User_id', value: $user['id'])->findAll();
-        foreach($userPractiseOffers as &$userPractiseOffer){
-            $userPractiseOffer['practiseOffer'] = $this->offerPractise->find($userPractiseOffer['Offer_practise_id']);
-            $userPractiseOffer['practiseManager'] = $this->practiseManagerModel->find($userPractiseOffer['practiseOffer']['Practise_manager_id']);
-            $userPractiseOffer['company'] = $this->companyModel->find($userPractiseOffer['practiseManager']['Company_id']);
-            $userPractiseOffer['practise'] = $this->practiseModel->find($userPractiseOffer['practiseOffer']['Practise_id']);
-            $userPractiseOffer['datePractise'] = $this->datePractiseModel->where('Practise_id', $userPractiseOffer['practise']['id'])->findAll();
-        }
+        $userPractiseOffers = $this->user_practiseModel->where('User_user_id', value: $user['user_id'])->findAll();
         $data = ['title' => 'Hlavní stránka', 'user' => $user, 'class' => $userClass, 'fieldStudy' => $userFieldStudy, 'practise' => $userPractiseOffers,];
         return view('home_student', $data);
     }
     public function homeCompany(){
         $nowDate = date('Y-m-d');
-        $representativeCompany = $this->representativeCompanyModel->find($this->userSession['idUser']);
-        $company = $this->companyModel->find($this->userSession['idCompany']);
+        $representativeCompany = $this->representativeCompanyModel->find($this->companyUser['idUser']);
+        $company = $this->companyModel->find($this->companyUser['idCompany']);
         $practises = $this->practiseModel->findAll();
         $count['practise'] = 0;
         foreach($practises as $practise){
-            if($nowDate <= $practise['end_new_offer']){
+            if($nowDate <= $practise['date_end_new_offer']){
                 $count['practise'] = $count['practise'] + 1;
             }
         }
         $users = $this->userModel->findAll();
         $count['userStudent'] = 0;
         foreach($users as $user){
-            if($user['Class_id'] !== null){
+            if($user['Class_class_id'] !== null){
                 $count['userStudent'] = $count['userStudent'] + 1;
             }
         }
         $count['companyCount'] = 0;
         $allCompanyes = $this->companyModel->findAll();
         foreach($allCompanyes as $allCompany){
-            if($allCompany['register_company'] == 1){
+            if($allCompany['company_register_company'] == 1){
                 $count['companyCount'] = $count['companyCount'] + 1;
             }
         }
@@ -127,16 +120,17 @@ class Home extends BaseController
     public function people(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
-        if(empty($search)){
-            $users = $this->userModel->select('User.*, User.id AS user_id')->where('role', 'student')->paginate(20);
+        $users = $this->userModel->where('user_role', 'student')->join('Class', 'Class.class_id = User.Class_class_id')->join('Field_study', 'Field_study.field_id = Class.Field_study_field_id')->join('Type_school', 'Type_school.type_id = Field_study.Type_school_type_id')->groupStart()->like("CONCAT(user_name, ' ', user_surname)", $search)->orLike("CONCAT(class_class, '.', class_letter_class)", $search)->orLike('field_shortcut', $search)->groupEnd()->paginate(20);
+       /* if(empty($search)){
+            $users = $this->userModel->where('user_role', 'student')->paginate(20);
         }else{
             $users = $this->userModel->join('Class', 'User.Class_id = Class.id')->select('User.*, Class.*, Class.id AS class_id, User.id AS user_id ')->where('role', 'student')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(Class.class, '.', Class.letter_class)", $search)->groupEnd()->paginate(20);
-        }
+        }*/
         $pager = $this->userModel->pager;
-        foreach($users as &$user){
-            $user['class'] = $this->classModel->where('id', $user['Class_id'])->first();
-            $user['fieldStudy'] = $this->fieldStudy->where('id', $user['class']['Field_study_id'])->first();
-        }   
+        /*foreach($users as &$user){
+            $user['class'] = $this->classModel->where('class_id', $user['Class_class_id'])->first();
+            $user['fieldStudy'] = $this->fieldStudy->where('field_id', $user['class']['Field_study_field_id'])->first();
+        }  */ 
         $data = [
             'title' => 'Žáci',
             'users' => $users,
@@ -149,7 +143,7 @@ class Home extends BaseController
         $search = $this->request->getGet('search');
         $search = urldecode($search);
         if(empty($search)){
-            $companyes = $this->companyModel->where('register_company', 1)->paginate(8);
+            $companyes = $this->companyModel->where('company_register_company', 1)->paginate(8);
         }else{
             $companyes = $this->companyModel->where('register_company', 1)->groupStart()->like('name', $search)->orLike('city', $search)->orLike('street', $search)->orLike('post_code', $search)->groupEnd()->paginate(8);
         }
@@ -165,11 +159,11 @@ class Home extends BaseController
     public function profileView(){
         $id = $this->userSession['id'];
         $user = $this->userModel->find($id);
-        $userClass = $this->classModel->find($user['Class_id']);
-        $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_id']);
+        $userClass = $this->classModel->find($user['Class_class_id']);
+        $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_field_id']);
         $categoryes = $this->categorySkill->findAll();
         foreach($categoryes as &$category){
-            $category['skill'] = $this->skill->join('User_has_Skill', 'Skill.id = User_has_Skill.Skill_id')->where('User_has_Skill.User_id', $id)->where('Skill.Category_skill_id', $category['id'])->find();
+            $category['skill'] = $this->skill->join('User_has_Skill', 'Skill.skill_id = User_has_Skill.Skill_skill_id')->where('User_has_Skill.User_user_id', $id)->where('Skill.Category_skill_category_id', $category['category_id'])->find();
         }
         $data = [
             'title' => 'Profil',
@@ -183,11 +177,11 @@ class Home extends BaseController
     public function allProfileView($idUser){
         $id = $idUser;
         $user = $this->userModel->find($id);
-        $userClass = $this->classModel->find($user['Class_id']);
-        $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_id']);
+        $userClass = $this->classModel->find($user['Class_class_id']);
+        $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_field_id']);
         $categoryes = $this->categorySkill->findAll();
         foreach($categoryes as &$category){
-            $category['skill'] = $this->skill->join('User_has_Skill', 'Skill.id = User_has_Skill.Skill_id')->where('User_has_Skill.User_id', $id)->where('Skill.Category_skill_id', $category['id'])->find();
+            $category['skill'] = $this->skill->join('User_has_Skill', 'Skill.skill_id = User_has_Skill.Skill_skill_id')->where('User_has_Skill.User_user_id', $id)->where('Skill.Category_skill_category_id', $category['category_id'])->find();
         }
         $data = [
             'title' => 'Profil',

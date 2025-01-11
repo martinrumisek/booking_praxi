@@ -108,20 +108,20 @@
                     foreach($users as $user){
                     ?>
                       <tr>
-                        <th class="nowrap" scope="row"><?php if(!empty($user['class']['year_graduation'])){echo '<i class="fa-solid fa-user-graduate"></i>';}else{echo '<i class="fa-solid fa-chalkboard-user"></i>';} ?></th>
+                        <th class="nowrap" scope="row"><?php if(!empty($user['class']['class_year_graduation'])){echo '<i class="fa-solid fa-user-graduate"></i>';}else{echo '<i class="fa-solid fa-chalkboard-user"></i>';} ?></th>
                         <td>
-                            <?= ($user['name'] ?? '') . ' ' . ($user['surname'] ?? '') ?>
+                            <?= ($user['user_name'] ?? '') . ' ' . ($user['user_surname'] ?? '') ?>
                         </td>
-                        <td><?= $user['class']['year_graduation']?? '' ?></td>
-                        <td><?php if(!empty($user['class']['class'])){ ?><?= ($user['class']['class']??''). '.' .($user['class']['letter_class']??''); }?></td>
+                        <td><?= $user['class']['class_year_graduation']?? '' ?></td>
+                        <td><?php if(!empty($user['class']['class_class'])){ ?><?= ($user['class']['class_class']??''). '.' .($user['class']['class_letter_class']??''); }?></td>
 
-                        <td><?= $user['field']['shortcut'] ?? ''?></td>
+                        <td><?= $user['field']['field_shortcut'] ?? ''?></td>
                         <?php // $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)): ?>
                         <td>
-                            <input type="checkbox" class="role-checkbox" data-role="admin" data-user-id="<?= $user['user_id']?>" <?= $user['admin'] ? 'checked' : '' ?> />
+                            <input type="checkbox" class="role-checkbox" data-role="admin" data-user-id="<?= $user['user_id']?>" <?= $user['user_admin'] ? 'checked' : '' ?> />
                         </td>
                         <td>
-                            <input type="checkbox" class="role-checkbox" data-role="spravce" data-user-id="<?= $user['user_id']?>" <?= $user['spravce'] ? 'checked' : '' ?> />
+                            <input type="checkbox" class="role-checkbox" data-role="spravce" data-user-id="<?= $user['user_id']?>" <?= $user['user_spravce'] ? 'checked' : '' ?> />
                         </td>
                         <?php // endif;?>
                     </tr>  

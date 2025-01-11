@@ -197,46 +197,46 @@
                 </thead>
                 <tbody class="table-group-divider">
                    <?php foreach($companyes as $company){ ?>
-                        <tr class="cursor-pointer" data-bs-toggle="collapse" data-bs-target="#company-<?= $company['id'] ?>">
+                        <tr class="cursor-pointer" data-bs-toggle="collapse" data-bs-target="#company-<?= $company['company_id'] ?>">
                             <td><i class="fa-solid fa-building"></i> Firma</td>
-                            <td class="name"><?= $company['name']?></td>
-                            <td><?= $company['ico']?></td>
+                            <td class="name"><?= $company['company_name']?></td>
+                            <td><?= $company['company_ico']?></td>
                             <td class="text-center"></td>
                             <td class="text-center"></td>
                             <td class="text-center"></td>
-                            <td><?= date('d.m.Y H:i:s', strtotime($company['create_time'])) ?></td>
-                            <td><div class="d-flex"><a class="icon-edit" href="#modalEditCompany" data-bs-toggle="modal" data-bs-target="#modalEditCompany" data-id-company="<?= $company['id'] ?>" data-name-company="<?= $company['name'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit" href="#"><i class="fa-solid fa-eye edite-icon"></i></a><a class="icon-edit" href="<?= base_url('/delete-company/'.$company['id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
+                            <td><?= date('d.m.Y H:i:s', strtotime($company['company_create_time'])) ?></td>
+                            <td><div class="d-flex"><a class="icon-edit" href="#modalEditCompany" data-bs-toggle="modal" data-bs-target="#modalEditCompany" data-id-company="<?= $company['company_id'] ?>" data-name-company="<?= $company['company_name'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit" href="#"><i class="fa-solid fa-eye edite-icon"></i></a><a class="icon-edit" href="<?= base_url('/delete-company/'.$company['company_id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
                         </tr>
                         <?php foreach($company['representative'] as $representativeCompany){?>
                             <!-- Zde je potřeba přidat barvu, pro každé zastápce firmy, bude jiná barva řádku, firma = bíla, všechny zástupci firmy budou pod ní a budou mít světle šedou -->
-                            <tr id="company-<?= $company['id'] ?>" class="collapse">
+                            <tr id="company-<?= $company['company_id'] ?>" class="collapse">
                                 <td class="users"><i class="fa-solid fa-building-user"></i> Zást.</td>
-                                <td class="users"><?php if(!empty($representativeCompany['degree_before'])){echo $representativeCompany['degree_before'] . ' ';}  echo $representativeCompany['name'] . ' ' . $representativeCompany['surname']; if(!empty($representativeCompany['degree_after'])){echo ' ' . $representativeCompany['degree_after'];} ?></td>
+                                <td class="users"><?php if(!empty($representativeCompany['representative_degree_before'])){echo $representativeCompany['representative_degree_before'] . ' ';}  echo $representativeCompany['representative_name'] . ' ' . $representativeCompany['representative_surname']; if(!empty($representativeCompany['representative_degree_after'])){echo ' ' . $representativeCompany['representative_degree_after'];} ?></td>
                                 <td class="text-center users"></td>
-                                <td class="users"><?= $representativeCompany['mail']?></td>
-                                <td class="users"><?= $representativeCompany['phone']?></td>
-                                <td class="users"><?= $representativeCompany['function']?></td>
-                                <td class="users"><?= date('d.m.Y H:i:s', strtotime($representativeCompany['create_time'])) ?></td>
-                                <td class="users"><div class="d-flex"><a class="icon-edit text-white" href="#modalEditRepresentativeCompany" data-bs-toggle="modal" data-bs-target="#modalEditRepresentativeCompany" data-id-representativeCompany="<?= $representativeCompany['id'] ?>" data-degreeBefore-representativeCompany="<?= $representativeCompany['degree_before'] ?>" data-name-representativeCompany="<?= $representativeCompany['name'] ?>" data-surname-representativeCompany="<?= $representativeCompany['surname'] ?>" data-degreeAfter-representativeCompany="<?= $representativeCompany['degree_after'] ?>" data-mail-representativeCompany="<?= $representativeCompany['mail'] ?>" data-phone-representativeCompany="<?= $representativeCompany['phone'] ?>"data-positionWorks-representativeCompany="<?= $representativeCompany['function'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit text-white" href="#" data-bs-toggle="modal" data-bs-target="#modalEditPasswordUser" data-id-passwordUser="<?= $representativeCompany['id'] ?>"><i class="fa-solid fa-key edite-icon"></i></a><a class="icon-edit text-white" href="<?= base_url('/delete-representativeCompany/'.$representativeCompany['id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
+                                <td class="users"><?= $representativeCompany['representative_mail']?></td>
+                                <td class="users"><?= $representativeCompany['representative_phone']?></td>
+                                <td class="users"><?= $representativeCompany['representative_function']?></td>
+                                <td class="users"><?= date('d.m.Y H:i:s', strtotime($representativeCompany['representative_create_time'])) ?></td>
+                                <td class="users"><div class="d-flex"><a class="icon-edit text-white" href="#modalEditRepresentativeCompany" data-bs-toggle="modal" data-bs-target="#modalEditRepresentativeCompany" data-id-representativeCompany="<?= $representativeCompany['representative_id'] ?>" data-degreeBefore-representativeCompany="<?= $representativeCompany['representative_degree_before'] ?>" data-name-representativeCompany="<?= $representativeCompany['representative_name'] ?>" data-surname-representativeCompany="<?= $representativeCompany['representative_surname'] ?>" data-degreeAfter-representativeCompany="<?= $representativeCompany['representative_degree_after'] ?>" data-mail-representativeCompany="<?= $representativeCompany['representative_mail'] ?>" data-phone-representativeCompany="<?= $representativeCompany['representative_phone'] ?>"data-positionWorks-representativeCompany="<?= $representativeCompany['representative_function'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit text-white" href="#" data-bs-toggle="modal" data-bs-target="#modalEditPasswordUser" data-id-passwordUser="<?= $representativeCompany['representative_id'] ?>"><i class="fa-solid fa-key edite-icon"></i></a><a class="icon-edit text-white" href="<?= base_url('/delete-representativeCompany/'.$representativeCompany['representative_id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
                             </tr>
                         <?php }?>
                         <?php if(empty($company['practiseManager'])){?>
-                            <tr id="company-<?= $company['id'] ?>" class="collapse"><td class="practise-manager text-center" colspan="8">Žádný vedoucí pro praxe</td></tr>
+                            <tr id="company-<?= $company['company_id'] ?>" class="collapse"><td class="practise-manager text-center" colspan="8">Žádný vedoucí pro praxe</td></tr>
                         <?php } ?>
                         <?php foreach($company['practiseManager'] as $practiseManager){ ?>
-                            <tr id="company-<?= $company['id'] ?>" class="collapse">
+                            <tr id="company-<?= $company['company_id'] ?>" class="collapse">
                                 <td class="practise-manager"><i class="fa-solid fa-user-tie"></i> Ved. praxe</td>
-                                <td class="practise-manager"><?php if(!empty($practiseManager['degree_before'])){echo $practiseManager['degree_before'] . ' ';}  echo $practiseManager['name'] . ' ' . $practiseManager['surname']; if(!empty($practiseManager['degree_after'])){echo ' ' . $practiseManager['degree_after'];} ?></td>
+                                <td class="practise-manager"><?php if(!empty($practiseManager['manager_degree_before'])){echo $practiseManager['manager_degree_before'] . ' ';}  echo $practiseManager['manager_name'] . ' ' . $practiseManager['manager_surname']; if(!empty($practiseManager['manager_degree_after'])){echo ' ' . $practiseManager['manager_degree_after'];} ?></td>
                                 <td class="practise-manager"></td>
-                                <td class="practise-manager"><?= $practiseManager['mail'] ?></td>
-                                <td class="practise-manager"><?= $practiseManager['phone'] ?></td>
-                                <td class="practise-manager"><?= $practiseManager['position_works'] ?></td>
-                                <td class="practise-manager"><?= date('d.m.Y H:i:s', strtotime($practiseManager['create_time'])) ?></td>
-                                <td class="practise-manager"><div class="d-flex"><a class="icon-edit text-white" href="#modalEditPractiseManager" data-bs-toggle="modal" data-bs-target="#modalEditPractiseManager" data-id-practiseManager="<?= $practiseManager['id'] ?>" data-degreeBefore-practiseManager="<?= $practiseManager['degree_before'] ?>" data-name-practiseManager="<?= $practiseManager['name'] ?>" data-surname-practiseManager="<?= $practiseManager['surname'] ?>" data-degreeAfter-practiseManager="<?= $practiseManager['degree_after'] ?>" data-phone-practiseManager="<?= $practiseManager['phone'] ?>" data-mail-practiseManager="<?= $practiseManager['mail'] ?>" data-positionWorks-practiseManager="<?= $practiseManager['position_works'] ?>" data-companyId-practiseManager="<?= $practiseManager['Company_id'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit text-white" href="<?= base_url('/delete-practiseManager/'.$practiseManager['id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
+                                <td class="practise-manager"><?= $practiseManager['manager_mail'] ?></td>
+                                <td class="practise-manager"><?= $practiseManager['manager_phone'] ?></td>
+                                <td class="practise-manager"><?= $practiseManager['manager_position_works'] ?></td>
+                                <td class="practise-manager"><?= date('d.m.Y H:i:s', strtotime($practiseManager['manager_create_time'])) ?></td>
+                                <td class="practise-manager"><div class="d-flex"><a class="icon-edit text-white" href="#modalEditPractiseManager" data-bs-toggle="modal" data-bs-target="#modalEditPractiseManager" data-id-practiseManager="<?= $practiseManager['manager_id'] ?>" data-degreeBefore-practiseManager="<?= $practiseManager['manager_degree_before'] ?>" data-name-practiseManager="<?= $practiseManager['manager_name'] ?>" data-surname-practiseManager="<?= $practiseManager['manager_surname'] ?>" data-degreeAfter-practiseManager="<?= $practiseManager['manager_degree_after'] ?>" data-phone-practiseManager="<?= $practiseManager['manager_phone'] ?>" data-mail-practiseManager="<?= $practiseManager['manager_mail'] ?>" data-positionWorks-practiseManager="<?= $practiseManager['manager_position_works'] ?>" data-companyId-practiseManager="<?= $practiseManager['Company_company_id'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit text-white" href="<?= base_url('/delete-practiseManager/'.$practiseManager['manager_id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
                             </tr>
                         <?php } ?>
-                            <tr id="company-<?= $company['id'] ?>" class="collapse">
-                                <td colspan="8" class="add-user"><div class="d-flex justify-content-center flex-row flex-wrap"><a href="#modalAddPractiseManager" class="btn-add-user" data-bs-toggle="modal" data-bs-target="#modalAddPractiseManager" data-companyId-practiseManager="<?= $company['id'] ?>"><i class="fa-solid fa-user-plus"></i> Přidat vedoucího</a><a href="#modalAddRepresentativeCompany" class="btn-add-user" data-bs-toggle="modal" data-bs-target="#modalAddRepresentativeCompany" data-companyId-representativeCompany="<?= $company['id'] ?>"><i class="fa-solid fa-user-plus"></i> Přidat zástupce</a></div></td>
+                            <tr id="company-<?= $company['company_id'] ?>" class="collapse">
+                                <td colspan="8" class="add-user"><div class="d-flex justify-content-center flex-row flex-wrap"><a href="#modalAddPractiseManager" class="btn-add-user" data-bs-toggle="modal" data-bs-target="#modalAddPractiseManager" data-companyId-practiseManager="<?= $company['company_id'] ?>"><i class="fa-solid fa-user-plus"></i> Přidat vedoucího</a><a href="#modalAddRepresentativeCompany" class="btn-add-user" data-bs-toggle="modal" data-bs-target="#modalAddRepresentativeCompany" data-companyId-representativeCompany="<?= $company['company_id'] ?>"><i class="fa-solid fa-user-plus"></i> Přidat zástupce</a></div></td>
                             </tr>
                     <?php }?>
                 </tbody>

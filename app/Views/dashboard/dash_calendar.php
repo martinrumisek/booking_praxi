@@ -169,10 +169,10 @@
                     foreach($practises as $practise){
                     ?>
                       <tr>
-                        <th class="nowrap" scope="row"><?= $practise['name']?></th>
+                        <th class="nowrap" scope="row"><?= $practise['practise_name']?></th>
                         <td>
                             <?php $countDate = count($practise['dates']); foreach($practise['dates'] as $date){ 
-                                echo date('d.m.Y', strtotime($date['date_from'])).' - '.date('d.m.Y', strtotime($date['date_to']));
+                                echo date('d.m.Y', strtotime($date['date_date_from'])).' - '.date('d.m.Y', strtotime($date['date_date_to']));
                                 $countDate = $countDate - 1;
                                 if($countDate > 0){
                                     echo '/';
@@ -181,25 +181,25 @@
                         </td>
                         <td>
                             <?php $countClass = count($practise['class']); foreach($practise['class'] as $class){
-                                echo $class['class'].'.'.$class['letter_class'];
+                                echo $class['class_class'].'.'.$class['class_letter_class'];
                                 $countClass = $countClass - 1;
                                 if($countClass > 0){
                                     echo ',';
                                 }
                             } ?>
                         </td>
-                        <td><?= date('d.m.Y', strtotime($practise['end_new_offer']))?></td>
-                        <?php if(empty($practise['contract_file'])){ ?>
+                        <td><?= date('d.m.Y', strtotime($practise['practise_end_new_offer']))?></td>
+                        <?php if(empty($practise['practise_contract_file'])){ ?>
                             <td><i class="fa-solid fa-circle-xmark"></i></td>
                         <?php }else{ ?>
                             <td><i class="fa-regular fa-circle-check"></i></td>
                         <?php } ?>
 
-                        <td><?= date('d.m.Y H:i', strtotime($practise['edit_time']))?></td>
+                        <td><?= date('d.m.Y H:i', strtotime($practise['practise_edit_time']))?></td>
                         <td>
                             <div class="d-flex">
                                 <?php $countDateAtribut = count($practise['dates']) ?>
-                                <a href="#modalAddNewPractiseDate" data-bs-toggle="modal" data-bs-target="#modalEditPractiseDate" data-id-datePractise="<?= $practise['id'] ?>" data-name-datePractise="<?= $practise['name'] ?>" data-dates-datePractise="<?= htmlspecialchars(json_encode($practise['dates'])) ?>" data-class-datePractise="<?= htmlspecialchars(json_encode($practise['class'])) ?>" data-endOffer-datePractise="<?= $practise['end_new_offer'] ?>" data-file-datePractise="<?= $practise['contract_file'] ?>" data-description-datePractise="<?= $practise['description'] ?>" data-countDate-datePractise="<?= $countDateAtribut ?>"><i class="fa-solid fa-pencil"></i></a>
+                                <a href="#modalAddNewPractiseDate" data-bs-toggle="modal" data-bs-target="#modalEditPractiseDate" data-id-datePractise="<?= $practise['practise_id'] ?>" data-name-datePractise="<?= $practise['practise_name'] ?>" data-dates-datePractise="<?= htmlspecialchars(json_encode($practise['dates'])) ?>" data-class-datePractise="<?= htmlspecialchars(json_encode($practise['class'])) ?>" data-endOffer-datePractise="<?= $practise['practise_end_new_offer'] ?>" data-file-datePractise="<?= $practise['practise_contract_file'] ?>" data-description-datePractise="<?= $practise['practise_description'] ?>" data-countDate-datePractise="<?= $countDateAtribut ?>"><i class="fa-solid fa-pencil"></i></a>
                                 <a href="#"><i class="fa-solid fa-trash"></i></a>
                             </div>
                         </td>
@@ -244,8 +244,8 @@
                 <div class="d-flex flex-wrap">
                     <?php foreach($schoolClass as $classes){ ?>
                             <div class="d-flex align-items-center p-1">
-                                <input type="checkbox" class="checkbox p-1" name="classes[]" value="<?= $classes['id']?>">
-                                <p class="m-0 p-1"><?= $classes['class'].'.'.$classes['letter_class']?></p>
+                                <input type="checkbox" class="checkbox p-1" name="classes[]" value="<?= $classes['class_id']?>">
+                                <p class="m-0 p-1"><?= $classes['class_class'].'.'.$classes['class_letter_class']?></p>
                             </div>
                         <?php } ?>
                 </div>
@@ -286,8 +286,8 @@
                 <div class="d-flex flex-wrap">
                 <?php foreach($schoolClass as $classes){ ?>
                             <div class="d-flex align-items-center p-1">
-                                <input type="checkbox" class="checkbox p-1" name="classes[]" value="<?= $classes['id']?>" id="class-<?= $classes['id']?>">
-                                <p class="m-0 p-1"><?= $classes['class'].'.'.$classes['letter_class']?></p>
+                                <input type="checkbox" class="checkbox p-1" name="classes[]" value="<?= $classes['class_id']?>" id="class-<?= $classes['class_id']?>">
+                                <p class="m-0 p-1"><?= $classes['class_class'].'.'.$classes['class_letter_class']?></p>
                             </div>
                         <?php } ?>
                 </div>

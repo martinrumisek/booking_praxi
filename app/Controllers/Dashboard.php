@@ -68,8 +68,8 @@ class Dashboard extends Controller
         $companyes = $this->companyModel->paginate(10);
         $pager = $this->companyModel->pager;
         foreach ($companyes as &$company){
-            $company['representative'] = $this->representativeCompanyModel->where('Company_id', $company['id'])->findAll();
-            $company['practiseManager'] = $this->practiseManager->where('Company_id', $company['id'])->findAll();
+            $company['representative'] = $this->representativeCompanyModel->where('Company_company_id', $company['company_id'])->findAll();
+            $company['practiseManager'] = $this->practiseManager->where('Company_company_id', $company['company_id'])->findAll();
         }
         $data= [
             'title' => 'Administrace',
@@ -80,14 +80,14 @@ class Dashboard extends Controller
     }
     public function deadlinesView(){
         
-        $practises = $this->practiseModel->orderBy('create_time', 'DESC')->findAll();
+        $practises = $this->practiseModel->orderBy('practise_create_time', 'DESC')->findAll();
         $schoolClass = $this->classModel->findAll();
         foreach($practises as &$practise){
-            $practise['dates'] = $this->datePractiseModel->where('Practise_id', $practise['id'])->findAll();
+            $practise['dates'] = $this->datePractiseModel->where('Practise_practise_id', $practise['practise_id'])->findAll();
             $practise['class'] = [];
-            $classIds = $this->class_practiseModel->where('Practise_id', $practise['id'])->findAll();
+            $classIds = $this->class_practiseModel->where('Practise_practise_id', $practise['practise_id'])->findAll();
             foreach($classIds as $classId){
-                $class = $this->classModel->find($classId['Class_id']);
+                $class = $this->classModel->find($classId['Class_class_id']);
                 $practise['class'][] = $class;
             }
         }
@@ -112,7 +112,7 @@ class Dashboard extends Controller
         $search = urldecode($search);
         $oder = $this->request->getGet('oder');
         if(empty($search || $oder)){
-            $users = $this->userModel->select('User.*, Class.*, User.id AS user_id')->orderBy('surname, name', 'ASC')->paginate(20);
+            $users = $this->userModel->orderBy('user_surname, user_name', 'ASC')->paginate(20);
         }else{
             if($oder == 1 || empty($oder) || $oder > 5 || $oder < 1){
                 $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('surname, name', 'ASC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
@@ -132,13 +132,13 @@ class Dashboard extends Controller
         }
         $pager = $this->userModel->pager;
         foreach($users as &$user){
-            $class = $this->classModel->where('id', $user['Class_id'])->first();
+            $class = $this->classModel->where('class_id', $user['Class_class_id'])->first();
             if(!empty($class)){
                 $user['class'] = $class;
-                $fieldStudy = $this->fieldStudy->where('id', $class['Field_study_id'])->first();
+                $fieldStudy = $this->fieldStudy->where('field_id', $class['Field_study_field_id'])->first();
                if(!empty($fieldStudy)){
                 $user['field'] = $fieldStudy;
-                $typeSchool = $this->typeSchool->where('id', $fieldStudy['Type_school_id'])->first();
+                $typeSchool = $this->typeSchool->where('type_id', $fieldStudy['Type_school_type_id'])->first();
                 if(!empty($typeSchool)){
                     $user['typeSchool'] = $typeSchool;
                 }
@@ -163,8 +163,8 @@ class Dashboard extends Controller
             return false;
         }
         $data = [
-            'name' => $name,
-            'description' => $description,
+            'category_name' => $name,
+            'category_description' => $description,
         ];
         $this->categorySkill->insert($data);
         return redirect()->to(base_url('/dashboard-skill'));
@@ -178,9 +178,9 @@ class Dashboard extends Controller
             return false;
         }
         $data = [
-            'name' => $name,
-            'description' => $description,
-            'Category_skill_id' => $idCategory,
+            'skill_name' => $name,
+            'skill_description' => $description,
+            'Category_skill_category_id' => $idCategory,
         ];
         $this->skill->insert($data);
         return redirect()->to(base_url('/dashboard-skill'));
@@ -193,8 +193,8 @@ class Dashboard extends Controller
             return redirect()->to(base_url('/dashboard-skill'));
         }
         $data = [
-            'name' => $name,
-            'description' => $description,
+            'category_name' => $name,
+            'category_description' => $description,
         ];
         $this->categorySkill->update($id, $data);
         return redirect()->to(base_url('/dashboard-skill'));
@@ -208,16 +208,16 @@ class Dashboard extends Controller
             return redirect()->to(base_url('/dashboard-skill'));
         }
         $data = [
-            'name' => $name,
-            'description' => $description,
-            'Category_skill_id' => $categoryId,
+            'skill_name' => $name,
+            'skill_description' => $description,
+            'Category_skill_category_id' => $categoryId,
         ];
         $this->skill->update($id, $data);
         return redirect()->to(base_url('/dashboard-skill'));
     }
     public function deleteCategorySkill($id){
         $this->categorySkill->delete($id);
-        $this->skill->where('Category_skill_id', $id)->delete();
+        $this->skill->where('Category_skill_category_id', $id)->delete();
         return redirect()->to(base_url('/dashboard-skill'));
     }
     public function deleteSkill($id){
@@ -233,8 +233,8 @@ class Dashboard extends Controller
         $role = $data->role;
         $value = $data->value;
         $user = $this->userModel->find($userId);
-        $admin = $user['admin'];
-        $spravce = $user['spravce'];
+        $admin = $user['user_admin'];
+        $spravce = $user['user_spravce'];
         if ($role === 'admin' && $value === 1) {
             $spravce = 0;
             $admin = 1;
@@ -245,7 +245,7 @@ class Dashboard extends Controller
             $admin = 0;
             $spravce = 0;
         }
-        $updateUser = ['admin' => $admin, 'spravce' => $spravce];
+        $updateUser = ['user_admin' => $admin, 'user_spravce' => $spravce];
         $this->userModel->update($userId, $updateUser);
         $user = $this->userModel->find($userId);
         return $this->response->setJSON([
@@ -257,10 +257,10 @@ class Dashboard extends Controller
     public function skillView(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
-        $categoryes = $this->categorySkill->orderBy('create_time', 'DESC')->groupStart()->like('name', $search)->groupEnd()->paginate(10);
+        $categoryes = $this->categorySkill->orderBy('category_create_time', 'DESC')->groupStart()->like('category_name', $search)->groupEnd()->paginate(10);
         $pager = $this->categorySkill->pager;
         foreach($categoryes as &$category){
-            $category['skill'] = $this->skill->where('Category_skill_id', $category['id'])->findAll();
+            $category['skill'] = $this->skill->where('Category_skill_category_id', $category['category_id'])->findAll();
         }
         $data= [
             'title' => 'Administrace',
@@ -274,10 +274,10 @@ class Dashboard extends Controller
     public function logView(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
-        $userLogs = $this->logUser->orderBy('create_time', 'DESC')->paginate(20);
+        $userLogs = $this->logUser->orderBy('log_user_create_time', 'DESC')->paginate(20);
         $pager = $this->logUser->pager;
         foreach($userLogs as &$userLog){
-            $userLog['user'] = $this->userModel->where('id', $userLog['User_id'])->first();
+            $userLog['user'] = $this->userModel->where('user_id', $userLog['User_user_id'])->first();
         }
         $data = [
             'title' => 'Administrace',
@@ -288,11 +288,11 @@ class Dashboard extends Controller
         return view('dashboard/dash_log', $data);
     }
     public function logViewCompany(){
-        $companyLogs = $this->logCompany->orderBy('create_time', 'DESC')->paginate(20);
+        $companyLogs = $this->logCompany->orderBy('log_company_create_time', 'DESC')->paginate(20);
         $pager = $this->logCompany->pager;
         foreach($companyLogs as &$companyLog){
-            $companyLog['user'] = $this->representativeCompanyModel->where('id', $companyLog['Representative_company_id'])->first();
-            $companyLog['company'] = $this->companyModel->where('id', $companyLog['user']['Company_id'])->first();
+            $companyLog['user'] = $this->representativeCompanyModel->where('representative_id', $companyLog['Representative_company_representative_id'])->first();
+            $companyLog['company'] = $this->companyModel->where('company_id', $companyLog['user']['Company_company_id'])->first();
         }
         $data = [
             'title' => 'Administrace',
@@ -319,25 +319,25 @@ class Dashboard extends Controller
         }
         $fileName = $file->getName();
         $dataPractise = [
-            'name' => $name,
-            'description'=> $description,
-            'end_new_offer' => $dateEndNewOffer,
-            'contract_file' => $fileName,
+            'practise_name' => $name,
+            'practise_description'=> $description,
+            'practise_end_new_offer' => $dateEndNewOffer,
+            'practise_contract_file' => $fileName,
         ];
         $id = $this->practiseModel->insert($dataPractise);
         foreach($dates as $date){
             $dataDate = [
-                'date_from' => $date['date-from'],
-                'date_to' => $date['date-to'],
-                'Practise_id' => $id,
+                'date_date_from' => $date['date-from'],
+                'date_date_to' => $date['date-to'],
+                'Practise_practise_id' => $id,
             ];
             $this->datePractiseModel->insert($dataDate);
         }
         if(!empty($classes)){
             foreach ($classes as $class) {
                 $dataClass = [
-                    'Class_id' => $class,
-                    'Practise_id' => $id,
+                    'Class_class_id' => $class,
+                    'Practise_practise_id' => $id,
                 ];
                 $this->class_practiseModel->insert($dataClass);
             }
@@ -359,14 +359,14 @@ class Dashboard extends Controller
             return redirect()->to(base_url('dashboard-company'));
         }
         $data = [
-            'degree_before' => $degreeBefore,
-            'name' => $name,
-            'surname' => $surname,
-            'degree_after' => $degreeAfter,
-            'mail' => $mail,
-            'phone' => $phone,
-            'position_works' => $positionWork,
-            'Company_id' => $companyId,
+            'manager_degree_before' => $degreeBefore,
+            'manager_name' => $name,
+            'manager_surname' => $surname,
+            'manager_degree_after' => $degreeAfter,
+            'manager_mail' => $mail,
+            'manager_phone' => $phone,
+            'manager_position_works' => $positionWork,
+            'Company_company_id' => $companyId,
         ];
         $this->practiseManager->insert($data);
         return redirect()->to(base_url('dashboard-company'));
@@ -385,14 +385,14 @@ class Dashboard extends Controller
             return redirect()->to(base_url('dashboard-company'));
         }
         $data = [
-            'degree_before' => $degreeBefore,
-            'name' => $name,
-            'surname' => $surname,
-            'degree_after' => $degreeAfter,
-            'mail' => $mail,
-            'phone' => $phone,
-            'position_works' => $positionWork,
-            'Company_id' => $companyId,
+            'manager_degree_before' => $degreeBefore,
+            'manager_name' => $name,
+            'manager_surname' => $surname,
+            'manager_degree_after' => $degreeAfter,
+            'manager_mail' => $mail,
+            'manager_phone' => $phone,
+            'manager_position_works' => $positionWork,
+            'Company_company_id' => $companyId,
         ];
         $this->practiseManager->update($id, $data);
         return redirect()->to(base_url('dashboard-company'));
@@ -409,7 +409,7 @@ class Dashboard extends Controller
         $passwd2 = $this->request->getPost('passwd2');
         $checkbox = $this->request->getPost('checkbox');
         $companyId = $this->request->getPost('companyId');
-        $user = $this->representativeCompanyModel->where('mail',$mail)->first();
+        $user = $this->representativeCompanyModel->where('representative_mail',$mail)->first();
         if(!empty($user)){
             return redirect()->to(base_url('dashboard-company'));
         }
@@ -426,15 +426,15 @@ class Dashboard extends Controller
         }
         $hashPassword = password_hash($passwd1, PASSWORD_DEFAULT);
         $data = [
-            'degree_before' => $degreeBefore,
-            'name' => $name,
-            'surname' => $surname,
-            'degree_after' => $degreeAfter,
-            'mail' => $mail,
-            'password' => $hashPassword,
-            'phone' => $phone,
-            'function' => $positionWork,
-            'Company_id' => $companyId, 
+            'representative_degree_before' => $degreeBefore,
+            'representative_name' => $name,
+            'representative_surname' => $surname,
+            'representative_degree_after' => $degreeAfter,
+            'representative_mail' => $mail,
+            'representative_password' => $hashPassword,
+            'representative_phone' => $phone,
+            'representative_function' => $positionWork,
+            'Company_company_id' => $companyId, 
         ];
         $idInsert = $this->representativeCompanyModel->insert($data);
         if(!empty($checkbox)){
@@ -459,10 +459,10 @@ class Dashboard extends Controller
             $expire = $nowTime->addHours(1);
             $hashSecretCode = password_hash($secretCode, PASSWORD_DEFAULT);
             $dataResetPass = [
-                'token' => $hashSecretCode,
-                'expires_at' => $expire,
-                'use' => 0,
-                'Representative_company_id' => $idInsert,
+                'reset_token' => $hashSecretCode,
+                'reset_expires_at' => $expire,
+                'reset_use' => 0,
+                'Representative_company_representative_id' => $idInsert,
             ] ;
             $this->resetPassword->insert($dataResetPass);
         }
@@ -481,13 +481,13 @@ class Dashboard extends Controller
             return redirect()->to(base_url('dashboard-company'));
         }
         $data = [
-            'degree_before' => $degreeBefore,
-            'name' => $name,
-            'surname' => $surname,
-            'degree_after' => $degreeAfter,
-            'mail' => $mail,
-            'phone' => $phone,
-            'function' => $positionWork,
+            'representative_degree_before' => $degreeBefore,
+            'representative_name' => $name,
+            'representative_surname' => $surname,
+            'representative_degree_after' => $degreeAfter,
+            'representative_mail' => $mail,
+            'representative_phone' => $phone,
+            'representative_function' => $positionWork,
         ];
         $this->representativeCompanyModel->update($id, $data);
         return redirect()->to(base_url('dashboard-company'));
@@ -499,7 +499,7 @@ class Dashboard extends Controller
             return redirect()->to(base_url('dashboard-company'));
         }
         $data = [
-            'name' => $name,
+            'company_name' => $name,
         ];
         $this->companyModel->update($id, $data);
         return redirect()->to(base_url('dashboard-company'));
@@ -526,12 +526,12 @@ class Dashboard extends Controller
             log_message('info', 'Chyba: Heslo');
             return redirect()->to(base_url('dashboard-company'));
         }
-        $existCompany = $this->companyModel->where('ico', $ico)->find();
+        $existCompany = $this->companyModel->where('company_ico', $ico)->find();
         if(!empty($existCompany)){
             log_message('info', 'Chyba: existuje firma');
             return redirect()->to(base_url('dashboard-company'));
         }
-        $existUser = $this->representativeCompanyModel->where('mail', $mail)->find();
+        $existUser = $this->representativeCompanyModel->where('representative_mail', $mail)->find();
         if(!empty($existUser)){
             log_message('info', 'Chyba: existuje uživatel');
             return redirect()->to(base_url('dashboard-company'));
@@ -549,14 +549,14 @@ class Dashboard extends Controller
         $postCode = $isValid['sidlo']['psc'];
         $legalNumberForm = $isValid['pravniForma'];
         $dataCompany = [
-            'name' => $nameCompany,	
-            'ico' => $ico,
-            'subject' => $legalForm,
-            'legal_form' => $legalNumberForm,
-            'city' => $town,
-            'agree_document' => 1,
-            'street' => $street,
-            'post_code' => $postCode,    
+            'company_name' => $nameCompany,	
+            'company_ico' => $ico,
+            'company_subject' => $legalForm,
+            'company_legal_form' => $legalNumberForm,
+            'company_city' => $town,
+            'company_agree_document' => 1,
+            'company_street' => $street,
+            'company_post_code' => $postCode,    
         ];
         $id = $this->companyModel->insert($dataCompany);
         if(!empty($checkbox)){
@@ -564,15 +564,15 @@ class Dashboard extends Controller
         }
         $hashPasswd = password_hash($passwd1, PASSWORD_DEFAULT);
         $dataUser = [
-            'degree_before' => $degreeBefore,
-            'name' => $name,
-            'surname' => $surname,
-            'degree_after' => $degreeAfter,
-            'mail' => $mail,
-            'password' => $hashPasswd,
-            'phone' => $phone,
-            'function' => $position_work,
-            'Company_id' => $id,
+            'representative_degree_before' => $degreeBefore,
+            'representative_name' => $name,
+            'representative_surname' => $surname,
+            'representative_degree_after' => $degreeAfter,
+            'representative_mail' => $mail,
+            'representative_password' => $hashPasswd,
+            'representative_phone' => $phone,
+            'representative_function' => $position_work,
+            'Company_company_id' => $id,
         ];
         $idUser = $this->representativeCompanyModel->insert($dataUser);
         if(!empty($checkbox)){
@@ -617,10 +617,10 @@ class Dashboard extends Controller
             $expire = $nowTime->addHours(1);
             $hashSecretCode = password_hash($secretCode, PASSWORD_DEFAULT);
             $dataReset = [
-                'token' => $hashSecretCode,
-                'expires_at' => $expire,
-                'use' => 0,
-                'Representative_company_id' => $idUser,
+                'reset_token' => $hashSecretCode,
+                'reset_expires_at' => $expire,
+                'reset_use' => 0,
+                'Representative_company_representative_id' => $idUser,
             ];
             $this->resetPassword->insert($dataReset);
         }
@@ -654,24 +654,24 @@ class Dashboard extends Controller
                 return redirect()->to(base_url('dashboard-company'));
             }
             $data = [
-                'password' => $passwd1,
+                'representative_password' => $passwd1,
             ];
             $this->representativeCompanyModel->update($id, $data);
         }
         if(!empty($checkbox)){
             $user = $this->representativeCompanyModel->find($id);
-            $resetCodes = $this->resetPassword->where('Representative_company_id', $user['id'])->find();
+            $resetCodes = $this->resetPassword->where('Representative_company_representative_id', $user['representative_id'])->find();
             $nowTime = Time::now();
             $expire = $nowTime->addHours(1);
             foreach($resetCodes as $resetCode){
-                if($resetCode['expires_at'] > $nowTime){
+                if($resetCode['reset_expires_at'] > $nowTime){
                     return redirect()->to(base_url('dashboard-company'));
                 }
             }
-            $mail = $user['mail'];
+            $mail = $user['representative_mail'];
             $secretCode = bin2hex(random_bytes(16));
             $hashMail = password_hash($mail, PASSWORD_DEFAULT);
-            $linkReset = base_url('/reset-password?code='.urlencode($secretCode).'&idcode='.urlencode($hashMail).'&id='.$user['id']);
+            $linkReset = base_url('/reset-password?code='.urlencode($secretCode).'&idcode='.urlencode($hashMail).'&id='.$user['representative_id']);
             $messageHtml = '
             <h1>Obnovení hesla k aplikaci Booking praxí</h1>
             <p>Vážený uživateli,</p>
@@ -692,10 +692,10 @@ class Dashboard extends Controller
             $this->email->sentEmail($mail, $messageHtml, $subjectEmail);
             $hashSecretCode = password_hash($secretCode, PASSWORD_DEFAULT);
             $dataResetPass = [
-                    'token' => $hashSecretCode,
-                    'expires_at' => $expire,
-                    'use' => 0,
-                    'Representative_company_id' => $user['id'],
+                    'reset_token' => $hashSecretCode,
+                    'reset_expires_at' => $expire,
+                    'reset_use' => 0,
+                    'Representative_company_representative_id' => $user['representative_id'],
                 ] ;
             $this->resetPassword->insert($dataResetPass);
         }
@@ -706,17 +706,17 @@ class Dashboard extends Controller
         if(empty($company)){
             return redirect()->to(base_url('dashboard-company'));
         }
-        $representativeCompanyes = $this->representativeCompanyModel->where('Company_id', $id)->find();
+        $representativeCompanyes = $this->representativeCompanyModel->where('Company_company_id', $id)->find();
         foreach($representativeCompanyes as $representativeCompany){
-            $logs = $this->logCompany->where('Representative_company_id', $representativeCompany['id'])->find();
+            $logs = $this->logCompany->where('Representative_company_representative_id', $representativeCompany['representative_id'])->find();
             foreach($logs as $log){
-                $this->logCompany->delete($log['id']);
+                $this->logCompany->delete($log['log_company_id']);
             }
-            $resets = $this->resetPassword->where('Representative_company_id', $representativeCompany['id'])->find();
+            $resets = $this->resetPassword->where('Representative_company_representative_id', $representativeCompany['representative_id'])->find();
             foreach($resets as $reset){
-                $this->resetPassword->delete($reset['id']);
+                $this->resetPassword->delete($reset['reset_id']);
             }
-            $this->representativeCompanyModel->delete($representativeCompany['id']);
+            $this->representativeCompanyModel->delete($representativeCompany['representative_id']);
         }
         $this->companyModel->delete($id);
         return redirect()->to(base_url('dashboard-company'));
@@ -726,13 +726,13 @@ class Dashboard extends Controller
         if(empty($representativeCompany)){
             return redirect()->to(base_url('dashboard-company'));
         }
-        $logs = $this->logCompany->where('Representative_company_id', $id)->find();
+        $logs = $this->logCompany->where('Representative_company_representative_id', $id)->find();
         foreach($logs as $log){
-            $this->logCompany->delete($log['id']);
+            $this->logCompany->delete($log['log_company_id']);
         }
-        $resets = $this->resetPassword->where('Representative_company_id', $id)->find();
+        $resets = $this->resetPassword->where('Representative_company_representative_id', $id)->find();
         foreach($resets as $reset){
-            $this->resetPassword->delete($reset['id']);
+            $this->resetPassword->delete($reset['reset_id']);
         }
         $this->representativeCompanyModel->delete($id);
         return redirect()->to(base_url('dashboard-company'));

@@ -67,15 +67,15 @@
             <div class="d-flex mt-2 justify-content-center">
                 <div class="card-icon-people d-flex align-items-center justify-content-center"><i class="fa-regular fa-user h4"></i></div>
             </div>
-            <div class="d-flex justify-content-center mt-1"><p class="fw-bold h5"><?= $user['name'] . ' ' . $user['surname'] ?></p></div>
+            <div class="d-flex justify-content-center mt-1"><p class="fw-bold h5"><?= $user['user_name'] . ' ' . $user['user_surname'] ?></p></div>
             <div class="d-flex m-2 justify-content-between p-2">
                 <div class="d-flex">
                     <p class="fw-bold p-2">Třída:</p>
-                    <p class="p-2"><?= $user['class']['class'] . '.' . $user['class']['letter_class'] ?></p>
+                    <p class="p-2"><?= $user['class_class'] . '.' . $user['class_letter_class'] ?></p>
                 </div>
                 <div class="d-flex">
                     <p class="fw-bold p-2">Obor:</p>
-                    <p class="p-2"><?= $user['fieldStudy']['shortcut'] ?></p>
+                    <p class="p-2"><?= $user['field_shortcut'] ?></p>
                 </div>
             </div>
           <div class="d-flex justify-content-center mt-2 text-center"><a class="d-flex justify-content-center align-items-center btn-show-profile" href="<?= base_url('/profile/'.$user['user_id']) ?>">Zobrazit</a></div>

@@ -96,12 +96,12 @@
                 <div class="p-5 container">
                     <div class="d-md-flex d-block">
                         <div class="d-flex justify-content-center align-items-center"><div class="icon-user d-flex align-items-center justify-content-center"><i class="fa-regular fa-user h1"></i></div></div>
-                        <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h3"><?php if(!empty($user['degree_before'])){echo $user['degree_before'];} echo ' '; echo $user['name'] . ' ' . $user['surname']; if(!empty($user['degree_after'])){echo $user['degree_after'];}  ?></div><div><span class="text-wrap">Firma</span></div></div></div>
+                        <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h3"><?php if(!empty($user['representative_degree_before'])){echo $user['representative_degree_before'];} echo ' '; echo $user['representative_name'] . ' ' . $user['representative_surname']; if(!empty($user['representative_degree_after'])){echo $user['representative_degree_after'];}  ?></div><div><span class="text-wrap">Firma</span></div></div></div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-12 col-md-6"><div class="h5 mt-2">E-mail</div><div class=""></div><?= $user['mail'] ?></div>
-                        <div class="col-12 col-md-6"><div class="h5 mt-2">Telefonní číslo</div><div class=""><?= $user['phone'] ?></div></div>
-                        <div class="col-12 col-md-6"><div class="h5 mt-2">Funkce</div><div class=""><?= $user['function'] ?></div></div>
+                        <div class="col-12 col-md-6"><div class="h5 mt-2">E-mail</div><div class=""></div><?= $user['representative_mail'] ?></div>
+                        <div class="col-12 col-md-6"><div class="h5 mt-2">Telefonní číslo</div><div class=""><?= $user['representative_phone'] ?></div></div>
+                        <div class="col-12 col-md-6"><div class="h5 mt-2">Funkce</div><div class=""><?= $user['representative_function'] ?></div></div>
                     </div>
                     <div class="d-flex justify-content-center aling-items-center p-3"><div><a href="#"><div>Zobrazit více</div><div class="d-flex justify-content-center"><i class="fa-solid fa-chevron-down"></i></div></a></div></div>
                 </div>
@@ -112,11 +112,11 @@
                     <div class="p-5 container">
                         <div class="d-md-flex d-block">
                             <div class="d-flex justify-content-center align-items-center"><div class="icon-company d-flex align-items-center justify-content-center"><i class="fa-solid fa-building h1"></i></div></div>
-                             <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h4">Název firmy/instituce</div><span><?= $company['name'] ?></span><br><span class="fw-bold">IČO: </span><span><?= $company['ico'] ?></span></div></div>
+                             <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h4">Název firmy/instituce</div><span><?= $company['company_name'] ?></span><br><span class="fw-bold">IČO: </span><span><?= $company['company_ico'] ?></span></div></div>
                         </div>
                         <div class="row">
-                            <div class="col-12"><div class="h5 mt-2">Lokalita</div><div class=""><?= $company['post_code'] . ' ' . $company['city'] . ', ' . $company['street'] ?></div></div>
-                            <div class="col-12"><div class="h5 mt-2">Právní forma</div><div class=""><?php if($company['subject'] == 1){echo 'Fyzická osoba';} if($company['subject'] == 2){echo 'Pravnická osoba';} ?></div></div>
+                            <div class="col-12"><div class="h5 mt-2">Lokalita</div><div class=""><?= $company['company_post_code'] . ' ' . $company['company_city'] . ', ' . $company['company_street'] ?></div></div>
+                            <div class="col-12"><div class="h5 mt-2">Právní forma</div><div class=""><?php if($company['company_subject'] == 1){echo 'Fyzická osoba';} if($company['company_subject'] == 2){echo 'Pravnická osoba';} ?></div></div>
                         </div>
                     </div>
                 </div>

@@ -11,8 +11,8 @@ use App\Models\RepresentativeCompanyModel;
 use App\Models\LogCompany;
 use App\Models\LogUser;
 use App\Models\ResetPassword;
+use App\Models\ClassModel;
 use App\Controllers\Email;
-
 class Auth extends Controller
 {
     protected $provider;
@@ -24,6 +24,7 @@ class Auth extends Controller
     var $logUser;
     var $resetPassword;
     var $email;
+    var $classModel;
     public function __construct()
     {
         $this->companyModel = new CompanyModel();
@@ -32,6 +33,8 @@ class Auth extends Controller
         $this->logCompany = new LogCompany();
         $this->logUser = new LogUser();
         $this->resetPassword = new ResetPassword();
+        $this->classModel = new ClassModel();
+        $this->email = new Email();
         $this->session = session();
         $this->session->keepFlashdata('err');
         // Načítání hodnot z .env souboru přímo v kontroleru
@@ -54,33 +57,33 @@ class Auth extends Controller
     public function loginCompany(){
         $mail = $this->request->getPost('email');
         $passwd = $this->request->getPost('password');
-        $user = $this->representativeCompanyModel->where('mail', $mail)->first();
-        if(!$user || !password_verify($passwd, $user['password'])){
+        $user = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
+        if(!$user || !password_verify($passwd, $user['representative_password'])){
             //když uživatel neexistuje nebo nesprávné heslo
             //!!Je potřeba dodělat hlášku
             return redirect()->to(base_url('/login'));
         }
         $this->session->set('companyUser',[
-            'idUser' => $user['id'],
-            'idCompany' => $user['Company_id'],
+            'idUser' => $user['representative_id'],
+            'idCompany' => $user['Company_company_id'],
         ]);
         $ipAdrese = $this->request->getIPAddress();
         $data = [
-            'name' => 'Přihlášení',
-            'ip_adrese' => $ipAdrese,
-            'Representative_company_id' => $user['id'],
+            'log_company_name' => 'Přihlášení',
+            'log_company_ip_adrese' => $ipAdrese,
+            'Representative_company_representative_id' => $user['representative_id'],
         ];
         $this->logCompany->insert($data);
         $this->session->set('role',['company']);
-        return redirect()->to(base_url('/home-student')); //!!Je potřeba dodat správnou url
+        return redirect()->to(base_url('/home-company')); //!!Je potřeba dodat správnou url
     }
     public function logOutCompany(){
         $ipAdrese = $this->request->getIPAddress();
         $user = $this->session->get('companyUser');
         $data = [
-            'name'=> 'Odhlášení',
-            'ip_adrese' => $ipAdrese,
-            'Representative_company_id' => $user['idUser'],
+            'log_company_name'=> 'Odhlášení',
+            'log_company_ip_adrese' => $ipAdrese,
+            'Representative_company_representative_id' => $user['idUser'],
         ];
         $this->logCompany->insert($data);
         $this->session->destroy();
@@ -95,8 +98,8 @@ class Auth extends Controller
             return redirect()->to(base_url('/registration'));
             //!Je potřeba doplnit chybějící hlášku
         }
-        $representativeUser = $this->representativeCompanyModel->where('mail', $mail)->first();
-        $companyExist = $this->companyModel->where('ico', $ico)->first();
+        $representativeUser = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
+        $companyExist = $this->companyModel->where('company_ico', $ico)->first();
         if($representativeUser || $companyExist){
             return redirect()->to(base_url('/registration'));
             //!JE potřeba doplnit chybějící hlášku, co se stalo.
@@ -210,27 +213,26 @@ class Auth extends Controller
             return redirect()->to(base_url('/next-step-register'));
         }
         $dataCompany = [
-            'name' => $nameCompany,	
-            'ico' => $ico,
-            'subject' => $legalForm,
-            'legal_form' => $legalFormNumber,
-            'city' => $placeCompany,
-            'agree_document' => $agreeDocument,
-            'street' => $streetCompany,
-            'post_code' => $postCode,    
+            'company_name' => $nameCompany,	
+            'company_ico' => $ico,
+            'company_subject' => $legalForm,
+            'company_legal_form' => $legalFormNumber,
+            'company_city' => $placeCompany,
+            'company_agree_document' => $agreeDocument,
+            'company_street' => $streetCompany,
+            'company_post_code' => $postCode,    
         ];
-        $this->companyModel->insert($dataCompany);
-        $lastIdInsert = $this->companyModel->getInsertID();
+        $lastIdInsert = $this->companyModel->insert($dataCompany); 
         $dataPerson = [
-            'degree_before' => $degreeBefore,
-            'name' => $namePerson,
-            'surname' => $surnamePerson,
-            'degree_after' => $degreeAfter,
-            'mail' => $mail,
-            'password' => $password,
-            'phone' => $phonePerson,
-            'function' => $functionPerson,
-            'Company_id' => $lastIdInsert,
+            'representative_degree_before' => $degreeBefore,
+            'representative_name' => $namePerson,
+            'representative_surname' => $surnamePerson,
+            'representative_degree_after' => $degreeAfter,
+            'representative_mail' => $mail,
+            'representative_password' => $password,
+            'representative_phone' => $phonePerson,
+            'representative_function' => $functionPerson,
+            'Company_company_id' => $lastIdInsert,
         ];
         $this->representativeCompanyModel->insert($dataPerson);
         $this->session->remove('company');
@@ -274,28 +276,52 @@ class Auth extends Controller
         $email = $userData['mail'] ?? $userData['userPrincipalName'];
 
         $ipAdrese = $this->session->get('ip_user');
-        $user = $this->userModel->where('mail', $email)->first();
+        $user = $this->userModel->where('user_mail', $email)->first();
         // Zjistím, zda stávající uživatel již není uveden v databázi, a když není, tak ho tam napíší.
         if (!$user) {
+            $department = $userData['department'];
+            $users = $this->userModel->findAll();
+            if(empty($users)){
+                $admin = 1;
+            }
             $data = [
-                'name' => $userData['givenName']??'',
-                'surname' => $userData['surname']??'',
-                'mail' => $email,
-                'department' => $userData['department'] ?? '',
-                'job_title' => $userData['jobTitle'] ?? '',
+                'user_name' => $userData['givenName']??'',
+                'user_surname' => $userData['surname']??'',
+                'user_mail' => $email,
+                'user_department' => $userData['department'] ?? '',
+                'user_job_title' => $userData['jobTitle'] ?? '',
+                'user_admin' => $admin ?? '0',
             ];
-            $this->userModel->insert($data);
-            $user = $this->userModel->where('mail', $email)->first();
+            $idUser = $this->userModel->insert($data);
+            if(strpos($department, '-') !== false){
+                [$yearGraduation, $letterClass] = explode('-', $department, 2);
+                $yearGraduation = intval($yearGraduation);
+                $letterClass = strtoupper(trim($letterClass));
+                $class = $this->classModel->where('class_year_graduation', $yearGraduation)->where('class_letter_class', $letterClass)->first();
+                if($class){
+                    $dataUser = [
+                        'user_role' => 'student',
+                        'Class_class_id' => $class['class_id'],
+                    ];
+                    $this->userModel->update($idUser, $dataUser);
+                }
+            }else{
+                $dataUser = [
+                    'user_role' => 'teacher',
+                ];
+                $this->userModel->update($idUser, $dataUser);
+            }
+            $user = $this->userModel->where('user_mail', $email)->first();
         }
         $dataLog = [
-            'name' => 'Přihlášení',
-            'ip' => $ipAdrese,
-            'User_id' =>$user['id'],
+            'log_user_name' => 'Přihlášení',
+            'log_user_ip_adrese' => $ipAdrese,
+            'User_user_id' => $user['user_id'],
         ];
         $this->logUser->insert($dataLog);
         // Potřebná data ukládám do session pro další práci s nimi
-        $admin = $user['admin'];
-        $spravce = $user['spravce'];
+        $admin = $user['user_admin'];
+        $spravce = $user['user_spravce'];
         if($admin == 1){
             $role = 'admin';
         }elseif($spravce == 1){
@@ -304,16 +330,16 @@ class Auth extends Controller
             $role = null;
         }
         if($role == null){
-            $this->session->set('role', [$user['role']]);
+            $this->session->set('role', [$user['user_role']]);
         }else{
-            $this->session->set('role', [$user['role'], $role]);
+            $this->session->set('role', [$user['user_role'], $role]);
         }
         $this->session->set('user', [
-            'id' => $user['id'],
-            'jmeno' => $user['name'],
-            'prijmeni' => $user['surname'],
-            'email' => $user['mail'],
-            'class' => $user['Class_id'],
+            'id' => $user['user_id'],
+            'jmeno' => $user['user_name'],
+            'prijmeni' => $user['user_surname'],
+            'email' => $user['user_mail'],
+            'class' => $user['Class_class_id'],
         ]);
         $this->session->remove('ip_user');
         //Vracím na stránku /routu
@@ -324,9 +350,9 @@ class Auth extends Controller
         $user = $this->session->get('user');
         $ipAdrese = $this->request->getIPAddress();
         $data = [
-            'name' => 'Odhlášení',
-            'ip_adrese' => $ipAdrese,
-            'User_id' => $user['id'],
+            'log_user_name' => 'Odhlášení',
+            'log_user_ip_adrese' => $ipAdrese,
+            'User_user_id' => $user['id'],
         ];
         $this->logUser->insert($data);
         $this->session->destroy();
@@ -338,26 +364,24 @@ class Auth extends Controller
         $idCode = $this->request->getGet('idcode');
         $id = $this->request->getGet('id');
         if(empty($secretCode && $idCode && $id)){
-            log_message('info', 'Chyba v získání údajů');
             return redirect()->to(base_url('/login'));
         }
         $user = $this->representativeCompanyModel->find($id);
         if(empty($user)){
             return redirect()->to(base_url('/login'));
         }
-        if(!password_verify($user['mail'], $idCode)){
-            log_message('info', 'Chyba mail');
+        if(!password_verify($user['representative_mail'], $idCode)){
             return redirect()->to(base_url('/login'));
         }
-        $resetPasswd = $this->resetPassword->where('Representative_company_id', $user['id'])->find();
+        $resetPasswd = $this->resetPassword->where('Representative_company_representative_id', $user['representative_id'])->find();
         if(empty($resetPasswd)){
             return redirect()->to(base_url('/login'));
         }
         foreach($resetPasswd as $resetPassword){
-            $experied = $resetPassword['expires_at'];
+            $experied = $resetPassword['reset_expires_at'];
             $nowTime = Time::now();
             if($experied > $nowTime){
-                if(password_verify($secretCode, $resetPassword['token'])){
+                if(password_verify($secretCode, $resetPassword['reset_token'])){
                     $data = [
                         'title' => 'Nové heslo',
                         'user' => $user,
@@ -381,25 +405,25 @@ class Auth extends Controller
         }
         $passwordHash = password_hash($passwd1, PASSWORD_DEFAULT);
         $data = [
-            'password' => $passwordHash,
+            'representative_password' => $passwordHash,
         ];
         $this->representativeCompanyModel->update($id, $data);
         $dataUse = [
-            'use' => 1,
+            'reset_use' => 1,
         ];
-        $resetPasswd = $this->resetPassword->where('Representative_company_id', $id)->first();
-        $this->resetPassword->update($resetPasswd['id'], $dataUse);
-        $this->resetPassword->delete($resetPasswd['id']);
+        $resetPasswd = $this->resetPassword->where('Representative_company_representative_id', $id)->first();
+        $this->resetPassword->update($resetPasswd['reset_id'], $dataUse);
+        $this->resetPassword->delete($resetPasswd['reset_id']);
         return redirect()->to(base_url('/login'));
     }
     public function forgotPassword(){
         $mail = $this->request->getPost('mail');
-        $user = $this->representativeCompanyModel->where('mail', $mail)->first();
-        $resetPasswd = $this->resetPassword->where('Representative_company_id', $user['id'])->find();
+        $user = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
+        $resetPasswd = $this->resetPassword->where('Representative_company_representative_id', $user['representative_id'])->find();
         $nowTime = Time::now();
         $expire = $nowTime->addHours(1);
         foreach($resetPasswd as $resetPassword){
-            if($resetPassword['expires_at'] > $nowTime){
+            if($resetPassword['reset_expires_at'] > $nowTime){
                 return redirect()->to(base_url('/login'));
             }
         }
@@ -408,7 +432,7 @@ class Auth extends Controller
         }
         $secretCode = bin2hex(random_bytes(16));
         $hashMail = password_hash($mail, PASSWORD_DEFAULT);
-        $linkReset = base_url('/reset-password?code='.urlencode($secretCode).'&idcode='.urlencode($hashMail).'&id='.$user['id']);
+        $linkReset = base_url('/reset-password?code='.urlencode($secretCode).'&idcode='.urlencode($hashMail).'&id='.$user['representative_id']);
         $messageHtml = '
         <h1>Obnovení hesla k aplikaci Booking praxí</h1>
         <p>Vážený uživateli,</p>
@@ -429,10 +453,10 @@ class Auth extends Controller
         $this->email->sentEmail($mail, $messageHtml, $subjectEmail);
         $hashSecretCode = password_hash($secretCode, PASSWORD_DEFAULT);
         $dataResetPass = [
-                'token' => $hashSecretCode,
-                'expires_at' => $expire,
-                'use' => 0,
-                'Representative_company_id' => $user['id'],
+                'reset_token' => $hashSecretCode,
+                'reset_expires_at' => $expire,
+                'reset_use' => 0,
+                'Representative_company_representative_id' => $user['representative_id'],
             ] ;
         $this->resetPassword->insert($dataResetPass);
         return redirect()->to(base_url('/login'));

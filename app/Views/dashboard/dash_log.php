@@ -72,14 +72,14 @@
                     foreach($logs as $log){
                     ?>
                       <tr>
-                        <th class="nowrap" scope="row"><?php if($log['name'] == 'Přihlášení'){echo '<i class="fa-solid fa-key"></i>  ';}else{echo '<i class="fa-solid fa-right-to-bracket"></i>  ';} ?><?= $log['name']?></th>
+                        <th class="nowrap" scope="row"><?php if($log['log_user_name'] == 'Přihlášení'){echo '<i class="fa-solid fa-key"></i>  ';}else{echo '<i class="fa-solid fa-right-to-bracket"></i>  ';} ?><?= $log['log_user_name']?></th>
                         <td>
-                            <?= $log['ip_adrese'] ?>
+                            <?= $log['log_user_ip_adrese'] ?>
                         </td>
                         <td>
-                            <?= date('d.m.Y H:i:s', strtotime($log['create_time'])) ?>
+                            <?= date('d.m.Y H:i:s', strtotime($log['log_user_create_time'])) ?>
                         </td>
-                        <td><?= $log['user']['name'] . ' ' . $log['user']['surname']?></td>
+                        <td><?= $log['user']['user_name'] . ' ' . $log['user']['user_surname']?></td>
                     </tr>  
                     <?php }?>
                 </tbody>

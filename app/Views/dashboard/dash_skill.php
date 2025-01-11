@@ -185,12 +185,12 @@
                     }
                     foreach($categoryes as $category){
                     ?>
-                    <tr <?php if(!empty($category['description'])){ ?> data-bs-toggle="tooltip" title="<?= $category['description'] ?>" <?php } ?>>
+                    <tr <?php if(!empty($category['category_description'])){ ?> data-bs-toggle="tooltip" title="<?= $category['category_description'] ?>" <?php } ?>>
                         <th class="nowrap" scope="row"><i class="fa-solid fa-folder-closed"></i></th>
-                        <td><?= $category['name']?></td>
-                        <td><?= date('d.m.Y H:i:s', strtotime($category['create_time'])) ?></td>
-                        <td><?= date('d.m.Y H:i:s', strtotime($category['edit_time'])) ?></td>
-                        <td><a href="<?=base_url('/delete-category-skill/'.$category['id'])?>"><i class="fa-solid fa-trash del-icon-category"></i></a><a href="#modalEditCategory"  data-bs-toggle="modal" data-bs-target="#modalEditCategory" data-id-category="<?= $category['id']?>" data-name-category="<?= $category['name']?>" data-description-category="<?= $category['description']?>"><i class="fa-solid fa-pencil edit-icon-category"></i></a></td>
+                        <td><?= $category['category_name']?></td>
+                        <td><?= date('d.m.Y H:i:s', strtotime($category['category_create_time'])) ?></td>
+                        <td><?= date('d.m.Y H:i:s', strtotime($category['category_edit_time'])) ?></td>
+                        <td><a href="<?=base_url('/delete-category-skill/'.$category['category_id'])?>"><i class="fa-solid fa-trash del-icon-category"></i></a><a href="#modalEditCategory"  data-bs-toggle="modal" data-bs-target="#modalEditCategory" data-id-category="<?= $category['category_id']?>" data-name-category="<?= $category['category_name']?>" data-description-category="<?= $category['category_description']?>"><i class="fa-solid fa-pencil edit-icon-category"></i></a></td>
                     </tr>
                     <?php
                     if(empty($category['skill'])){ ?>
@@ -199,12 +199,12 @@
                     </tr>
                     <?php } 
                     foreach($category['skill'] as $skill){ ?>
-                        <tr <?php if(!empty($skill['description'])){ ?> data-bs-toggle="tooltip" title="<?= $skill['description'] ?>" <?php } ?>>
+                        <tr <?php if(!empty($skill['skill_description'])){ ?> data-bs-toggle="tooltip" title="<?= $skill['skill_description'] ?>" <?php } ?>>
                         <th class="nowrap skill" scope="row"><i class="fa-regular fa-file"></i></th>
-                        <td class="skill"><?= $skill['name']?></td>
-                        <td class="skill"><?= date('d.m.Y H:i:s', strtotime($skill['create_time'])) ?></td>
-                        <td class="skill"><?= date('d.m.Y H:i:s', strtotime($skill['edit_time'])) ?></td>
-                        <td class="skill"><a href="<?=base_url('/delete-skill/'.$skill['id'])?>"><i class="fa-solid fa-trash del-icon-skill"></i></a><a href="#modalEditSkill"  data-bs-toggle="modal" data-bs-target="#modalEditSkill" data-id-skill="<?= $skill['id']?>" data-name-skill="<?= $skill['name']?>" data-description-skill="<?= $skill['description']?>" data-categoryId-skill="<?= $skill['Category_skill_id'] ?>"><i class="fa-solid fa-pencil edit-icon-skill"></i></a></td>
+                        <td class="skill"><?= $skill['skill_name']?></td>
+                        <td class="skill"><?= date('d.m.Y H:i:s', strtotime($skill['skill_create_time'])) ?></td>
+                        <td class="skill"><?= date('d.m.Y H:i:s', strtotime($skill['skill_edit_time'])) ?></td>
+                        <td class="skill"><a href="<?=base_url('/delete-skill/'.$skill['skill_id'])?>"><i class="fa-solid fa-trash del-icon-skill"></i></a><a href="#modalEditSkill"  data-bs-toggle="modal" data-bs-target="#modalEditSkill" data-id-skill="<?= $skill['skill_id']?>" data-name-skill="<?= $skill['skill_name']?>" data-description-skill="<?= $skill['skill_description']?>" data-categoryId-skill="<?= $skill['Category_skill_category_id'] ?>"><i class="fa-solid fa-pencil edit-icon-skill"></i></a></td>
                     </tr>
                     <?php } ?>
                     <?php } ?>
@@ -255,7 +255,7 @@
               <select class="form-select" name="category_id">
                   <option>Vyberte možnost</option>
                   <?php foreach($categoryes as $category){ ?>
-                      <option value="<?= $category['id']?>"><?=$category['name']?></option>
+                      <option value="<?= $category['category_id']?>"><?=$category['category_name']?></option>
                   <?php } ?>
               </select>
             </div>
@@ -310,7 +310,7 @@
               <select class="form-select" id="edit-skill-categoryId" name="category_id">
                   <option>Vyberte možnost</option>
                   <?php foreach($categoryes as $category){ ?>
-                      <option value="<?= $category['id']?>"><?=$category['name']?></option>
+                      <option value="<?= $category['category_id']?>"><?=$category['category_name']?></option>
                   <?php } ?>
               </select>
             </div>

@@ -112,16 +112,16 @@ class UserAzureSync extends Controller
             }
             // Uložení do databáze
             $dataUser = [
-                'mail' => $mail,
-                'name' => $name,
-                'surname' => $surname,
-                'job_title' => $jobTitle,
-                'department' => $department,
-                'role' => $role,
+                'user_mail' => $mail,
+                'user_name' => $name,
+                'user_surname' => $surname,
+                'user_job_title' => $jobTitle,
+                'user_department' => $department,
+                'user_role' => $role,
             ];
-            $userExist = $userModel->where('mail', $mail)->first();
+            $userExist = $userModel->where('user_mail', $mail)->first();
             if ($userExist) {
-                $userModel->update($userExist['id'], $dataUser);
+                $userModel->update($userExist['user_id'], $dataUser);
             } else {
                 $userModel->insert($dataUser);
             }
@@ -130,7 +130,7 @@ class UserAzureSync extends Controller
     private function userToCLass(){
         $userModel = new UserModel();
         $classModel = new ClassModel();
-        $users = $userModel->where('role', 'student')->findAll();
+        $users = $userModel->where('user_role', 'student')->findAll();
         foreach( $users as $user ){
             $department = $user['department'];
 
@@ -138,17 +138,17 @@ class UserAzureSync extends Controller
                 [$yearGraduation, $letterClass] = explode('-', $department, 2);
                 $yearGraduation = intval($yearGraduation);
                 $letterClass = strtoupper(trim($letterClass));
-                $class = $classModel->where('year_graduation', $yearGraduation)->where('letter_class', $letterClass)->first();
+                $class = $classModel->where('class_year_graduation', $yearGraduation)->where('class_letter_class', $letterClass)->first();
                 if($class){
-                    $userModel->update($user['id'], ['Class_id' => $class['id']]);
+                    $userModel->update($user['user_id'], ['Class_class_id' => $class['class_id']]);
                 }else{
-                    $userModel->delete($user['id']);
+                    $userModel->delete($user['user_id']);
                 }
             }
         }
     }
     public function updateClassYearGraduation(){
         $classModel = new ClassModel();
-        $classModel->db->table('class')->set('year_graduation', 'year_graduation - 1', false)->update();
+        $classModel->db->table('class')->set('class_year_graduation', 'class_year_graduation - 1', false)->update();
     }
 }
