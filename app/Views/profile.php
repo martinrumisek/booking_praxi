@@ -91,7 +91,7 @@
                 <div class="profile-icon d-flex justify-content-center align-items-center"><i class="fa-solid fa-user h1"></i></div>
             </div>
             <div class="d-flex justify-content-center mt-3 profile-name"><h2 class="text-white"><?= $user['user_name'] . ' ' . $user['user_surname'] ?></h2></div>
-            <div class="d-flex justify-content-center mt-3 profile-name"><h3 class="text-white"><?= $class['class_class'] . '.' . $class['class_letter_class'] ?></h3></div>
+            <div class="d-flex justify-content-center mt-3 profile-name"><h3 class="text-white"><?= $user['class_class'] . '.' . $user['class_letter_class'] ?></h3></div>
             <div class="d-flex flex-wrap justify-content-center soc-icon align-items-end">
                 <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
                 <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
@@ -110,7 +110,7 @@
             <div class="row">
                 <div class="col-12 col-lg-6 p-2">
                     <h5>Obor</h5>
-                    <p><?php if(empty($fieldStudy['field_name'])){echo 'Není uvedeno';}else{echo $fieldStudy['field_name'];} ?></p>
+                    <p><?php if(empty($user['field_name'])){echo 'Není uvedeno';}else{echo $user['field_name'];} ?></p>
                 </div>
                 <div class="col-12 col-lg-6 p-2">
                     <h5>Telefonní číslo</h5>
