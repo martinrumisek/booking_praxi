@@ -146,9 +146,24 @@ class Home extends BaseController
     public function profileView(){
         $id = $this->userSession['id'];
         $user = $this->userModel->where('User.user_id', $id)->join('Class', 'User.Class_class_id = Class.class_id')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id')->first();
-        $categoryes = $this->categorySkill->findAll();
-        foreach($categoryes as &$category){
-            $category['skill'] = $this->skill->join('User_has_Skill', 'Skill.skill_id = User_has_Skill.Skill_skill_id')->where('User_has_Skill.User_user_id', $id)->where('Skill.Category_skill_category_id', $category['category_id'])->find();
+        $resultCategoryes = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id')->join('User_has_Skill', 'Skill.skill_id = User_has_Skill.Skill_skill_id')->where('User_has_Skill.User_user_id', $id)->find();
+        $categoryes = [];
+        foreach ($resultCategoryes as $result){
+            $categoryId = $result['category_id'];
+            if(!isset($categoryes[$categoryId])){
+                $categoryes[$categoryId] = [
+                    'category_id' => $categoryId,
+                    'category_name' => $result['category_name'],
+                    'category_description' => $result['category_description'],
+                    'skills' => [],
+                ];
+            }
+            $categoryes[$categoryId]['skills'][] = [
+                'skill_id' => $result['skill_id'],
+                'skill_name' => $result['skill_name'],
+                'skill_description' => $result['skill_description'],
+            ];
+
         }
         $data = [
             'title' => 'Profil',
@@ -160,9 +175,24 @@ class Home extends BaseController
     public function allProfileView($idUser){
         $id = $idUser;
         $user = $this->userModel->where('User.user_id', $id)->join('Class', 'User.Class_class_id = Class.class_id')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id')->first();
-        $categoryes = $this->categorySkill->findAll();
-        foreach($categoryes as &$category){
-            $category['skill'] = $this->skill->join('User_has_Skill', 'Skill.skill_id = User_has_Skill.Skill_skill_id')->where('User_has_Skill.User_user_id', $id)->where('Skill.Category_skill_category_id', $category['category_id'])->find();
+        $resultCategoryes = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id')->join('User_has_Skill', 'Skill.skill_id = User_has_Skill.Skill_skill_id')->where('User_has_Skill.User_user_id', $id)->find();
+        $categoryes = [];
+        foreach ($resultCategoryes as $result){
+            $categoryId = $result['category_id'];
+            if(!isset($categoryes[$categoryId])){
+                $categoryes[$categoryId] = [
+                    'category_id' => $categoryId,
+                    'category_name' => $result['category_name'],
+                    'category_description' => $result['category_description'],
+                    'skills' => [],
+                ];
+            }
+            $categoryes[$categoryId]['skills'][] = [
+                'skill_id' => $result['skill_id'],
+                'skill_name' => $result['skill_name'],
+                'skill_description' => $result['skill_description'],
+            ];
+
         }
         $data = [
             'title' => 'Profil',

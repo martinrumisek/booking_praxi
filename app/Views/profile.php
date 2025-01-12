@@ -134,7 +134,7 @@
 <div class="m-4 d-flex justify-content-center"><h2>Dovednosti</h2></div>
 <div class="container">
     <div class="row">
-        <?php foreach($categoryes as $category){ if(!empty($category['skill'])){ ?>
+        <?php foreach($categoryes as $category){ if(!empty($category['skills'])){ ?>
             <div class="col-12 col-md-6 col-lg-4 mt-2 d-flex justify-content-center">
             <div class="card" style="width: 20rem;">
                 <div class="card-top d-flex justify-content-center align-items-center">
@@ -142,7 +142,7 @@
                 </div>
                 <hr class="custom-line">
                 <div class="card-body">
-                    <?php foreach($category['skill'] as $skill){ ?>
+                    <?php foreach($category['skills'] as $skill){ ?>
                         <ul>
                             <li><?= $skill['skill_name'] ?></li>
                         </ul>
