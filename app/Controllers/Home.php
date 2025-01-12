@@ -120,7 +120,7 @@ class Home extends BaseController
     public function people(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
-        $users = $this->userModel->where('user_role', 'student')->join('Class', 'Class.class_id = User.Class_class_id')->join('Field_study', 'Field_study.field_id = Class.Field_study_field_id')->join('Type_school', 'Type_school.type_id = Field_study.Type_school_type_id')->groupStart()->like("CONCAT(user_name, ' ', user_surname)", $search)->orLike("CONCAT(class_class, '.', class_letter_class)", $search)->orLike('field_shortcut', $search)->groupEnd()->paginate(20);
+        $users = $this->userModel->where('user_role', 'student')->join('Class', 'Class.class_id = User.Class_class_id AND Class.class_del_time IS NULL')->join('Field_study', 'Field_study.field_id = Class.Field_study_field_id AND Field_study.field_del_time IS NULL')->join('Type_school', 'Type_school.type_id = Field_study.Type_school_type_id AND Type_school.type_del_time IS NULL')->groupStart()->like("CONCAT(user_name, ' ', user_surname)", $search)->orLike("CONCAT(class_class, '.', class_letter_class)", $search)->orLike('field_shortcut', $search)->groupEnd()->paginate(20);
         $pager = $this->userModel->pager;
         $data = [
             'title' => 'Žáci',
@@ -145,8 +145,8 @@ class Home extends BaseController
     }
     public function profileView(){
         $id = $this->userSession['id'];
-        $user = $this->userModel->where('User.user_id', $id)->join('Class', 'User.Class_class_id = Class.class_id')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id')->first();
-        $resultCategoryes = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id')->join('User_has_Skill', 'Skill.skill_id = User_has_Skill.Skill_skill_id')->where('User_has_Skill.User_user_id', $id)->find();
+        $user = $this->userModel->where('User.user_id', $id)->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL')->first();
+        $resultCategoryes = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id AND Skill.skill_del_time IS NULL')->join('User_has_Skill', 'Skill.skill_id = User_has_Skill.Skill_skill_id AND User_has_Skill.user_skill_del_time IS NULL')->where('User_has_Skill.User_user_id', $id)->find();
         $categoryes = [];
         foreach ($resultCategoryes as $result){
             $categoryId = $result['category_id'];
@@ -174,8 +174,8 @@ class Home extends BaseController
     }
     public function allProfileView($idUser){
         $id = $idUser;
-        $user = $this->userModel->where('User.user_id', $id)->join('Class', 'User.Class_class_id = Class.class_id')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id')->first();
-        $resultCategoryes = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id')->join('User_has_Skill', 'Skill.skill_id = User_has_Skill.Skill_skill_id')->where('User_has_Skill.User_user_id', $id)->find();
+        $user = $this->userModel->where('User.user_id', $id)->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL')->first();
+        $resultCategoryes = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id AND Skill.skill_del_time IS NULL')->join('User_has_Skill', 'Skill.skill_id = User_has_Skill.Skill_skill_id AND User_has_Skill.user_skill_del_time IS NULL')->where('User_has_Skill.User_user_id', $id)->find();
         $categoryes = [];
         foreach ($resultCategoryes as $result){
             $categoryId = $result['category_id'];
