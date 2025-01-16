@@ -38,6 +38,8 @@
         white-space: nowrap;
     }
     .btn-search{
+        width: 40px;
+        height: 40px;
         margin-left: 10px;
         border-radius: 100%;
         background-color: white;
@@ -48,6 +50,7 @@
         color: white;
     }
     .all-user{
+        height: 40px;
         margin-left: 5px;
         margin-right: 5px;
         padding: 10px;
@@ -59,6 +62,49 @@
         color:white;
         background-color: #006DBC;
     }
+    input{
+      border: none;
+      height: 40px;
+      padding: 8px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0px 3px 6px #00000029;
+    }
+    input:focus{
+        border:1px solid #006DBC;
+        outline: none;
+    }
+    input:disabled{
+      box-shadow: 0px 1px 1px #00000029;
+      color: #006DBC;
+    }
+    input.checkbox{
+      background-color: transparent;
+      box-shadow: none;
+      height: auto;
+      cursor:pointer;
+    }
+    input.checkbox:hover{
+        border: 1px solid #006DBC;
+    }
+    .btn-create:hover{
+        background-color: #006DBC;
+        color: white;
+    }
+    .circle-icon{
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .circle-icon:hover{
+        border: 1px solid red;
+    }
+    .icon-link{
+        color: #006DBC;
+        text-decoration: underline ;
+    }
 </style>
 <div class="container-fluid">
     <h2>Přehled termínů pro praxe</h2>
@@ -68,9 +114,9 @@
                 <input class="search-input p-2 mt-2" name="search" id="search-input" type="text" placeholder="Vyhledat uživatele" <?php if(!empty($search)){?> value="<?= $search ?>" <?php } ?>>
                 <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-            <div class="flex">
+            <div class="d-flex flex-wrap">
                 <select class="search-input mt-2" id="orderSelect" name="oder">
-                    <option <?php if(empty($oder)){?> selected <?php } ?> value="">Seřadit podle</option>
+                    <option <?php if(empty($oder)){?> selected <?php } ?> disabled value="">Seřadit podle</option>
                     <option <?php if(!empty($oder) && $oder == 1){?> selected <?php } ?> value="1">Seřadit podle A-Z</option>
                     <option <?php if(!empty($oder) && $oder == 2){?> selected <?php } ?> value="2">Seřadit podle Z-A</option>
                     <option <?php if(!empty($oder) && $oder == 3){?> selected <?php } ?> value="3">Seřadit podle třídy (sestupně)</option>
@@ -78,7 +124,9 @@
                     <option <?php if(!empty($oder) && $oder == 5){?> selected <?php } ?> value="5">Zobrazit první admin a správce</option>
                 </select>
                 </form>
-                <a class="all-user" href="#modalLoadAllUser" data-bs-toggle="modal" data-bs-target="#modalLoadAllUser">Načíst uživatele</a>
+                <a class="all-user mt-2" href="#modalLoadAllUser" data-bs-toggle="modal" data-bs-target="#modalLoadAllUser"><i class="fa-solid fa-spinner"></i> Načíst uživatele</a>
+                <a class="all-user mt-2" href="#modalSocialLink" data-bs-toggle="modal" data-bs-target="#modalSocialLink"><i class="fa-solid fa-icons"></i> Sociální sítě</a>
+                <a class="all-user mt-2" href="<?= base_url('/dashboard-class') ?>"><i class="fa-solid fa-people-roof"></i> Upravit třídy</a>
             </div>
     </div>
     <div class="container-fluid">
@@ -108,20 +156,20 @@
                     foreach($users as $user){
                     ?>
                       <tr>
-                        <th class="nowrap" scope="row"><?php if(!empty($user['class']['class_year_graduation'])){echo '<i class="fa-solid fa-user-graduate"></i>';}else{echo '<i class="fa-solid fa-chalkboard-user"></i>';} ?></th>
+                        <th class="nowrap" scope="row"><?php if(!empty($user['class_year_graduation'])){echo '<i class="fa-solid fa-user-graduate"></i>';}else{echo '<i class="fa-solid fa-chalkboard-user"></i>';} ?></th>
                         <td>
                             <?= ($user['user_name'] ?? '') . ' ' . ($user['user_surname'] ?? '') ?>
                         </td>
-                        <td><?= $user['class']['class_year_graduation']?? '' ?></td>
-                        <td><?php if(!empty($user['class']['class_class'])){ ?><?= ($user['class']['class_class']??''). '.' .($user['class']['class_letter_class']??''); }?></td>
+                        <td><?= $user['class_year_graduation']?? '' ?></td>
+                        <td><?php if(!empty($user['class_class'])){ ?><?= ($user['class_class']??''). '.' .($user['class_letter_class']??''); }?></td>
 
-                        <td><?= $user['field']['field_shortcut'] ?? ''?></td>
+                        <td><?= $user['field_shortcut'] ?? ''?></td>
                         <?php // $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)): ?>
                         <td>
-                            <input type="checkbox" class="role-checkbox" data-role="admin" data-user-id="<?= $user['user_id']?>" <?= $user['user_admin'] ? 'checked' : '' ?> />
+                            <input type="checkbox" class="role-checkbox checkbox" data-role="admin" data-user-id="<?= $user['user_id']?>" <?= $user['user_admin'] ? 'checked' : '' ?> />
                         </td>
                         <td>
-                            <input type="checkbox" class="role-checkbox" data-role="spravce" data-user-id="<?= $user['user_id']?>" <?= $user['user_spravce'] ? 'checked' : '' ?> />
+                            <input type="checkbox" class="role-checkbox checkbox" data-role="spravce" data-user-id="<?= $user['user_id']?>" <?= $user['user_spravce'] ? 'checked' : '' ?> />
                         </td>
                         <?php // endif;?>
                     </tr>  
@@ -168,6 +216,38 @@
       </div>
       <div class="modal-footer">
       <a class="all-user" href="<?= base_url('azure-users') ?>">Aktualizovat</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- Modal pro úpravu sociálních sítí -->
+<div class="modal" id="modalSocialLink">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">Správa sociálních sítích</h4>
+        <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
+      </div>
+      <div class="modal-body">
+      <form action="<?= base_url('/new-social-link') ?>" method="POST">
+            <div class="container d-flex flex-column">
+                <div class="d-flex justify-content-end">Počet linků: <?= $countLinks ?>/8</div>
+                <label class="mt-1" for="name">Název sociální sítě</label>
+                <input <?php if($countLinks == 8){ ?> disabled <?php } ?> class="m-1" type="text" id="edit-SocialLink-name" name="name" placeholder="Např.: Instagram">
+                <label class="mt-1" for="name">Ikonka * (nutné vyplnit)</label>
+                <input <?php if($countLinks == 8){ ?> disabled <?php } ?> class="m-1" type="text" id="edit-SocialLink-name" name="icon_name" placeholder="Např.: <i class=''fa-brands fa-instagram''></i>">
+                <div><p>Ikonku, kterou je potřeba použít naleznete <a class="icon-link" target="_blank" href="https://fontawesome.com/v6/search?o=r&m=free">zde</a></p></div>
+                <div class="d-flex justify-content-end mt-2"><input class="btn-create" type="submit" placeholder="Uložit" value="Vytvořit"></div>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer d-flex justify-content-center align-items-center flex-wrap">
+        <?php if(empty($links)){?> <div class="d-flex justify-content-center align-items-center text-black"><p>Nejsou žádné sociální sítě přidané</p></div>  <?php }else{ foreach($links as $link){ ?>
+                <div class="d-flex align-items-center">
+                    <a href="<?= base_url('/delete-social-link/'.$link['social_id']) ?>"><div class="circle-icon d-flex justify-content-center align-items-center m-2 text-black h4"><?= $link['social_icon'] ?></div></a>
+                </div>
+            <?php }} ?>
       </div>
     </div>
   </div>
