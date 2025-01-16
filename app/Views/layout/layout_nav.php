@@ -309,7 +309,7 @@
                     </div>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
                 </div>
-                <div class="offcanvas-body container d-flex flex-column align-items-center justify-content-center">
+                <div class="offcanvas-body container d-flex flex-column align-items-center">
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $home?>"><div class="flex-shrink-0"><i class="fa-solid fa-house nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Domů</div></a>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $listPractise?>"><div class="flex-shrink-0"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Nabídka praxe</div></a>
                     <a class="nav-icon-canvas d-flex align-items-center" href="<?= $people?>"><div class="flex-shrink-0"><i class="fa-solid fa-user-group nav-icon h4 m-0"></i></div><div class="flex-grow-1 ms-3 h6 text-bold">Lidé</div></a>
