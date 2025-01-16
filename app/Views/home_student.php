@@ -93,7 +93,7 @@ $role = session()->get('role');
 if(in_array('admin', $role)){
     $viewRole = "admin";
 }else if(in_array('spravce', $role)){
-    $viewrole = "správce";
+    $viewRole = "správce";
 }
 ?>
 <div class="container-fluid">
@@ -110,7 +110,7 @@ if(in_array('admin', $role)){
                         <div class="col-12 col-md-6"><div class="h5 mt-2">Telefonní číslo</div><div class=""><?php if(empty($user['user_phone'])){echo "Není uvedeno";}else{echo $user['user_phone'];} ?></div></div>
                         <div class="col-12 col-md-6"><div class="h5 mt-2">E-mail</div><div class=""><?= $user['user_mail'] ?></div></div>
                     </div>
-                    <div class="d-flex justify-content-center aling-items-center p-3"><div><a href="#"><div>Zobrazit více</div><div class="d-flex justify-content-center"><i class="fa-solid fa-chevron-down"></i></div></a></div></div>
+                    <div class="d-flex justify-content-center aling-items-center p-3"><div><a href="<?= base_url('/profile') ?>"><div>Zobrazit více</div><div class="d-flex justify-content-center"><i class="fa-solid fa-chevron-down"></i></div></a></div></div>
                 </div>
             </div>
         </div>
