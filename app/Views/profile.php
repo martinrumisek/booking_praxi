@@ -33,6 +33,9 @@
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
     }
+    .circle-icon:hover{
+        border: 1px solid black;
+    }
     .custom-line{
         height: 7px;
         width: 100%;
@@ -93,15 +96,9 @@
             <div class="d-flex justify-content-center mt-3 profile-name"><h2 class="text-white"><?= $user['user_name'] . ' ' . $user['user_surname'] ?></h2></div>
             <div class="d-flex justify-content-center mt-3 profile-name"><h3 class="text-white"><?= $user['class_class'] . '.' . $user['class_letter_class'] ?></h3></div>
             <div class="d-flex flex-wrap justify-content-center soc-icon align-items-end">
-                <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
-                <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
-                <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
-                <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
-                <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
-                <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
-                <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
-                <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
-                <div class="circle-icon d-flex justify-content-center align-items-center m-2"><i class="fa-solid fa-globe h3 p-0 m-0"></i></div>
+                <?php if(!empty($socialLinks)){ foreach($socialLinks as $link){ ?>
+                    <a target="_blank" href="<?= $link['user_social_url'] ?>"><div class="circle-icon d-flex justify-content-center align-items-center m-2 h3"><?= $link['social_icon'] ?></div></a>
+                <?php }} ?>
             </div>
         </div>
     </div>
@@ -125,7 +122,7 @@
                     <p> <?= $user['user_mail'] ?></p>
                 </div>
                 <?php if($isAdmin || $isSpravce || $userId == $user['user_id']){ ?>
-                <div class="col-12 mt-5 d-flex justify-content-center"><a class="btn-repair d-flex justify-conentent-center align-items-center h5" href="##zkouška"><i class="fa-solid fa-gear p-2"></i>Upravit profil</a></div>
+                <div class="col-12 mt-5 d-flex justify-content-center"><a class="btn-repair d-flex justify-conentent-center align-items-center h5" href="<?= base_url('/edit-profile/'.$user['user_id']) ?>"><i class="fa-solid fa-gear p-2"></i>Upravit profil</a></div>
                 <?php } ?> 
             </div>
         </div>
