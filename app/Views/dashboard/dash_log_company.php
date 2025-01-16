@@ -40,19 +40,19 @@
 </style>
 <div class="container-fluid">
     <h2>Historie aktivity uživatelů</h2>
-    <form action="" method="POST">
+    <form action="" method="GET" id="formSearch">
     <div class="d-flex flex-wrap justify-content-between m-3">
             <div class="d-flex">
-                <input class="search-input p-2 mt-2" id="search-input" type="text" placeholder="Vyhledat uživatele">
+                <input class="search-input p-2 mt-2" id="search-input" type="text" name="search" placeholder="Vyhledat uživatele" <?php if(!empty($search)){?> value="<?= $search ?>" <?php } ?>>
                 <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
             <div>
-                <select class="search-input mt-2" id="">
-                    <option selected disabled>Seřadit podle</option>
-                    <option value="1">Od přihlášení po odhlášení</option>
-                    <option value="2">Od odhlášení po přihlášení</option>
-                    <option value="3">Datum sestupně</option>
-                    <option value="4">Datum vzestupně</option>
+                <select class="search-input mt-2" id="orderSelect" name="order">
+                    <option <?php if(empty($order)){?> selected <?php } ?> disabled>Seřadit podle</option>
+                    <option <?php if(!empty($order) && $order == 1){?> selected <?php } ?> value="1">Datum sestupně</option>
+                    <option <?php if(!empty($order) && $order == 2){?> selected <?php } ?> value="2">Datum vzestupně</option>
+                    <option <?php if(!empty($order) && $order == 3){?> selected <?php } ?> value="3">Od přihlášení po odhlášení</option>
+                    <option <?php if(!empty($order) && $order == 4){?> selected <?php } ?> value="4">Od odhlášení po přihlášení</option>
                 </select>
             </div>
     </div>
@@ -87,8 +87,8 @@
                         <td>
                             <?= date('d.m.Y H:i:s', strtotime($log['log_company_create_time'])) ?>
                         </td>
-                        <td><?= $log['user']['representative_name'] . ' ' . $log['user']['representative_surname']?></td>
-                        <td class="name"><?= $log['company']['company_name']?></td>
+                        <td><?= $log['representative_name'] . ' ' . $log['representative_surname']?></td>
+                        <td class="name"><?= $log['company_name']?></td>
                     </tr>  
                     <?php }?>
                 </tbody>
@@ -98,32 +98,8 @@
     </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('search-input');
-    const rows = document.querySelectorAll('#log-table tr');
-    const storedValue = localStorage.getItem('searchValue');
-    if (storedValue) {
-        searchInput.value = storedValue;
-        filterRows(storedValue);
-    }
-    searchInput.addEventListener('keyup', function () {
-        const searchValue = this.value.toLowerCase();
-        localStorage.setItem('searchValue', searchValue);
-        filterRows(searchValue);
+document.getElementById('orderSelect').addEventListener('change', function () {
+        document.getElementById('formSearch').submit();
     });
-    function filterRows(searchValue) {
-        rows.forEach(row => {
-            const nameCell = row.querySelector('td:nth-child(4)');
-            if (nameCell) {
-                const name = nameCell.textContent.toLowerCase();
-                if (name.includes(searchValue)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            }
-        });
-    }
-});
 </script>
 <?= $this->endSection() ?>
