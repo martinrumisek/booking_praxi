@@ -185,8 +185,8 @@
                     }
                     foreach($categoryes as $category){
                     ?>
-                    <tr <?php if(!empty($category['category_description'])){ ?> data-bs-toggle="tooltip" title="<?= $category['category_description'] ?>" <?php } ?>>
-                        <th class="nowrap" scope="row"><i class="fa-solid fa-folder-closed"></i></th>
+                    <tr <?php if(!empty($category['skill'])){$countSkill = count($category['skill']);}else{$countSkill = 0;} if(!empty($category['category_description'])){ ?> data-bs-toggle="tooltip" title="<?= $category['category_description'] ?>" <?php } ?>>
+                        <th class="nowrap" scope="row"><i class="fa-solid fa-folder-closed"></i><?php echo ' ('.$countSkill.')'; ?></th>
                         <td><?= $category['category_name']?></td>
                         <td><?= date('d.m.Y H:i:s', strtotime($category['category_create_time'])) ?></td>
                         <td><?= date('d.m.Y H:i:s', strtotime($category['category_edit_time'])) ?></td>
@@ -197,7 +197,7 @@
                         <tr>
                         <td colspan="5" class="text-center skill">Zatím nebyli přidané žádné dovednosti do dané kategorie</td>
                     </tr>
-                    <?php } 
+                    <?php } else{
                     foreach($category['skill'] as $skill){ ?>
                         <tr <?php if(!empty($skill['skill_description'])){ ?> data-bs-toggle="tooltip" title="<?= $skill['skill_description'] ?>" <?php } ?>>
                         <th class="nowrap skill" scope="row"><i class="fa-regular fa-file"></i></th>
@@ -207,7 +207,7 @@
                         <td class="skill"><a href="<?=base_url('/delete-skill/'.$skill['skill_id'])?>"><i class="fa-solid fa-trash del-icon-skill"></i></a><a href="#modalEditSkill"  data-bs-toggle="modal" data-bs-target="#modalEditSkill" data-id-skill="<?= $skill['skill_id']?>" data-name-skill="<?= $skill['skill_name']?>" data-description-skill="<?= $skill['skill_description']?>" data-categoryId-skill="<?= $skill['Category_skill_category_id'] ?>"><i class="fa-solid fa-pencil edit-icon-skill"></i></a></td>
                     </tr>
                     <?php } ?>
-                    <?php } ?>
+                    <?php }} ?>
                 </tbody>
             </table>
         </div>
