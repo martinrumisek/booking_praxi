@@ -17,10 +17,14 @@ $routes->get('practise_offer', 'Home::offerView'); //stránka pro nabídky praxe
 $routes->get('people','Home::people'); //stránka pro zobrazení lidí z oauh
 $routes->get('company','Home::companyView'); //stránka pro zobrazení firem
 $routes->get('profile','Home::profileView', ['filter' => 'role:student']); //stránka pro zobrazení profilu
-$routes->get('profile/(:num)','Home::allProfileView/$1', ['filter' => 'role:student']);
+$routes->get('profile/(:num)','Home::allProfileView/$1', ['filter' => 'role:student,teacher']);
+$routes->get('edit-profile/(:num)','Home::editProfileView/$1', ['filter' => 'role:student,teacher']);
+$routes->post('/edit-profile','Home::editProfile', ['filter' => 'role:student,teacher']);
+
 //ROUTY PRO BTN - SCRIPT
-$routes->get('azure-users', 'UserAzureSync::getAllUsers'); //routa pro btn - pro script (načtení všech uživatelů z db - azure)
-$routes->get('plus-graduationClass', 'UserAzureSync::updateClassYearGraduation'); //Routa pro přidání jednoho roku pro rok ukončení maturity "mělo by se to dělat jedenkrát za rok o prázninách, takže přes cron" !!! //!!Routa pro cron
+$routes->get('azure-users', 'UserAzureSync::getAllUsers', ['filter' => 'role:admin, spravce']); //routa pro btn - pro script (načtení všech uživatelů z db - azure)
+$routes->get('plus-graduationClass', 'UserAzureSync::upUsersClass', ['filter' => 'role:admin, spravce']); //Routa pro přidání jednoho roku pro rok ukončení maturity "mělo by se to dělat jedenkrát za rok o prázninách, takže přes cron" !!! //!!Routa pro cron
+$routes->get('minus-graduationClass', 'UserAzureSync::downUsersClass', ['filter' => 'role:admin, spravce']);
 //ROUTY PRO DASHBOARD
 $routes->get('dashboard-home','Dashboard::homeView', ['filter' => 'role:admin,spravce']);
 $routes->get('dashboard-calendar','Dashboard::deadlinesView', ['filter' => 'role:admin,spravce']);
@@ -30,8 +34,15 @@ $routes->get('dashboard-skill','Dashboard::skillView', ['filter' => 'role:admin,
 $routes->get('dashboard-company','Dashboard::companyView', ['filter' => 'role:admin,spravce']);
 $routes->get('dashboard-log','Dashboard::logView', ['filter' => 'role:admin,spravce']);
 $routes->get('dashboard-log-company','Dashboard::logViewCompany', ['filter' => 'role:admin,spravce']);
+$routes->get('dashboard-class', 'Dashboard::viewClass', ['filter' => 'role:admin,spravce']);
 //ZPRACOVÁNÍ (EDITACE) V DASHBOARDU
 $routes->post('/sent-date-practise','Dashboard::addNewDate', ['filter' => 'role:admin,spravce']);
+$routes->post('/edit-practise','Dashboard::editPractise', ['filter' => 'role:admin,spravce']);
+$routes->post('/edit-date-practise','Dashboard::editDatePractise', ['filter' => 'role:admin,spravce']);
+$routes->post('/add-next-date','Dashboard::addNextDate', ['filter' => 'role:admin,spravce']);
+$routes->get('/delete-date-practise/(:num)','Dashboard::deleteDatePractise/$1', ['filter' => 'role:admin,spravce']);
+$routes->get('/delete-practise/(:num)','Dashboard::deletePractise/$1', ['filter' => 'role:admin,spravce']);
+
 $routes->post('/sent-new-role-user','Dashboard::editUserRole', ['filter' => 'role:admin,spravce']);
 $routes->post('/add-new-category', 'Dashboard::addCategorySkill', ['filter' => 'role:admin,spravce']);
 $routes->post('/add-new-skill', 'Dashboard::addSkill', ['filter' => 'role:admin,spravce']);
@@ -49,6 +60,18 @@ $routes->post('/edit-user-password', 'Dashboard::editUserPassword', ['filter' =>
 $routes->get('/delete-company/(:num)', 'Dashboard::deleteCompany/$1', ['filter' => 'role:admin,spravce']);
 $routes->get('/delete-representativeCompany/(:num)', 'Dashboard::deleteRepresentativeCompany/$1', ['filter' => 'role:admin,spravce']);
 $routes->get('/delete-practiseManager/(:num)', 'Dashboard::deletePractiseManager/$1', ['filter' => 'role:admin,spravce']);
+$routes->get('/delete-social-link/(:num)', 'Dashboard::deleteSocialLink/$1', ['filter' => 'role:admin,spravce']);
+$routes->post('/new-social-link', 'Dashboard::newSocialLink', ['filter' => 'role:admin,spravce']);
+$routes->post('/new-class-school', 'Dashboard::newClassSchool', ['filter' => 'role:admin,spravce']);
+$routes->post('/new-type-school', 'Dashboard::newTypeSchool', ['filter' => 'role:admin,spravce']);
+$routes->post('/new-field-school', 'Dashboard::newFieldSchool', ['filter' => 'role:admin,spravce']);
+$routes->get('/delete-class/(:num)', 'Dashboard::deleteClass/$1', ['filter' => 'role:admin,spravce']);
+$routes->get('/delete-field-study/(:num)', 'Dashboard::deleteFieldStudy/$1', ['filter' => 'role:admin,spravce']);
+$routes->get('/delete-type-school/(:num)', 'Dashboard::deleteTypeSchool/$1', ['filter' => 'role:admin,spravce']);
+$routes->post('/edit-class-school', 'Dashboard::editClassSchool', ['filter' => 'role:admin,spravce']);
+$routes->post('/edit-type-school', 'Dashboard::editTypeSchool', ['filter' => 'role:admin,spravce']);
+$routes->post('/edit-field-school', 'Dashboard::editFieldSchool', ['filter' => 'role:admin,spravce']);
+
 
 //$routes->get('/postEmail', 'Dashboard::sentEmail');
 
@@ -63,4 +86,5 @@ $routes->get('/', 'Auth::callback'); // Routa pro zpracování údajů po přihl
 $routes->post('/new-password', 'Auth::newPassword');
 $routes->post('/forgot-password', 'Auth::forgotPassword');
 //ZKUŠEBNÍ ROUTY - PŘI VÝVOJI
+//$routes->get('sentMoreMails', 'Dashboard::sentMoreEmail');
 
