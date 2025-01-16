@@ -20,6 +20,8 @@ use App\Models\CategorySkill;
 use App\Models\Skill;
 use App\Models\ResetPassword;
 use App\Controllers\Email;
+use App\Models\SocialLink;
+use App\Models\SocialLink_User;
 
 class Dashboard extends Controller
 {
@@ -39,6 +41,8 @@ class Dashboard extends Controller
     var $practiseManager;
     var $resetPassword;
     var $email;
+    var $socialLink_user;
+    var $socialLink;
     public function __construct(){
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
@@ -56,6 +60,8 @@ class Dashboard extends Controller
         $this->practiseManager = new PractiseManager();
         $this->resetPassword = new ResetPassword();
         $this->email = new Email();
+        $this->socialLink = new SocialLink();
+        $this->socialLink_user = new SocialLink_User();
     }
     //Metody pro zobrazení viewček
     public function homeView(){
@@ -65,95 +71,322 @@ class Dashboard extends Controller
         return view('dashboard/dash_home', $data);
     }
     public function companyView(){
-        $companyes = $this->companyModel->paginate(10);
+        $search = $this->request->getGet('search');
+        $search = urldecode($search);
+        $this->companyModel->join('Representative_company', 'Company.company_id = Representative_company.Company_company_id AND Representative_company.representative_del_time IS NULL', 'left')->join('Practise_manager', 'Company.company_id = Practise_manager.Company_company_id AND Practise_manager.manager_del_time IS NULL', 'left');
+        if(!empty($search)){
+            $this->companyModel->groupStart()->like('company_name', $search)->orLike("CONCAT(representative_name, ' ', representative_surname)", $search)->orLike('company_ico', $search)->orLike("CONCAT(manager_name, ' ', manager_surname)", $search)->groupEnd();
+        }
+        $results = $this->companyModel->paginate(10);
         $pager = $this->companyModel->pager;
-        foreach ($companyes as &$company){
-            $company['representative'] = $this->representativeCompanyModel->where('Company_company_id', $company['company_id'])->findAll();
-            $company['practiseManager'] = $this->practiseManager->where('Company_company_id', $company['company_id'])->findAll();
+        $companyes = [];
+        foreach($results as $company){
+            $companyId = $company['company_id'];
+            if(!isset($companyes[$companyId])){
+                $companyes[$companyId] = [
+                    'company_id' => $companyId,
+                    'company_name' => $company['company_name'],
+                    'company_ico' => $company['company_ico'],
+                    'company_subject' => $company['company_subject'],
+                    'company_description' => $company['company_description'],
+                    'company_city' => $company['company_city'],
+                    'company_agree_document' => $company['company_agree_document'],
+                    'company_post_code' => $company['company_post_code'],
+                    'company_logo' => $company['company_logo'],
+                    'company_create_time' => $company['company_create_time'],
+                    'company_edit_time' => $company['company_edit_time'],
+                    'representative' => [],
+                    'practiseManager' =>[],
+                ];
+            }
+            $companyes[$companyId]['representative'][] = [
+                'representative_id' => $company['representative_id'],
+                'representative_degree_before' => $company['representative_degree_before'],
+                'representative_name' => $company['representative_name'],
+                'representative_surname' => $company['representative_surname'],
+                'representative_degree_after' => $company['representative_degree_after'],
+                'representative_mail' => $company['representative_mail'],
+                'representative_phone' => $company['representative_phone'],
+                'representative_function' => $company['representative_function'],
+                'representative_create_time' => $company['representative_create_time'],
+                'representative_edit_time' => $company['representative_edit_time'],
+                'Company_company_id' => $company['Company_company_id'],
+            ];
+            $companyes[$companyId]['practiseManager'][] = [
+                'manager_id' => $company['manager_id'],
+                'manager_degree_before' => $company['manager_degree_before'],
+                'manager_name' => $company['manager_name'],
+                'manager_surname' => $company['manager_surname'],
+                'manager_degree_after' => $company['manager_degree_after'],
+                'manager_mail' => $company['manager_mail'],
+                'manager_phone' => $company['manager_phone'],
+                'manager_position_works' => $company['manager_position_works'],
+                'manager_create_time' => $company['manager_create_time'],
+                'manager_edit_time' => $company['manager_edit_time'],
+                'Company_company_id' => $company['Company_company_id'],
+            ];
         }
         $data= [
             'title' => 'Administrace',
             'companyes' => $companyes,
             'pager' => $pager,
+            'search' => $search,
         ];
         return view('dashboard/dash_company', $data);
     }
     public function deadlinesView(){
-        
-        $practises = $this->practiseModel->orderBy('practise_create_time', 'DESC')->findAll();
-        $schoolClass = $this->classModel->findAll();
-        foreach($practises as &$practise){
-            $practise['dates'] = $this->datePractiseModel->where('Practise_practise_id', $practise['practise_id'])->findAll();
-            $practise['class'] = [];
-            $classIds = $this->class_practiseModel->where('Practise_practise_id', $practise['practise_id'])->findAll();
-            foreach($classIds as $classId){
-                $class = $this->classModel->find($classId['Class_class_id']);
-                $practise['class'][] = $class;
+        $search = $this->request->getGet('search');
+        $search = urldecode($search);
+        $results = $this->practiseModel->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL')->join('Class_has_Practise', 'Practise.practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL')->join('Class', 'Class.class_id = Class_has_Practise.Class_class_id AND Class.class_del_time IS NULL')->groupStart()->like('Practise.practise_name', $search)->orLike("CONCAT(Date_practise.date_date_from, ' - ', Date_practise.date_date_to)", $search)->orLike('Practise.practise_end_new_offer', $search)->orLike("CONCAT(Class.class_class, '.', Class.class_letter_class)", $search)->groupEnd()->orderBy('Practise.practise_create_time', 'DESC')->findAll();
+        $practises = [];
+        foreach($results as $practise){
+            $practiseId = $practise['practise_id'];
+            if(!isset($practises[$practiseId])){
+                $practises[$practiseId] = [
+                    'practise_id' => $practise['practise_id'],
+                    'practise_name' => $practise['practise_name'],
+                    'practise_description' => $practise['practise_description'],
+                    'practise_contract_file' => $practise['practise_contract_file'],
+                    'practise_end_new_offer' => $practise['practise_end_new_offer'],
+                    'practise_create_time' => $practise['practise_create_time'],
+                    'practise_edit_time' => $practise['practise_edit_time'],
+                    'dates' => [],
+                    'class' => [],
+                ];
+            }
+            if(!in_array($practise['date_id'], array_column($practises[$practiseId]['dates'], 'date_id'))){
+                $practises[$practiseId]['dates'][] = [
+                    'date_id' => $practise['date_id'],
+                    'date_date_from' => $practise['date_date_from'],
+                    'date_date_to' => $practise['date_date_to'],
+                    'date_edit_time' => $practise['date_edit_time'],
+                    'Practise_practise_id' => $practise['Practise_practise_id'],
+                ];
+            }
+            if(!in_array($practise['class_id'], array_column($practises[$practiseId]['class'], 'class_id'))){
+                $practises[$practiseId]['class'][] = [
+                    'class_id' => $practise['class_id'],
+                    'class_class' => $practise['class_class'],
+                    'class_letter_class' => $practise['class_letter_class'],
+                ];
             }
         }
+        $schoolClass = $this->classModel->findAll();
         $data= [
             'title' => 'Administrace',
             'practises' => $practises,
             'schoolClass' => $schoolClass,
+            'search' => $search,
         ];
         return view('dashboard/dash_calendar', $data);
-    }
-    public function formDateView(){
-        $class = $this->classModel->findAll();
-
-        $data = [
-            'title' => 'Administrace',
-            'class' => $class,
-        ];
-        return view('dashboard/dash_form_calendar', $data);
     }
     public function peopleView(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
-        $oder = $this->request->getGet('oder');
-        if(empty($search || $oder)){
-            $users = $this->userModel->orderBy('user_surname, user_name', 'ASC')->paginate(20);
-        }else{
-            if($oder == 1 || empty($oder) || $oder > 5 || $oder < 1){
-                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('surname, name', 'ASC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
-            }
-            if($oder == 2){
-                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('surname, name', 'DESC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
-            }
-            if($oder == 3){
-                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('Class.class, Class.letter_class', 'ASC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
-            }
-            if($oder == 4){
-                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('Class.class, Class.letter_class', 'DESC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
-            }
-            if($oder == 5){
-                $users = $this->userModel->join('Class', 'User.Class_id = Class.id', 'left')->select('User.*, Class.*, User.id AS user_id')->orderBy('admin, spravce', 'DESC')->groupStart()->like("CONCAT(name, ' ', surname)", $search)->orLike("CONCAT(class, '.', letter_class)", $search)->groupEnd()->paginate(20);
-            }
+        $oder = $this->request->getGet('oder') ?? 1;
+        $this->userModel->join('Class', 'User.Class_class_id = Class.class_id', 'left')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id', 'left')->join('Type_school', 'Field_study.Type_school_type_id = Type_school.type_id', 'left');
+        switch ($oder){
+            case 2: $this->userModel->orderBy('user_surname, user_name', 'DESC'); break;
+            case 3: $this->userModel->orderBy('class_class, class_letter_class', 'ASC'); break;
+            case 4: $this->userModel->orderBy('class_class, class_letter_class', 'DESC'); break;
+            case 5: $this->userModel->orderBy('user_admin, user_spravce', 'DESC'); break;
+            default: $this->userModel->orderBy('user_surname, user_name', 'ASC');
         }
+        if(!empty($search)){
+            $this->userModel->groupStart()->like("CONCAT(user_name, ' ', user_surname)", $search)->orLike("CONCAT(class_class, '.', class_letter_class)", $search)->orLike('field_shortcut', $search)->groupEnd();
+        }
+        $users = $this->userModel->paginate(20);
         $pager = $this->userModel->pager;
-        foreach($users as &$user){
-            $class = $this->classModel->where('class_id', $user['Class_class_id'])->first();
-            if(!empty($class)){
-                $user['class'] = $class;
-                $fieldStudy = $this->fieldStudy->where('field_id', $class['Field_study_field_id'])->first();
-               if(!empty($fieldStudy)){
-                $user['field'] = $fieldStudy;
-                $typeSchool = $this->typeSchool->where('type_id', $fieldStudy['Type_school_type_id'])->first();
-                if(!empty($typeSchool)){
-                    $user['typeSchool'] = $typeSchool;
-                }
-               }
-            }
-        }
-        //log_message('info', 'Uživatelé ' . print_r($users, true));
+        $socialLinks = $this->socialLink->findAll();
+        $countLinks = count($socialLinks);
         $data= [
             'title' => 'Administrace',
             'users' => $users,
             'pager' => $pager,
             'oder' => $oder,
             'search' => $search,
+            'links' => $socialLinks,
+            'countLinks' => $countLinks,
         ];
         return view('dashboard/dash_people', $data);
+    }
+    public function viewClass(){
+        $resultTypeSchools = $this->typeSchool->join('Field_study', 'Field_study.Type_school_type_id = Type_school.type_id AND Field_study.field_del_time IS NULL', 'left')->join('Class', 'Class.Field_study_field_id = Field_study.field_id AND Class.class_del_time IS NULL', 'left')->orderBy('class_year_graduation', 'DESC')->find();
+        $typeSchools = [];
+        foreach($resultTypeSchools as $result){
+            $typeId = $result['type_id'];
+            if(!isset($typeSchools[$typeId])){
+                $typeSchools[$typeId] = [
+                    'type_id' => $typeId,
+                    'type_name' => $result['type_name'],
+                    'type_shortcut' => $result['type_shortcut'],
+                    'type_description' => $result['type_description'],
+                    'type_edit_time' => $result['type_edit_time'],
+                    'fields' => [],
+                ];
+            }
+            $fieldId = $result['field_id'];
+            if(!isset($typeSchools[$typeId]['fields'][$fieldId])){
+                $typeSchools[$typeId]['fields'][$fieldId] = [
+                    'field_id' => $fieldId,
+                    'field_name' => $result['field_name'],
+                    'field_shortcut' => $result['field_shortcut'],
+                    'field_edit_time' => $result['field_edit_time'],
+                    'Type_school_type_id' => $result['Type_school_type_id'],
+                    'classes' => [],
+                ];
+            }
+            $classId = $result['class_id'];
+            if(!isset($typeSchools[$typeId]['fields'][$fieldId]['classes'][$classId])){
+                $typeSchools[$typeId]['fields'][$fieldId]['classes'][$classId] = [
+                    'class_id' => $classId,
+                    'class_year_graduation' => $result['class_year_graduation'],
+                    'class_class' => $result['class_class'],
+                    'class_letter_class' => $result['class_letter_class'],
+                    'class_edit_time' => $result['class_edit_time'],
+                    'Field_study_field_id' => $result['Field_study_field_id'],
+                ];
+            }
+        }
+        $data = [
+            'title' => 'Administrace',
+            'typeSchools' => $typeSchools,
+        ];
+        return view('dashboard/dash_class', $data);
+    }
+    public function newTypeSchool(){
+        $name = $this->request->getPost('name');
+        $shortcut = $this->request->getPost('shortcut');
+        $description = $this->request->getPost('description');
+        if(empty($name && $shortcut)){
+            return redirect()->to(base_url('dashboard-class'));
+        }
+        $data = [
+            'type_name' => $name,
+            'type_shortcut' => $shortcut,
+            'type_description' => $description,
+        ];
+        $this->typeSchool->insert($data);
+        return redirect()->to(base_url('dashboard-class'));
+    }
+    public function deleteTypeSchool($id){
+        $fields = $this->fieldStudy->where('Type_school_type_id', $id)->find();
+        foreach($fields as $field){
+            $this->deleteFieldStudy($field['field_id']);
+        }
+        $this->typeSchool->delete($id);
+        return redirect()->to(base_url('dashboard-class'));
+    }
+    public function editTypeSchool(){
+        $id = $this->request->getPost('id');
+        $name = $this->request->getPost('name');
+        $shortcut = $this->request->getPost('shortcut');
+        $description = $this->request->getPost('description');
+        if(empty($name && $shortcut)){
+            return redirect()->to(base_url('dashboard-class'));
+        }
+        $data = [
+            'type_name' => $name,
+            'type_shortcut' => $shortcut,
+            'type_description' => $description,
+        ];
+        $this->typeSchool->update($id, $data);
+        return redirect()->to(base_url('dashboard-class'));
+    }
+    public function newFieldSchool(){
+        $name = $this->request->getPost('name');
+        $shortcut = $this->request->getPost('shortcut');
+        $typeSchoolId = $this->request->getPost('type_school');
+        if(empty($name && $shortcut && $typeSchoolId)){
+            return redirect()->to(base_url('dashboard-class'));
+        }
+        $data = [
+            'field_name' => $name,
+            'field_shortcut' => $shortcut,
+            'Type_school_type_id' => $typeSchoolId,
+        ];
+        $this->fieldStudy->insert($data);
+        return redirect()->to(base_url('dashboard-class'));
+    }
+    public function deleteFieldStudy($id){
+        $classes = $this->classModel->where('Field_study_field_id', $id)->find();
+        if(!empty($classes)){
+            foreach($classes as $class){
+                $this->classModel->delete($class['class_id']);
+            }
+        }
+        $this->fieldStudy->delete($id);
+        return redirect()->to(base_url('dashboard-class'));
+    }
+    public function editFieldSchool(){
+        $name = $this->request->getPost('name');
+        $shortcut = $this->request->getPost('shortcut');
+        $id = $this->request->getPost('id');
+        if(empty($name && $shortcut && $id)){
+            return redirect()->to(base_url('dashboard-class'));
+        }
+        $data = [
+            'field_name' => $name,
+            'field_shortcut' => $shortcut,
+        ];
+        $this->fieldStudy->update($id, $data);
+        return redirect()->to(base_url('dashboard-class'));
+    }
+    public function newClassSchool(){
+        $numberClass = $this->request->getPost('class');
+        $letterClass = $this->request->getPost('letter');
+        $graduatClass = $this->request->getPost('year_graduation');
+        $fieldId = $this->request->getPost('fieldId');
+        if(empty($numberClass && $letterClass && $graduatClass && $fieldId)){
+            return redirect()->to(base_url('dashboard-class'));
+        }
+        $data = [
+            'class_year_graduation' => $graduatClass,
+            'class_class' => $numberClass,
+            'class_letter_class' => $letterClass,
+            'Field_study_field_id' => $fieldId,
+        ];
+        $this->classModel->insert($data);
+        return redirect()->to(base_url('dashboard-class'));
+    }
+    public function deleteClass($id){
+        $this->classModel->delete($id);
+        return redirect()->to(base_url('dashboard-class'));
+    }
+    public function editClassSchool(){
+        $id = $this->request->getPost('id');
+        $numberClass = $this->request->getPost('class');
+        $letterClass = $this->request->getPost('letter');
+        $graduatClass = $this->request->getPost('year_graduation');
+        if(empty($numberClass && $letterClass && $graduatClass && $id)){
+            return redirect()->to(base_url('dashboard-class'));
+        }
+        $data = [
+            'class_year_graduation' => $graduatClass,
+            'class_class' => $numberClass,
+            'class_letter_class' => $letterClass,
+        ];
+        $this->classModel->update($id, $data);
+        return redirect()->to(base_url('dashboard-class'));
+    }
+    public function newSocialLink(){
+        $name = $this->request->getPost('name');
+        $icon = $this->request->getPost('icon_name');
+        if(empty($icon)){
+            return redirect()->to(base_url('dashboard-people'));
+        }
+        $data = [
+            'social_name' => $name,
+            'social_icon' => $icon,
+        ];
+        $this->socialLink->insert($data);
+        return redirect()->to(base_url('dashboard-people'));
+        
+    }   
+    public function deleteSocialLink($id){
+        $this->socialLink->delete($id);
+        $this->socialLink_user->where('Social_link_social_id', $id)->delete();
+        return redirect()->to(base_url('/dashboard-people'));
     }
     public function addCategorySkill(){
         $name = $this->request->getPost('name');
@@ -257,11 +490,36 @@ class Dashboard extends Controller
     public function skillView(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
-        $categoryes = $this->categorySkill->orderBy('category_create_time', 'DESC')->groupStart()->like('category_name', $search)->groupEnd()->paginate(10);
-        $pager = $this->categorySkill->pager;
-        foreach($categoryes as &$category){
-            $category['skill'] = $this->skill->where('Category_skill_category_id', $category['category_id'])->findAll();
+        $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id AND Skill.skill_del_time IS NULL', 'left')->orderBy('category_create_time', 'DESC');
+        if(!empty($search)){
+            $this->categorySkill->groupStart()->like('category_name', $search)->orLike('skill_name', $search)->groupEnd();
         }
+        $results = $this->categorySkill->paginate(10);
+        $pager = $this->categorySkill->pager;
+        $categoryes = [];
+        foreach($results as $category){
+            $categoryId = $category['category_id'];
+            if(!isset($categoryes[$categoryId])){   
+                $categoryes[$categoryId] = [
+                    'category_id' => $category['category_id'],
+                    'category_name' => $category['category_name'],
+                    'category_description' => $category['category_description'],
+                    'category_create_time' => $category['category_create_time'],
+                    'category_edit_time' => $category['category_edit_time'],
+                ];
+            }
+            if(!empty($category['skill_name']) && $category['skill_name'] !== null){
+                $categoryes[$categoryId]['skill'][] = [
+                    'skill_id' => $category['skill_id'],
+                    'skill_name' => $category['skill_name'],
+                    'skill_description' => $category['skill_description'],
+                    'skill_create_time' => $category['skill_create_time'],
+                    'skill_edit_time' => $category['skill_edit_time'],
+                    'Category_skill_category_id' => $category['Category_skill_category_id'],
+                ];
+            }
+        }
+        log_message('info', 'problém s načítaní prázdných položek, které neexistují:  ' . json_encode($categoryes));
         $data= [
             'title' => 'Administrace',
             'categoryes' => $categoryes,
@@ -274,30 +532,51 @@ class Dashboard extends Controller
     public function logView(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
-        $userLogs = $this->logUser->orderBy('log_user_create_time', 'DESC')->paginate(20);
-        $pager = $this->logUser->pager;
-        foreach($userLogs as &$userLog){
-            $userLog['user'] = $this->userModel->where('user_id', $userLog['User_user_id'])->first();
+        $order = $this->request->getGet('order');
+        $this->logUser->join('User', 'Log_user.User_user_id = User.user_id');
+        switch($order){
+            case 2: $this->logUser->orderBy('log_user_create_time', 'ASC'); break;
+            case 3: $this->logUser->orderBy('log_user_name', 'DESC'); break;
+            case 4: $this->logUser->orderBy('log_user_name', 'ASC'); break;
+            default: $this->logUser->orderBy('log_user_create_time', 'DESC');
         }
+        if(!empty($search)){
+            $this->logUser->groupStart()->like('user_name', $search)->groupEnd();
+        }
+        $userLogs = $this->logUser->paginate(20);
+        $pager = $this->logUser->pager;
         $data = [
             'title' => 'Administrace',
             'logs' => $userLogs,
             'pager' => $pager,
+            'search' => $search,
+            'order' => $order,
         ];
 
         return view('dashboard/dash_log', $data);
     }
     public function logViewCompany(){
-        $companyLogs = $this->logCompany->orderBy('log_company_create_time', 'DESC')->paginate(20);
-        $pager = $this->logCompany->pager;
-        foreach($companyLogs as &$companyLog){
-            $companyLog['user'] = $this->representativeCompanyModel->where('representative_id', $companyLog['Representative_company_representative_id'])->first();
-            $companyLog['company'] = $this->companyModel->where('company_id', $companyLog['user']['Company_company_id'])->first();
+        $search = $this->request->getGet('search');
+        $search = urldecode($search);
+        $order = $this->request->getGet('order');
+        $this->logCompany->join('Representative_company', 'Log_company.Representative_company_representative_id = Representative_company.representative_id')->join('Company', 'Representative_company.Company_company_id = Company.company_id');
+        switch($order){
+            case 2: $this->logCompany->orderBy('log_company_create_time', 'ASC'); break;
+            case 3: $this->logCompany->orderBy('log_company_name', 'DESC'); break;
+            case 4: $this->logCompany->orderBy('log_company_name', 'ASC'); break;
+            default: $this->logCompany->orderBy('log_company_create_time', 'DESC');
         }
+        if(!empty($search)){
+            $this->logCompany->groupStart()->like("CONCAT(representative_name, ' ', representative_surname)", $search)->orLike('company_name', $search)->groupEnd();
+        }
+        $companyLogs = $this->logCompany->paginate(20);
+        $pager = $this->logCompany->pager;
         $data = [
             'title' => 'Administrace',
             'logs' => $companyLogs,
             'pager' => $pager,
+            'search' => $search,
+            'order' => $order,
         ];
         return view('dashboard/dash_log_company', $data);
     }
@@ -309,15 +588,13 @@ class Dashboard extends Controller
         $file = $this->request->getFile('contract-file');
         $dates = $this->request->getPost('dates');
         $classes = $this->request->getPost('classes');
-        if(empty($file)){
-            log_message('info','chyba v souboru1');
+        if(empty($file && $name && $dates && $classes && $dateEndNewOffer)){
             return redirect()->to(base_url('dashboard-calendar'));
         }
         if($file->getClientMimeType() !== 'application/pdf'){
-            log_message('info','chyba v souboru2');
             return redirect()->to(base_url('dashboard-calendar'));
         }
-        $fileName = $file->getName();
+        $fileName = bin2hex(random_bytes(10)) . '.pdf';
         $dataPractise = [
             'practise_name' => $name,
             'practise_description'=> $description,
@@ -325,25 +602,198 @@ class Dashboard extends Controller
             'practise_contract_file' => $fileName,
         ];
         $id = $this->practiseModel->insert($dataPractise);
+        $countDate = count($dates);
         foreach($dates as $date){
+            if($date['date-from'] > $date['date-to']){
+                if($countDate == 1 ){
+                    return redirect()->to(base_url('dashboard-calendar'));
+                }else{
+                    $countDate--;
+                    continue;
+                }
+            }
             $dataDate = [
                 'date_date_from' => $date['date-from'],
                 'date_date_to' => $date['date-to'],
                 'Practise_practise_id' => $id,
             ];
+            $countDate--;
             $this->datePractiseModel->insert($dataDate);
         }
+        $classPractises = $this->class_practiseModel->findAll();
+        $existingClass = array_column($classPractises, 'Class_class_id');
+        $countClass = count($classes);
         if(!empty($classes)){
             foreach ($classes as $class) {
+                if(in_array($class, $existingClass)){
+                    if($countClass == 1){
+                        return redirect()->to(base_url('dashboard-calendar'));
+                    }else{
+                        $countClass--;
+                        continue;
+                    }
+                }
                 $dataClass = [
                     'Class_class_id' => $class,
                     'Practise_practise_id' => $id,
                 ];
+                $countClass--;
                 $this->class_practiseModel->insert($dataClass);
             }
         }
         $path = FCPATH . 'assets/document';
         $file->move($path, $fileName);
+        return redirect()->to(base_url('dashboard-calendar'));
+    }
+   /* public function sentMoreEmail(){
+        $companyes = $this->representativeCompanyModel->findAll();
+        $moreMails = [];
+        foreach($companyes as $company){
+            $moreMails[] = $company['representative_mail'];
+        }
+        log_message('info', 'maily: ' . json_encode($moreMails));
+        $messageHtml = 'Zkouška hromadného mailu:';
+        $subjectEmail = 'Zkouška hromadného mailu';
+        $this->email->sentMoreEmail($moreMails, $messageHtml, $subjectEmail);
+    }*/
+    public function editPractise(){
+        $id = $this->request->getPost('id');
+        $name = $this->request->getPost('name');
+        $endOffer = $this->request->getPost('end-new-offer');
+        $file = $this->request->getPost('contract-file');
+        $classes = $this->request->getPost('classes');
+        $description = $this->request->getPost('description');
+        $practise = $this->practiseModel->find($id);
+        if(empty($id && $name && $endOffer && $classes)){
+            return redirect()->to(base_url('dashboard-calendar'));
+        }
+        if(!empty($file)){
+            $fileName = $file->getName();
+            if($fileName !== $practise['practise_contract_file']){
+                $fileName = bin2hex(random_bytes(10)) . '.pdf';
+                $path = FCPATH . 'assets/document';
+                if(unlink($path . $practise['practise_contract_file'])){
+                    $file->move($path, $fileName);
+                }else{
+                    return redirect()->to(base_url('dashboard-calendar'));
+                }
+            }
+            $data = [
+                'practise_name' => $name,
+                'practise_description' => $description,
+                'practise_contract_file' => $fileName,
+                'practise_end_new_offer' => $endOffer,
+            ];
+            $this->practiseModel->update($id, $data);
+        }else{
+            $data = [
+                'practise_name' => $name,
+                'practise_description' => $description,
+                'practise_end_new_offer' => $endOffer,
+            ];
+            $this->practiseModel->update($id, $data);
+        }
+        $existingClasses = $this->class_practiseModel->where('Practise_practise_id')->withDeleted()->find();
+        $existingId = array_column($existingClasses, 'Class_class_id');
+        $classPractises = $this->class_practiseModel->findAll();
+        $existingClass = array_column($classPractises, 'Class_class_id');
+        $countClass = count($classes);
+        foreach($classes as $class){
+            if(in_array($class, $existingClass)){
+                if($countClass == 1){
+                    return redirect()->to(base_url('dashboard-calendar'));
+                }else{
+                    $countClass--;
+                    continue;
+                }
+            }
+            if(in_array($class, $existingId)){
+                $currentDelTime = $existingClasses[array_search($class, $existingId)]['class_practise_del_time'];
+                $currentId = $existingClasses[array_search($class, $existingId)]['class_practise_id'];
+                if(!empty($currentDelTime)){
+                    $this->class_practiseModel->update($currentId, ['class_practise_del_time' => null]);
+                    $countClass--;
+                }
+            }else{
+                $newDataClass = [
+                    'Class_class_id' => $class,
+                    'Practise_practise_id' => $id,
+                ];
+                $countClass--;
+                $this->class_practiseModel->insert($newDataClass);
+            }
+        }
+        $countClass = count($classes);
+        foreach($existingClasses as $existingClass){
+            if(in_array($class, $existingClass)){
+                if($countClass == 1){
+                    return redirect()->to(base_url('dashboard-calendar'));
+                }else{
+                    $countClass--;
+                    continue;
+                }
+            }
+            if(!empty($classes)){
+                if(!in_array($existingClass['Class_class_id'], $classes)){
+                    $this->class_practiseModel->delete($existingClass['class_practise_id']);
+                    $countClass--;
+                }
+            }else{
+                $this->class_practiseModel->delete($existingClass['class_practise_id']);
+                $countClass--;
+            }
+        }
+        return redirect()->to(base_url('dashboard-calendar'));
+    }
+    public function deletePractise($id){
+        $practise = $this->practiseModel->find($id);
+        $fileName = $practise['practise_contract_file'];
+        if(!empty($fileName)){
+            $path = FCPATH . 'assets/document/';
+            unlink($path . $fileName);
+        }
+        $this->datePractiseModel->where('Practise_practise_id', $id)->delete();
+        $this->class_practiseModel->where('Practise_practise_id', $id)->delete();
+        $this->practiseModel->delete($id);
+        return redirect()->to(base_url('dashboard-calendar'));
+    }
+    public function editDatePractise(){
+        $id = $this->request->getPost('id');
+        $dateFrom = $this->request->getPost('dateFrom');
+        $dateTo = $this->request->getPost('dateTo');
+        if(empty($id && $dateFrom && $dateTo)){
+            return redirect()->to(base_url('dashboard-calendar'));
+        }
+        if($dateFrom > $dateTo){
+            return redirect()->to(base_url('dashboard-calendar'));
+        }
+        $data = [
+            'date_date_from' => $dateFrom,
+            'date_date_to' => $dateTo,
+        ];
+        $this->datePractiseModel->update($id, $data);
+        return redirect()->to(base_url('dashboard-calendar'));
+    }
+    public function deleteDatePractise($id){
+        $this->datePractiseModel->delete($id);
+        return redirect()->to(base_url('dashboard-calendar'));
+    }
+    public function addNextDate(){
+        $dateFrom = $this->request->getPost('dateFrom');
+        $dateTo = $this->request->getPost('dateTo');
+        $practiseId = $this->request->getPost('id');
+        if(empty($dateFrom && $dateTo && $practiseId)){
+            return redirect()->to(base_url('dashboard-calendar'));
+        }
+        if($dateFrom > $dateTo){
+            return redirect()->to(base_url('dashboard-calendar'));
+        }
+        $data = [
+            'date_date_from' => $dateFrom,
+            'date_date_to' => $dateTo,
+            'Practise_practise_id' => $practiseId,
+        ];
+        $this->datePractiseModel->insert($data);
         return redirect()->to(base_url('dashboard-calendar'));
     }
     public function addPractiseManager(){
@@ -708,40 +1158,26 @@ class Dashboard extends Controller
         }
         $representativeCompanyes = $this->representativeCompanyModel->where('Company_company_id', $id)->find();
         foreach($representativeCompanyes as $representativeCompany){
-            $logs = $this->logCompany->where('Representative_company_representative_id', $representativeCompany['representative_id'])->find();
-            foreach($logs as $log){
-                $this->logCompany->delete($log['log_company_id']);
-            }
-            $resets = $this->resetPassword->where('Representative_company_representative_id', $representativeCompany['representative_id'])->find();
-            foreach($resets as $reset){
-                $this->resetPassword->delete($reset['reset_id']);
-            }
-            $this->representativeCompanyModel->delete($representativeCompany['representative_id']);
+            $this->logCompany->where('Representative_company_representative_id', $representativeCompany['representative_id'])->delete();
+            $this->resetPassword->where('Representative_company_representative_id', $representativeCompany['representative_id'])->delete();
         }
+        $representativeCompanyes = $this->representativeCompanyModel->where('Company_company_id', $id)->delete();
         $this->companyModel->delete($id);
         return redirect()->to(base_url('dashboard-company'));
     }
     public function deleteRepresentativeCompany($id){
         $representativeCompany = $this->representativeCompanyModel->find($id);
-        if(empty($representativeCompany)){
+        $countCompany = $this->representativeCompanyModel->where('Company_company_id', $representativeCompany['Company_company_id'])->find();
+        $count = count($countCompany);
+        if($count < 2){
             return redirect()->to(base_url('dashboard-company'));
         }
-        $logs = $this->logCompany->where('Representative_company_representative_id', $id)->find();
-        foreach($logs as $log){
-            $this->logCompany->delete($log['log_company_id']);
-        }
-        $resets = $this->resetPassword->where('Representative_company_representative_id', $id)->find();
-        foreach($resets as $reset){
-            $this->resetPassword->delete($reset['reset_id']);
-        }
-        $this->representativeCompanyModel->delete($id);
+        $this->logCompany->where('Representative_company_representative_id', $id)->delete();
+        $this->resetPassword->where('Representative_company_representative_id', $id)->delete();
+        $this->representativeCompanyModel->where('representative_id', $id)->delete();
         return redirect()->to(base_url('dashboard-company'));
     }
     public function deletePractiseManager($id){
-        $practiseManager = $this->practiseManager->find($id);
-        if(empty($practiseManager)){
-            return redirect()->to(base_url('dashboard-company'));
-        }
         $this->practiseManager->delete($id);
         return redirect()->to(base_url('dashboard-company'));
     }
