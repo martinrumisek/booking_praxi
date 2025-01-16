@@ -170,9 +170,9 @@
 <div class="container-fluid">
     <h2 class="mt-2">Přehled firem</h2>
     <div class="d-flex flex-wrap justify-content-between m-3">
-        <form action="" method="POST">
+        <form action="" method="GET">
             <div class="d-flex">
-                <input class="search-input p-2 mt-2" id="search-input" type="text" placeholder="Vyhledat uživatele">
+                <input class="search-input p-2 mt-2" id="search-input" name="search" type="text" placeholder="Vyhledat uživatele" <?php if(!empty($search)){?> value="<?= $search ?>" <?php } ?>>
                 <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </form>
