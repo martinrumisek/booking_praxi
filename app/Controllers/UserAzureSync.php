@@ -18,7 +18,23 @@ class UserAzureSync extends Controller
         $this->userToCLass();
         return redirect()->to(base_url('/dashboard-people'));
     }
-
+    public function upUsersClass(){
+        $this->updateClassYearGraduationPlus();
+        $this->userToClass();
+        return redirect()->to(base_url('/dashboard-class'));
+    }
+    public function downUsersClass(){
+        $this->updateClassYearGraduationMinus();
+        $this->userToClass();
+        return redirect()->to(base_url('/dashboard-class'));
+    }
+    public function newSchoolYear(){
+        $accessToken = $this->getAccessToken();
+        $usersData = $this->getUsers($accessToken);
+        $this->saveUsers($usersData);
+        $this->updateClassYearGraduationPlus();
+        $this->userToCLass();
+    }
     // Získní přístupové tokenu, tak abych mohl pracovat s daty uživatelů
     private function getAccessToken()
     {
@@ -132,7 +148,7 @@ class UserAzureSync extends Controller
         $classModel = new ClassModel();
         $users = $userModel->where('user_role', 'student')->findAll();
         foreach( $users as $user ){
-            $department = $user['department'];
+            $department = $user['user_department'];
 
             if(strpos($department, '-') !== false){
                 [$yearGraduation, $letterClass] = explode('-', $department, 2);
@@ -147,7 +163,11 @@ class UserAzureSync extends Controller
             }
         }
     }
-    public function updateClassYearGraduation(){
+    private function updateClassYearGraduationPlus(){
+        $classModel = new ClassModel();
+        $classModel->db->table('class')->set('class_year_graduation', 'class_year_graduation + 1', false)->update();
+    }
+    private function updateClassYearGraduationMinus(){
         $classModel = new ClassModel();
         $classModel->db->table('class')->set('class_year_graduation', 'class_year_graduation - 1', false)->update();
     }
