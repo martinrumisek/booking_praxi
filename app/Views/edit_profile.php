@@ -168,12 +168,12 @@
                 </div>
                 <div class="col-12 col-lg-6 p-2">
                     <h5>Telefonní číslo</h5>
-                    <input name="phone" type="tel" id="phone" style="width: 50%;" <?php if(!empty($user['user_phone'])){?> value="<?= $user['user_phone'] ?>"  <?php } ?> oninput="checkPhone()">
+                    <input name="phone" type="tel" id="phone" style="width: 80%;" <?php if(!empty($user['user_phone'])){?> value="<?= $user['user_phone'] ?>"  <?php } ?> oninput="checkPhone()">
                 </div>
                 <div class="col-12 col-lg-6 p-2">
                     <h5>Datum narození</h5>
                     <div class="d-flex">
-                    <input name="birthday" type="date" style="width: 50%;" id="birthdayDay" <?php if(!empty($user['user_date_birthday'])){?> value="<?= $user['user_date_birthday'] ?>"  <?php } ?>>
+                    <input name="birthday" type="date" style="width: 80%;" id="birthdayDay" <?php if(!empty($user['user_date_birthday'])){?> value="<?= $user['user_date_birthday'] ?>"  <?php } ?>>
                     <div class="m-2 d-flex align-items-center h4 p-0"><a class="reset-btn-date" onclick="resetDate(event)"><i class="fa-regular fa-circle-xmark"></i></a></div>
                     </div>
                 </div>
@@ -187,8 +187,8 @@
 </div>
 <div class="container mt-2 d-flex flex-wrap">
     <?php foreach($socialLinks as $link){ ?>
-        <div class="d-flex">
-        <div class="d-flex">
+        <div class="d-flex flex-wrap">
+            <div class="d-flex">
                 <div class="circle-icon d-flex justify-content-center align-items-center m-2 h3"><?= $link['social_icon'] ?></div>
                 <div class="d-flex align-items-center"><?= $link['social_name'] ?></div>
             </div>
