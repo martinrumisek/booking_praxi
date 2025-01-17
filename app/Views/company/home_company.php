@@ -103,7 +103,7 @@
                         <div class="col-12 col-md-6"><div class="h5 mt-2">Telefonní číslo</div><div class=""><?= $user['representative_phone'] ?></div></div>
                         <div class="col-12 col-md-6"><div class="h5 mt-2">Funkce</div><div class=""><?= $user['representative_function'] ?></div></div>
                     </div>
-                    <div class="d-flex justify-content-center aling-items-center p-3"><div><a href="#"><div>Zobrazit více</div><div class="d-flex justify-content-center"><i class="fa-solid fa-chevron-down"></i></div></a></div></div>
+                    <div class="d-flex justify-content-center aling-items-center p-3"><div><a href="<?= base_url('/company-profil') ?>"><div>Zobrazit více</div><div class="d-flex justify-content-center"><i class="fa-solid fa-chevron-down"></i></div></a></div></div>
                 </div>
             </div>
         </div>
@@ -124,91 +124,9 @@
     </div>
 </div>
 <div class="btn-container d-flex flex-wrap justify-content-center align-items-center"><div class="btn-document-export d-flex flex-column justify-content-center align-items-center p-2 m-1"><div class="fw-bold">Počet žáků</div><div><?= $count['userStudent'] ?></div></div><div class="btn-document-export d-flex flex-column justify-content-center align-items-center p-2 m-1"><div class="fw-bold">Počet termínů praxí</div><div><?= $count['practise'] ?></div></div><div class="btn-document-export d-flex flex-column justify-content-center align-items-center p-2 m-1"><div class="fw-bold">Registrované firmy</div><div><?= $count['companyCount'] ?></div></div></div>
-<div class="d-flex justify-content-center mt-2"><h3>Oblíbené nabídky</h3></div>
-<div class="d-flex align-items-center container d-none">
-    <!-- Tlačítko pro předchozí kartu -->
-    <a href="#">
-        <div class="next-previously d-flex align-items-center justify-content-center"><i class="fa-solid fa-chevron-left"></i></div>
-    </a>
-    <div class="d-flex flex-row">
-        <!-- Začátek první karty -->
-        <div class="card-offer m-3">
-            <div class="d-flex m-3">
-                <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
-                <p class="card-title fw-bold">Obchodní akademie, Vyšší odborná škola a Jazyková škola s právem státní jazykové zkoušky Uherské Hradiště</p>
-                <a href="#"><i class="fa-solid fa-star card-star p-1"></i></a>
-            </div>
-            <div class="d-flex">
-                <i class="fa-regular fa-calendar h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">20.03 - 21.03.2024 / 20.05 - 21.05.2024</p>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-                <i class="fa-solid fa-location-dot h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">Nádražní 22/22, 686 01 Uherské Hradiště 1</p>
-            </div>
-            <div class="d-flex mt-2">
-                <p class="fw-bold m-3 mb-0 mt-0">Pro obor: </p>
-                <p>IT, OA, VOŠ</p>
-            </div>
-            <h6 class="text-center">popis praxe</h6>
-            <div class="p-2">
-                <p class="text-praxe">Popis dané praxe</p>
-            </div>
-        </div>
-        <!-- Konec prnví karty a začátek druhé karty -->
-        <div class="card-offer m-3">
-            <div class="d-flex m-3">
-                <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
-                <p class="card-title fw-bold">Obchodní akademie, Vyšší odborná škola a Jazyková škola s právem státní jazykové zkoušky Uherské Hradiště</p>
-                <a href="#"><i class="fa-solid fa-star card-star p-1"></i></a>
-            </div>
-            <div class="d-flex">
-                <i class="fa-regular fa-calendar h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">20.03 - 21.03.2024 / 20.05 - 21.05.2024</p>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-                <i class="fa-solid fa-location-dot h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">Nádražní 22/22, 686 01 Uherské Hradiště 1</p>
-            </div>
-            <div class="d-flex mt-2">
-                <p class="fw-bold m-3 mb-0 mt-0">Pro obor: </p>
-                <p>IT, OA, VOŠ</p>
-            </div>
-            <h6 class="text-center">popis praxe</h6>
-            <div class="p-2">
-                <p class="text-praxe">Popis dané praxe</p>
-            </div>
-        </div>
-        <!-- Konec druhé karty a začátek třetí karty -->
-        <div class="card-offer m-3">
-            <div class="d-flex m-3">
-                <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
-                <p class="card-title fw-bold">Obchodní akademie, Vyšší odborná škola a Jazyková škola s právem státní jazykové zkoušky Uherské Hradiště</p>
-                <a href="#"><i class="fa-solid fa-star card-star p-1"></i></a>
-            </div>
-            <div class="d-flex">
-                <i class="fa-regular fa-calendar h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">20.03 - 21.03.2024 / 20.05 - 21.05.2024</p>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-                <i class="fa-solid fa-location-dot h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">Nádražní 22/22, 686 01 Uherské Hradiště 1</p>
-            </div>
-            <div class="d-flex mt-2">
-                <p class="fw-bold m-3 mb-0 mt-0">Pro obor: </p>
-                <p>IT, OA, VOŠ</p>
-            </div>
-            <h6 class="text-center">popis praxe</h6>
-            <div class="p-2">
-                <p class="text-praxe">Popis dané praxe</p>
-            </div>
-        </div>
-        <!-- Konec třetí karty -->
-    </div>
-    <!-- Tlačítko pro další kartu -->
-    <a href="#">
-        <div class="next-previously d-flex align-items-center justify-content-center"><i class="fa-solid fa-chevron-right"></i></div>
-    </a>
-</div>
+<div class="d-flex justify-content-center mt-2"><h3>Žádosti žáků</h3></div>
 
+<div class="d-flex justify-content-center mt-2"><h3>Probíhající praxe</h3></div>
+
+<div class="d-flex justify-content-center mt-2"><h3>Nové termíny praxí</h3></div>
 <?= $this->endSection() ?>
