@@ -109,6 +109,7 @@ class Home extends BaseController
             'company' => $company,
             'user' => $representativeCompany,
             'count' => $count,
+            'practises' => $practises,
         ];
         return view('company/home_company', $data);
     }
@@ -124,10 +125,59 @@ class Home extends BaseController
         $data = ['title' => 'Nabídky praxe'];
         return view ('practise_offer', $data);
     }
+    public function addNewOfferPractiseView(){
+        $id = $this->companyUser['idCompany'];
+        $company = $this->companyModel->find($id);
+        $today = date('Y-m-d');
+        $resultPractise = $this->practiseModel->where('practise_end_new_offer >=', $today)->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id', 'left')->join('Class_has_Practise', 'Practise.practise_id = Class_has_Practise.Practise_practise_id', 'left')->join('Class', 'Class_has_Practise.Class_class_id = Class.class_id', 'left')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id', 'left')->find();
+        $practises = [];
+        foreach($resultPractise as $practise){
+            $practiseId = $practise['practise_id'];
+            if(!isset($practises[$practiseId])){
+                $practises[$practiseId] = [
+                    'practise_id' => $practiseId,
+                    'practise_name' => $practise['practise_name'],
+                    'practise_contract_file' => $practise['practise_contract_file'],
+                    'dates' => [],
+                    'classes' => [],
+                ];
+            }
+            $practises[$practiseId]['dates'][] = [
+                'date_date_from' => $practise['date_date_from'],
+                'date_date_to' => $practise['date_date_to'],
+            ];
+            $practises[$practiseId]['classes'][] = [
+                'class_class' => $practise['class_class'],
+                'class_letter_class' => $practise['class_letter_class'],
+                'field_shortcut' => $practise['field_shortcut'],
+            ];
+        }
+        $resultCategoryes = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id')->find();
+        $categoryes = [];
+        foreach($resultCategoryes as $category){
+            $categoryId = $category['category_id'];
+            if(!isset($categoryes[$categoryId])){
+                $categoryes[$categoryId] = [
+                    'category_name' => $category['category_name'],
+                ];
+            }
+            $categoryes[$categoryId]['skills'][] = [
+                'skill_id' => $category['skill_id'],
+                'skill_name' => $category['skill_name'],
+            ];
+        }
+        $data = [
+            'title' => 'Nová nabídka praxe',
+            'company' => $company,
+            'practises' => $practises,
+            'categoryes' => $categoryes,
+        ];
+        return view ('company/add_new_offer_practise', $data);
+    }
     public function people(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
-        $users = $this->userModel->where('user_role', 'student')->join('Class', 'Class.class_id = User.Class_class_id AND Class.class_del_time IS NULL')->join('Field_study', 'Field_study.field_id = Class.Field_study_field_id AND Field_study.field_del_time IS NULL')->join('Type_school', 'Type_school.type_id = Field_study.Type_school_type_id AND Type_school.type_del_time IS NULL')->groupStart()->like("CONCAT(user_name, ' ', user_surname)", $search)->orLike("CONCAT(class_class, '.', class_letter_class)", $search)->orLike('field_shortcut', $search)->groupEnd()->paginate(20);
+        $users = $this->userModel->where('user_role', 'student')->join('Class', 'Class.class_id = User.Class_class_id AND Class.class_del_time IS NULL')->join('Field_study', 'Field_study.field_id = Class.Field_study_field_id AND Field_study.field_del_time IS NULL')->join('Type_school', 'Type_school.type_id = Field_study.Type_school_type_id AND Type_school.type_del_time IS NULL')->groupStart()->like("CONCAT(user_name, ' ', user_surname)", $search)->orLike("CONCAT(class_class, '.', class_letter_class)", $search)->orLike('field_shortcut', $search)->groupEnd()->orderBy('user_surname, user_name', 'ASC')->paginate(20);
         $pager = $this->userModel->pager;
         $data = [
             'title' => 'Žáci',
@@ -149,6 +199,65 @@ class Home extends BaseController
             'search' => $search,
         ];
         return view ('company', $data);
+    }
+    public function companyProfilView(){
+        $id = $this->companyUser['idUser'];
+        $company = $this->companyModel->find($id);
+        $representatives = $this->representativeCompanyModel->where('Company_company_id', $id)->find();
+        $contactCompany = $this->representativeCompanyModel->where('Company_company_id', $id)->first();
+        $managers = $this->practiseManagerModel->where('Company_company_id', $id)->find();
+        $data = [
+            'title' => 'Profil',
+            'company' => $company,
+            'representatives' => $representatives,
+            'contact' => $contactCompany,
+            'managers' => $managers,
+        ];
+        return view ('company/profile_company', $data);
+    }
+    public function companyProfilAllView($idCompany){
+        $id = $idCompany;
+        $company = $this->companyModel->find($id);
+        $representatives = $this->representativeCompanyModel->where('Company_company_id', $id)->find();
+        $contactCompany = $this->representativeCompanyModel->where('Company_company_id', $id)->first();
+        $managers = $this->practiseManagerModel->where('Company_company_id', $id)->find();
+        $data = [
+            'title' => 'Profil',
+            'company' => $company,
+            'representatives' => $representatives,
+            'contact' => $contactCompany,
+            'managers' => $managers,
+        ];
+        return view ('company/profile_company', $data);
+    }
+    public function editCompanyProfil($idCompany){
+        $id = $idCompany;
+        $role = $this->session->get('role');
+        if(!empty($this->companyUser['idCompany'])){
+            $userSession = $this->companyUser['idCompany'];
+        }
+        $isAdmin = in_array('admin', $role);
+        $isSpravce = in_array('spravce', $role);
+        if(!$isAdmin && !$isSpravce && $userSession !== $id){
+            $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+        }
+        $company = $this->companyModel->find($id);
+        $representatives = $this->representativeCompanyModel->where('Company_company_id', $id)->find();
+        $contactCompany = $this->representativeCompanyModel->where('Company_company_id', $id)->first();
+        $managers = $this->practiseManagerModel->where('Company_company_id', $id)->find();
+        $data = [
+            'title' => 'Profil',
+            'company' => $company,
+            'representatives' => $representatives,
+            'contact' => $contactCompany,
+            'managers' => $managers,
+        ];
+        return view ('company/edit_profile_company', $data);
     }
     public function profileView(){
         $id = $this->userSession['id'];
