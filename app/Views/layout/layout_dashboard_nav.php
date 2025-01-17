@@ -20,6 +20,7 @@
     .main-content {
             padding-left: 60px; 
             width: 100%;
+            min-height: 100vh;
             transition: margin-left 0.5s ease;
         }
         .nav-text {
@@ -320,5 +321,6 @@
                 </div>
             </div>
     </div>
+
 </body>
 </html>

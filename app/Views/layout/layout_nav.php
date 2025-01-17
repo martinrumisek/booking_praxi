@@ -20,6 +20,7 @@
     .main-content {
             padding-left: 60px; 
             width: 100%;
+            min-height: 100vh;
             transition: margin-left 0.3s ease;
         }
         .nav-text {
@@ -255,13 +256,13 @@
         $logOut = base_url('/logout'); // #teacher
     }
     if($isCompany){
-        $home = base_url('/dashboard/home-company');
+        $home = base_url('home-company');
         $listPractise = '#company'; //base_url('#');
-        $people = '#company'; //base_url('#');
+        $people = base_url('/people');
         $company = '#company'; //base_url('#');
         $info = '#company'; //base_url('#');
-        $profile = '#company'; //base_url('#');
-
+        $profile = base_url('company-profil');
+        $addPractise = base_url('/company-add-offer-practise');
         $logOut = base_url('/logOutCompany'); // #company
     }
 ?>
@@ -275,10 +276,12 @@
                 </div>
                 <div class="nav-items">
                     <a class="nav-icon" href="<?= $home?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-house nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Domů</p></div></div></a>
-                    <a class="nav-icon" href="<?= $listPractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nabídky praxe</p></div></div></a>
+                    <?php if($isCompany){ ?> <a class="nav-icon" href="<?= $listPractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Naše nabídky</p></div></div></a><?php } ?>
+                    <?php if($isTeacher || $isStudent){ ?><a class="nav-icon" href="<?= $listPractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nabídky praxe</p></div></div></a><?php } ?>
                     <a class="nav-icon" href="<?= $people?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-user-group nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Lidé</p></div></div></a>
-                    <a class="nav-icon" href="<?= $company?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-building nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Firmy</p></div></div></a>
+                    <?php if($isTeacher || $isStudent){ ?><a class="nav-icon" href="<?= $company?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-building nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Firmy</p></div></div></a><?php } ?>
                     <a class="nav-icon" href="<?= $info?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-circle-info nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Informace</p></div></div></a>
+                    <?php if($isCompany){ ?><a class="nav-icon" href="<?= $addPractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-file-circle-plus nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Přidat praxi</p></div></div></a><?php } ?>
                     <?php if($isAdmin || $isSpravce){ ?><a class="nav-icon" href="<?= $dashboard?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-gear nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nastavení</p></div></div></a> <?php } ?>
                 </div>
                 <div class=" mt-auto">
