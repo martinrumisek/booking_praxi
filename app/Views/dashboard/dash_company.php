@@ -205,7 +205,7 @@
                             <td class="text-center"></td>
                             <td class="text-center"></td>
                             <td><?= date('d.m.Y H:i:s', strtotime($company['company_create_time'])) ?></td>
-                            <td><div class="d-flex"><a class="icon-edit" href="#modalEditCompany" data-bs-toggle="modal" data-bs-target="#modalEditCompany" data-id-company="<?= $company['company_id'] ?>" data-name-company="<?= $company['company_name'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit" href="#"><i class="fa-solid fa-eye edite-icon"></i></a><a class="icon-edit" href="<?= base_url('/delete-company/'.$company['company_id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
+                            <td><div class="d-flex"><a class="icon-edit" href="#modalEditCompany" data-bs-toggle="modal" data-bs-target="#modalEditCompany" data-id-company="<?= $company['company_id'] ?>" data-name-company="<?= $company['company_name'] ?>"><i class="fa-solid fa-pencil edite-icon"></i></a><a class="icon-edit" href="<?= base_url('/company-profil/'.$company['company_id']) ?>"><i class="fa-solid fa-eye edite-icon"></i></a><a class="icon-edit" href="<?= base_url('/delete-company/'.$company['company_id']) ?>"><i class="fa-solid fa-trash del-icon"></i></a></div></td>
                         </tr>
                         <?php foreach($company['representative'] as $representativeCompany){?>
                             <!-- Zde je potřeba přidat barvu, pro každé zastápce firmy, bude jiná barva řádku, firma = bíla, všechny zástupci firmy budou pod ní a budou mít světle šedou -->
