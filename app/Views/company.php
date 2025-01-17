@@ -79,12 +79,12 @@
         <?php foreach($companyes as $company){ ?>
             <div class="card-company m-4">
             <div class="d-flex mt-2 justify-content-center">
-                <div class="card-icon-company d-flex align-items-center justify-content-center"><i class="fa-regular fa-user h4"></i></div>
+                <div class="card-icon-company d-flex align-items-center justify-content-center"><i class="fa-solid fa-building h4"></i></div>
             </div>
             <div class="d-flex justify-content-center mt-1 card-company-name"><p class="fw-bold text-center m-2 company-name"><?= $company['company_name'] ?></p></div>
             <div class="d-flex justify-content-center"><i class="fa-solid fa-location-dot p-2 h5"></i></div>
             <p class="text-center company-text"><?= $company['company_street'] . ', ' . $company['company_post_code'] . ' ' . $company['company_city'] ?></p>
-            <div class="d-flex justify-content-center mt-2 text-center"><a class="d-flex justify-content-center align-items-center btn-show-company" href="#company">Zobrazit</a></div>
+            <div class="d-flex justify-content-center mt-2 text-center"><a class="d-flex justify-content-center align-items-center btn-show-company" href="<?= base_url('/company-profil/'.$company['company_id']) ?>">Zobrazit</a></div>
         </div>
         <?php }?>
     </div>
