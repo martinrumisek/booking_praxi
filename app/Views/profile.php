@@ -84,7 +84,7 @@
 
  }
  if($isCompany){
-     $companyId = $companySession['id'];
+     $userId = $companySession['idUser'];
  }
 ?>
 <div class="container-fluid row p-0 m-0">
