@@ -19,9 +19,12 @@ $routes->get('company','Home::companyView', ['filter' => 'role:student,teacher']
 $routes->get('profile','Home::profileView', ['filter' => 'role:student']); //stránka pro zobrazení profilu
 $routes->get('profile/(:num)','Home::allProfileView/$1', ['filter' => 'role:student,teacher,company']);
 $routes->get('company-profil', 'Home::companyProfilView', ['filter' => 'role:company']);
-$routes->get('company-add-offer-practise', 'Home::addNewOfferPractiseView', ['filter' => 'role:company']);
+$routes->post('/add-offer-practise', 'Home::addNewOfferPractise', ['filter' => 'role:company,admin,spravce']);
+$routes->get('company-add-offer-practise', 'Home::addNewOfferPractiseView', ['filter' => 'role:company,admin,spravce']);
 $routes->get('company-profil/(:num)', 'Home::companyProfilAllView/$1', ['filter' => 'role:student,teacher,company']);
-$routes->get('edit-company-profile/(:num)', 'Home::editCompanyProfil/$1', ['filter' => 'role:admin,spravce,company']);
+$routes->get('edit-company-profile/(:num)', 'Home::editCompanyProfilView/$1', ['filter' => 'role:admin,spravce,company']);
+$routes->post('/edit-company-profile', 'Home::editCompanyProfil', ['filter' => 'role:admin,spravce,company']);
+$routes->post('/profilAdd-practiseManager', 'Home::profilAddPractiseManager', ['filter' => 'role:admin,spravce,company']);
 $routes->get('edit-profile/(:num)','Home::editProfileView/$1', ['filter' => 'role:student,teacher']);
 $routes->post('/edit-profile','Home::editProfile', ['filter' => 'role:student,teacher']);
 
