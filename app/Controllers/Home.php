@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\Skill_OfferPractise;
 use App\Models\User_Skill;
 use CodeIgniter\I18n\Time;
 use App\Models\OfferPractise;
@@ -45,6 +46,7 @@ class Home extends BaseController
     var $user_skill;
     var $socialLink;
     var $socialLink_user;
+    var $skill_offerPractise;
     public function __construct(){
         $this->session = session();
         $this->userSession = $this->session->get('user');
@@ -69,6 +71,7 @@ class Home extends BaseController
         $this->socialLink = new SocialLink();
         $this->socialLink_user = new SocialLink_User();
         $this->user_skill = new User_Skill();
+        $this->skill_offerPractise = new Skill_OfferPractise();
     }
     public function homeStudent(){
         $user = $this->userModel->find($this->userSession['id']);
@@ -166,13 +169,58 @@ class Home extends BaseController
                 'skill_name' => $category['skill_name'],
             ];
         }
+        $managers = $this->practiseManagerModel->where('Company_company_id', $company['company_id'])->find();
         $data = [
             'title' => 'Nová nabídka praxe',
             'company' => $company,
             'practises' => $practises,
             'categoryes' => $categoryes,
+            'managers' => $managers,
         ];
         return view ('company/add_new_offer_practise', $data);
+    }
+    public function addNewOfferPractise(){
+        $name = $this->request->getPost('name_offer_practise');
+        $shortDescription = $this->request->getPost('short_description_offer_practise');
+        $cityOfferPractise = $this->request->getPost('city_practise');
+        $streetOfferPractise = $this->request->getPost('street_practise');
+        $postCodeOfferPractise = $this->request->getPost('post_code_practise');
+        $countPractise = $this->request->getPost('count_practise');
+        $datePractise = $this->request->getPost('select_practise');
+        $copyNextYear = $this->request->getPost('copy_next_year');
+        $skills = $this->request->getPost('skills');
+        $managerPractiseOffer = $this->request->getPost('practise_manager');
+        $fullDescription = $this->request->getPost('full_description');
+        if(empty($name && $cityOfferPractise && $streetOfferPractise && $postCodeOfferPractise && $countPractise && $datePractise && $managerPractiseOffer)){
+            return redirect()->to(base_url('/company-add-offer-practise'));
+        }
+        if(empty($copyNextYear)){
+            $copyNextYear = 0;
+        }
+        for($i=1; $i <= $countPractise; $i++){
+            $dataOffer = [
+                'offer_name' => $name,
+                'offer_requirements' => $shortDescription,
+                'offer_description' => $fullDescription,
+                'offer_city' => $cityOfferPractise,
+                'offer_street' => $streetOfferPractise,
+                'offer_post_code' => $postCodeOfferPractise,
+                'offer_copy_next_year' => $copyNextYear,
+                'Practise_practise_id' => $datePractise,
+                'Practise_manager_manager_id' => $managerPractiseOffer,
+            ];
+            $id = $this->offerPractise->insert($dataOffer);
+            if(!empty($skills)){
+                foreach($skills as $skill){
+                    $dataSkill = [
+                        'Skill_skill_id' => $skill,
+                        'Offer_practise_offer_id' => $id,
+                    ];
+                    $this->skill_offerPractise->insert($dataSkill);
+                }
+            }
+        }
+        return redirect()->to(base_url('/company-add-offer-practise'));
     }
     public function people(){
         $search = $this->request->getGet('search');
@@ -230,7 +278,7 @@ class Home extends BaseController
         ];
         return view ('company/profile_company', $data);
     }
-    public function editCompanyProfil($idCompany){
+    public function editCompanyProfilView($idCompany){
         $id = $idCompany;
         $role = $this->session->get('role');
         if(!empty($this->companyUser['idCompany'])){
@@ -258,6 +306,105 @@ class Home extends BaseController
             'managers' => $managers,
         ];
         return view ('company/edit_profile_company', $data);
+    }
+    public function editCompanyProfil(){
+        $idCompany = $this->request->getPost('idCompany');
+        if(empty($idCompany)){
+            $previousUrl = $this->request->getServer('HTTP_REFERER');
+            log_message('info', 'Nenalezeno $idCompany');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+        }
+        $role = $this->session->get('role');
+        if(!empty($this->companyUser['idCompany'])){
+            $userSession = $this->companyUser['idCompany'];
+        }
+        $isAdmin = in_array('admin', $role);
+        $isSpravce = in_array('spravce', $role);
+        if(!$isAdmin && !$isSpravce && $userSession !== $idCompany){
+            log_message('info', 'Není admin, ani správce ani nesedí id company');
+            $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+        }
+        $nameCompany = $this->request->getPost('nameCompany');
+        $descriptionCompany = $this->request->getPost('description_company');
+        if(empty($nameCompany)){
+            log_message('info', 'prázdné jméno firmy');
+            $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+        }
+        $data = [
+            'company_name' => $nameCompany,
+            'company_description' => $descriptionCompany,
+        ];
+        $this->companyModel->update($idCompany, $data);
+        $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+    }
+    public function profilAddPractiseManager(){
+        $idCompany = $this->request->getPost('companyId');
+        $degreeBefore = $this->request->getPost('degree_before');
+        $name = $this->request->getPost('name');
+        $surname = $this->request->getPost('surname');
+        $degreeAfter = $this->request->getPost('degree_after');
+        $mail = $this->request->getPost('mail');
+        $phone = $this->request->getPost('phone');
+        $positionWork = $this->request->getPost('position_work');
+        if(empty($idCompany && $name && $surname && $phone && $positionWork && $mail)){
+            $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+        }
+        $role = $this->session->get('role');
+        if(!empty($this->companyUser['idCompany'])){
+            $userSession = $this->companyUser['idCompany'];
+        }
+        $isAdmin = in_array('admin', $role);
+        $isSpravce = in_array('spravce', $role);
+        if(!$isAdmin && !$isSpravce && $userSession !== $idCompany){
+            log_message('info', 'Není admin, ani správce ani nesedí id company');
+            $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+        }
+        $data = [
+            'manager_degree_before' => $degreeBefore,
+            'manager_name' => $name,
+            'manager_surname' => $surname,
+            'manager_degree_after' => $degreeAfter,
+            'manager_mail' => $mail,
+            'manager_phone' => $phone,
+            'manager_position_works' => $positionWork,
+            'Company_company_id' => $idCompany,
+        ];
+        $this->practiseManagerModel->insert($data);
+        $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
     }
     public function profileView(){
         $id = $this->userSession['id'];
