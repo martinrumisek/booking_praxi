@@ -171,8 +171,27 @@
         background-color: #006DBC;
         color: white;
     }
+    .btn-right-display-submit{
+        position: fixed;
+        bottom: 55px;
+        right: 20px;
+        z-index: 1;
+        padding: 10px 20px;
+        background-color: #006DBC; 
+        box-shadow: 0px 3px 6px #00000029;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .btn-right-display-submit:hover{
+        color: #006DBC;
+        background-color: white;
+        border: 1px solid #006DBC;
+    }
 </style>
-
+<form action="<?= base_url('/add-offer-practise') ?>" method="POST">
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-lg-6 p-0">
@@ -200,11 +219,11 @@
                         <div class="container d-flex flex-column">
                             <h5>Lokace praxe</h5>
                             <span>Město/vesnice</span>
-                            <input type="text">
+                            <input type="text" name="city_practise" value="<?= $company['company_city'] ?>">
                             <span>Ulice</span>
-                            <input type="text">
+                            <input type="text" name="street_practise" value="<?= $company['company_street'] ?>">
                             <span>PSČ</span>
-                            <input type="text">
+                            <input type="text" name="post_code_practise" value="<?= $company['company_post_code'] ?>">
                         </div>
                     </div>
                 </div>
@@ -212,7 +231,16 @@
     </div>
 </div>
 <div class="btn-container d-flex flex-wrap justify-content-center align-items-center">
-
+<div class="d-flex">
+            <label class="d-flex align-items-center p-2 text-white" for="count_practise">Celkový počet žáků: </label>
+            <select name="count_practise" id="count_practise">
+                <?php for($i = 1; $i <= 10; $i++){ ?>
+                    <option value="<?= $i ?>"><?= $i ?></option>
+               <?php } ?>
+            </select>
+            <label class="d-flex align-items-center p-2 text-white" for="copy_next_year">Kopírovat praxi pro další termíny</label>
+            <input type="checkbox" id="copy_next_year" class="checkbox" name="copy_next_year" value="1">
+</div>
 </div>
 <div class="container-fluid mt-2">
 <div class="row">
@@ -222,14 +250,14 @@
         <?php foreach($practises as $practise){ ?>
         <div class="m-2">
         <div class="d-flex">
-            <input type="checkbox" class="checkbox select-practise" name="select_practises[]" value="<?= $practise['practise_id'] ?>">
+            <input type="checkbox" class="checkbox select-practise" name="select_practise" value="<?= $practise['practise_id'] ?>">
             <div class="d-flex align-items-center p-2 fw-bold"><?= $practise['practise_name'] ?></div>
         </div>
         <div>
             <span class="fw-bold">Pro třídy:</span> <?php foreach($practise['classes'] as $class){ echo $class['class_class'] . '.' . $class['class_letter_class'] . ' (' . $class['field_shortcut'] . '), '; } ?>
         </div>
         <div>
-            <span class="fw-bold">Termín/y:</span> <?php $countDate = count($practise['dates']); foreach($practise['dates'] as $date){echo date('d.m.Y', strtotime($date['date_date_from']))  . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])); if($countDate > 1){echo ' / ';}} ?>
+             <?php $countDate = 1; foreach($practise['dates'] as $date){echo '<span class="fw-bold">Termín ' . $countDate . ': </span>' .  date('d.m.Y', strtotime($date['date_date_from']))  . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])) . '<br>'; $countDate++;} ?>
         </div>
         <div class="m-2"><a target="_blank" class="view-contract-file" href="<?= base_url('assets/document/'.$practise['practise_contract_file']) ?>"><i class="fa-solid fa-file-pdf"></i> Smlouva pro praxi</a></div>
         </div>
@@ -248,15 +276,26 @@
         </div>
         <?php } ?>
         <h4 class="text-center">Vedoucí pro praxi</h4>
+        <div class="d-flex flex-wrap">
+            <div class="d-flex align-items-center p-2"><i class="fa-solid fa-clipboard-user h3 m-0"></i></div>
+            <select name="practise_manager" id="practise_manager">
+                <option disabled selected value="">Vyberte vedoucího praxe</option>
+                <?php foreach($managers as $manager){ ?>
+                    <option value="<?= $manager['manager_id'] ?>"><?php if(!empty($manager['manager_degree_before'])){echo $manager['manager_degree_before'] . ' ';} echo $manager['manager_name'] . ' ' . $manager['manager_surname']; if(!empty($manager['manager_degree_after'])){echo ' '. $manager['manager_degree_after'];} ?></option>
+                <?php } ?>
+            </select>
+        </div>
     </div>
     <div class="col-12 col-md-8">
         <h4>Popis praxe</h4>
         <div class="container" style="height: 100%;">
-            <textarea name="" class="full-description" id=""></textarea>
+            <textarea name="full_description" class="full-description" id="editor"></textarea>
         </div>
     </div>
 </div>
 </div>
+<input type="submit" class="btn-right-display-submit" value="Vytvořit">
+</form>
 <script>
     document.querySelectorAll('.select-practise').forEach((checkbox) => {
     checkbox.addEventListener('change', (e) => {
@@ -267,5 +306,6 @@
         });
     });
 });
+
 </script>
 <?= $this->endSection() ?>
