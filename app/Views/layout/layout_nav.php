@@ -324,5 +324,11 @@
                 </div>
             </div>
     </div>
+    <script>
+        tinymce.init({
+  selector: 'textarea#editor',
+  license_key: 'gpl'
+});
+    </script>
 </body>
 </html>

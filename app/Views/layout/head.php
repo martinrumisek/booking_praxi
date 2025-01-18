@@ -14,6 +14,7 @@
     <!---Font awesome - staženo přes composer---->
     <link rel="stylesheet" href="<?= base_url('vendor/fortawesome/font-awesome/css/all.min.css'); ?>">
     <!------->
+    <script src="https://cdn.tiny.cloud/1/3io9fm8rdapac1ujewwwecu1ef1anxw4cfu9xpxfi2wc5t3l/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <!------->
     <!------->
     <!------->

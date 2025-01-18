@@ -220,7 +220,7 @@
      $userId = $companySession['idCompany'];
  }
 ?>
-<form action="">
+<form action="<?= base_url('/edit-company-profile') ?>" method="POST">
 <div class="container-fluid row p-0 m-0">
     <div class="col-12 col-lg-5 p-0">
         <div class="container-profil">
@@ -265,7 +265,7 @@
 </div>
 <div class="m-4 d-flex justify-content-center"><h2>O nás</h2></div>
 <div class="container profile-text">
-    <textarea name="description" class="description-company" id="editor"><?= $company['company_description'] ?></textarea>
+    <textarea name="description_company" class="description-company" id="editor"><?= $company['company_description'] ?></textarea>
 </div>
 <input type="hidden" name="idCompany" value="<?= $company['company_id'] ?>">
 <input type="submit" class="btn-right-display-submit" value="Upravit">
@@ -340,7 +340,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center">
-                <a class="icon-edit-people edit-repair" href=""><i class="fa-solid fa-pencil"></i></a>
+                <a class="icon-edit-people edit-repair" href="" data-bs-toggle="modal" data-bs-target="#modalEditPractiseManager" data-id-practiseManager="<?= $user['manager_id'] ?>" data-degreeBefore-practiseManager="<?= $user['manager_degree_before'] ?>" data-name-practiseManager="<?= $user['manager_name'] ?>" data-surname-practiseManager="<?= $user['manager_surname'] ?>" data-degreeAfter-practiseManager="<?= $user['manager_degree_after'] ?>" data-mail-practiseManager="<?= $user['manager_mail'] ?>" data-phone-practiseManager="<?= $user['manager_phone'] ?>" data-positionWorks-practiseManager="<?= $user['manager_position_works'] ?>"><i class="fa-solid fa-pencil"></i></a>
                 <a class="icon-edit-people edit-del" href=""><i class="fa-solid fa-trash"></i></a>
             </div>
         </div>
@@ -356,7 +356,7 @@
         <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('/add-practiseManager')?>" method="POST">
+        <form action="<?= base_url('/profilAdd-practiseManager')?>" method="POST">
             <div class="container d-flex flex-column">
             <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
             <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
@@ -382,18 +382,18 @@
         <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('/add-practiseManager')?>" method="POST">
+        <form action="<?= base_url('/profilEdit-practiseManager')?>" method="POST">
             <div class="container d-flex flex-column">
-            <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
-            <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
-            <input type="mail" class="m-1" name="mail" placeholder="E-mail">
-            <input class="m-1" placeholder="Tel. č" name="phone" type="tel">
-            <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text">
-            <input class="m-1" id="add-practiseManager-companyId" name="companyId" type="hidden">
+            <div class="d-flex"><input class="m-1" type="text" name="degree_before" id="edit-practiseManager-degreeBefore" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" id="edit-practiseManager-name" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
+            <div class="d-flex"><input type="text" class="m-1" id="edit-practiseManager-surname" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" id="edit-practiseManager-degreeAfter" style="width: 20%;" placeholder="Titul za"></div>
+            <input type="mail" class="m-1" name="mail" id="edit-practiseManager-mail" placeholder="E-mail">
+            <input class="m-1" placeholder="Tel. č" id="edit-practiseManager-phone" name="phone" type="tel">
+            <input class="m-1" placeholder="Pracovní pozice" id="edit-practiseManager-positionWorks" name="position_work" type="text">
+            <input class="m-1" id="edit-practiseManager-id" name="id" type="hidden">
             </div>
       </div>
       <div class="modal-footer">
-        <input class="btn-create" type="submit" placeholder="Uložit" value="Vytvořit">
+        <input class="btn-create" type="submit" placeholder="Uložit" value="Upravit">
       </div>
       </form>
     </div>
@@ -437,6 +437,32 @@
       if (button) {
         const companyId = button.getAttribute('data-idCompany-practiseManager') || '';
         document.getElementById('add-practiseManager-companyId').value = companyId;
+      }
+    });
+  }
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const modalEditCategory = document.getElementById('modalEditPractiseManager');
+  if (modalEditCategory) {
+    modalEditCategory.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      if (button) {
+        const id = button.getAttribute('data-id-practiseManager') || '';
+        const degreeBefore = button.getAttribute('data-degreeBefore-practiseManager') || '';
+        const name = button.getAttribute('data-name-practiseManager') || '';
+        const surname = button.getAttribute('data-surname-practiseManager') || '';
+        const degreeAfter = button.getAttribute('data-degreeAfter-practiseManager') || '';
+        const mail = button.getAttribute('data-mail-practiseManager') || '';
+        const phone = button.getAttribute('data-phone-practiseManager') || '';
+        const positionWorks = button.getAttribute('data-positionWorks-practiseManager') || '';
+        document.getElementById('edit-practiseManager-id').value = id;
+        document.getElementById('edit-practiseManager-degreeBefore').value = degreeBefore;
+        document.getElementById('edit-practiseManager-name').value = name;
+        document.getElementById('edit-practiseManager-surname').value = surname;
+        document.getElementById('edit-practiseManager-degreeAfter').value = degreeAfter;
+        document.getElementById('edit-practiseManager-mail').value = mail;
+        document.getElementById('edit-practiseManager-phone').value = phone;
+        document.getElementById('edit-practiseManager-positionWorks').value = positionWorks;
       }
     });
   }
