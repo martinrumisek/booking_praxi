@@ -99,32 +99,36 @@ class Dashboard extends Controller
                     'practiseManager' =>[],
                 ];
             }
-            $companyes[$companyId]['representative'][] = [
-                'representative_id' => $company['representative_id'],
-                'representative_degree_before' => $company['representative_degree_before'],
-                'representative_name' => $company['representative_name'],
-                'representative_surname' => $company['representative_surname'],
-                'representative_degree_after' => $company['representative_degree_after'],
-                'representative_mail' => $company['representative_mail'],
-                'representative_phone' => $company['representative_phone'],
-                'representative_function' => $company['representative_function'],
-                'representative_create_time' => $company['representative_create_time'],
-                'representative_edit_time' => $company['representative_edit_time'],
-                'Company_company_id' => $company['Company_company_id'],
-            ];
-            $companyes[$companyId]['practiseManager'][] = [
-                'manager_id' => $company['manager_id'],
-                'manager_degree_before' => $company['manager_degree_before'],
-                'manager_name' => $company['manager_name'],
-                'manager_surname' => $company['manager_surname'],
-                'manager_degree_after' => $company['manager_degree_after'],
-                'manager_mail' => $company['manager_mail'],
-                'manager_phone' => $company['manager_phone'],
-                'manager_position_works' => $company['manager_position_works'],
-                'manager_create_time' => $company['manager_create_time'],
-                'manager_edit_time' => $company['manager_edit_time'],
-                'Company_company_id' => $company['Company_company_id'],
-            ];
+            if(!in_array($company['representative_id'], array_column($companyes[$companyId]['representative'], 'representative_id'))){
+                $companyes[$companyId]['representative'][] = [
+                    'representative_id' => $company['representative_id'],
+                    'representative_degree_before' => $company['representative_degree_before'],
+                    'representative_name' => $company['representative_name'],
+                    'representative_surname' => $company['representative_surname'],
+                    'representative_degree_after' => $company['representative_degree_after'],
+                    'representative_mail' => $company['representative_mail'],
+                    'representative_phone' => $company['representative_phone'],
+                    'representative_function' => $company['representative_function'],
+                    'representative_create_time' => $company['representative_create_time'],
+                    'representative_edit_time' => $company['representative_edit_time'],
+                    'Company_company_id' => $company['Company_company_id'],
+                ];
+            }
+            if(!in_array($company['manager_id'], array_column($companyes[$companyId]['practiseManager'], 'manager_id'))){
+                $companyes[$companyId]['practiseManager'][] = [
+                    'manager_id' => $company['manager_id'],
+                    'manager_degree_before' => $company['manager_degree_before'],
+                    'manager_name' => $company['manager_name'],
+                    'manager_surname' => $company['manager_surname'],
+                    'manager_degree_after' => $company['manager_degree_after'],
+                    'manager_mail' => $company['manager_mail'],
+                    'manager_phone' => $company['manager_phone'],
+                    'manager_position_works' => $company['manager_position_works'],
+                    'manager_create_time' => $company['manager_create_time'],
+                    'manager_edit_time' => $company['manager_edit_time'],
+                    'Company_company_id' => $company['Company_company_id'],
+                ];
+            }
         }
         $data= [
             'title' => 'Administrace',
