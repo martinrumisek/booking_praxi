@@ -6,6 +6,11 @@ use CodeIgniter\Controller;
 use App\Models\UserModel;
 use App\Models\ClassModel;
 use App\Models\Class_Practise;
+use App\Models\OfferPractise;
+use App\Models\User_OfferPractise;
+use App\Models\Skill_OfferPractise;
+use App\Models\Practise;
+use App\Models\DatePractise;
 class UserAzureSync extends Controller
 {
     protected $provider;
@@ -175,6 +180,11 @@ class UserAzureSync extends Controller
     private function updateClassInPractisePlus(){
         $class_practise = new Class_Practise();
         $class = new ClassModel();
+        $offerPractiseModel = new OfferPractise();
+        $user_offerPractiseModel = new User_OfferPractise();
+        $skill_offerPractiseModel = new Skill_OfferPractise();
+        $practiseModel = new Practise();
+        $datePractiseModel = new DatePractise();
         $class_practises = $class_practise->findAll();
         foreach($class_practises as $classPractise){
             $selectClass = $class->find($classPractise['Class_class_id']);
@@ -187,10 +197,31 @@ class UserAzureSync extends Controller
                 $class_practise->update($classPractise['class_practise_id'], ['Class_class_id' => $newClass['class_id']]);
             }
         }
+        $practises = $practiseModel->findAll();
+        foreach($practises as $practise){
+            $existClass = $class_practise->where('Practise_practise_id', $practise['practise_id'])->find();
+            if(empty($existClass)){
+                $datePractiseModel->where('Practise_practise_id', $practise['practise_id'])->delete();
+                $allOfferPractises = $offerPractiseModel->where('Practise_practise_id', $practise['practise_id'])->find();
+                foreach($allOfferPractises as $offerPractise){
+                    $user_offerPractiseModel->where('Offer_practise_offer_id', $offerPractise['offer_id'])->delete();
+                    $skill_offerPractiseModel->where('Offer_practise_offer_id', $offerPractise['offer_id'])->delete();
+                }
+                $allOfferPractises = $offerPractiseModel->where('Practise_practise_id', $practise['practise_id'])->delete();
+                $practiseModel->delete($practise['practise_id']);
+            }else{
+                continue;
+            }
+        }
     }
     private function updateClassInPractiseMinus(){
         $class_practise = new Class_Practise();
         $class = new ClassModel();
+        $offerPractiseModel = new OfferPractise();
+        $user_offerPractiseModel = new User_OfferPractise();
+        $skill_offerPractiseModel = new Skill_OfferPractise();
+        $practiseModel = new Practise();
+        $datePractiseModel = new DatePractise();
         $class_practises = $class_practise->findAll();
         foreach($class_practises as $classPractise){
             $selectClass = $class->find($classPractise['Class_class_id']);
@@ -198,9 +229,26 @@ class UserAzureSync extends Controller
             $upNumber = $numberClass - 1;
             $newClass = $class->where('class_class', $upNumber)->where('class_letter_class', $selectClass['class_letter_class'])->first();
             if(empty($newClass)){
+
                 $class_practise->delete($classPractise['class_practise_id']);
             }else{
                 $class_practise->update($classPractise['class_practise_id'], ['Class_class_id' => $newClass['class_id']]);
+            }
+        }
+        $practises = $practiseModel->findAll();
+        foreach($practises as $practise){
+            $existClass = $class_practise->where('Practise_practise_id', $practise['practise_id'])->find();
+            if(empty($existClass)){
+                $datePractiseModel->where('Practise_practise_id', $practise['practise_id'])->delete();
+                $allOfferPractises = $offerPractiseModel->where('Practise_practise_id')->find();
+                foreach($allOfferPractises as $offerPractise){
+                    $user_offerPractiseModel->where('Offer_practise_offer_id', $offerPractise['offer_id'])->delete();
+                    $skill_offerPractiseModel->where('Offer_practise_offer_id', $offerPractise['offer_id'])->delete();
+                }
+                $allOfferPractises = $offerPractiseModel->where('Practise_practise_id', $practise['practise_id'])->delete();
+                $practiseModel->delete($practise['practise_id']);
+            }else{
+                continue;
             }
         }
     }
