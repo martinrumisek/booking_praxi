@@ -5,7 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\Controller;
 use App\Models\UserModel;
 use App\Models\ClassModel;
-
+use App\Models\Class_Practise;
 class UserAzureSync extends Controller
 {
     protected $provider;
@@ -19,9 +19,10 @@ class UserAzureSync extends Controller
         return redirect()->to(base_url('/dashboard-people'));
     }
     public function upUsersClass(){
-        $this->updateClassYearGraduationPlus();
-        $this->userToClass();
-        return redirect()->to(base_url('/dashboard-class'));
+        $this->updateClassInPractisePlus();
+        //$this->updateClassYearGraduationPlus();
+        //$this->userToClass();
+        //return redirect()->to(base_url('/dashboard-class'));
     }
     public function downUsersClass(){
         $this->updateClassYearGraduationMinus();
@@ -170,5 +171,37 @@ class UserAzureSync extends Controller
     private function updateClassYearGraduationMinus(){
         $classModel = new ClassModel();
         $classModel->db->table('class')->set('class_year_graduation', 'class_year_graduation - 1', false)->update();
+    }
+    private function updateClassInPractisePlus(){
+        $class_practise = new Class_Practise();
+        $class = new ClassModel();
+        $class_practises = $class_practise->findAll();
+        foreach($class_practises as $classPractise){
+            $selectClass = $class->find($classPractise['Class_class_id']);
+            $numberClass = $selectClass['class_class'];
+            $upNumber = $numberClass + 1;
+            $newClass = $class->where('class_class', $upNumber)->where('class_letter_class', $selectClass['class_letter_class'])->first();
+            if(empty($newClass)){
+                $class_practise->delete($classPractise['class_practise_id']);
+            }else{
+                $class_practise->update($classPractise['class_practise_id'], ['Class_class_id' => $newClass['class_id']]);
+            }
+        }
+    }
+    private function updateClassInPractiseMinus(){
+        $class_practise = new Class_Practise();
+        $class = new ClassModel();
+        $class_practises = $class_practise->findAll();
+        foreach($class_practises as $classPractise){
+            $selectClass = $class->find($classPractise['Class_class_id']);
+            $numberClass = $selectClass['class_class'];
+            $upNumber = $numberClass - 1;
+            $newClass = $class->where('class_class', $upNumber)->where('class_letter_class', $selectClass['class_letter_class'])->first();
+            if(empty($newClass)){
+                $class_practise->delete($classPractise['class_practise_id']);
+            }else{
+                $class_practise->update($classPractise['class_practise_id'], ['Class_class_id' => $newClass['class_id']]);
+            }
+        }
     }
 }
