@@ -174,7 +174,7 @@
                                 </div>
                                 <div class="m-3 form-floating">
                                     <select class="form-control text-center login-input shadow" name="select_subject" id="select_subject" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                        <option value="0"></option>
+                                        <option disabled selected value="0">Vyberte možnost</option>
                                         <option value="1">Fyzická osoba</option>
                                         <option value="2">Právnická osoba</option>
                                     </select>
@@ -338,7 +338,7 @@
     };
     const tooltipCheckbox = new bootstrap.Tooltip(checkboxInput, {
         html: true,
-        title: 'Musíte souhlasit se zpracováním dat!',
+        title: 'Váš je nutný!',
         trigger: 'manual',
     });
     const checkCheckbox = () => { 
