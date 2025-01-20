@@ -184,16 +184,16 @@
                             <div class="col-12 col-lg-6">
                                 <div class="d-flex justify-content-center"><div class="container-rounded-icon d-flex justify-content-center align-items-center"><i class="fa-solid fa-user h3 m-0"></i></div></div><!-- div pro ikonku zástupce osob -->
                                 <p class="text-center h5">Zástupce firmy</p><!-- div pro text, napsané malým "firma" -->
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center m-3">
                                 <input type="text" class="form-control text-center login-input shadow" placeholder="Titul před." id="degree_before" name="degree_before" style="width:20%">
-                                <div class="m-3 form-floating" style="width:80%">
+                                <div class="form-floating" style="width:80%">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
                                     <input type="text" class="form-control text-center login-input shadow" placeholder="Jméno" id="name" name="name" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                     <label for="name" class="h5 input-text">Jméno *</label>
                                 </div>
                                 </div>
-                                <div class="d-flex align-items-center">
-                                <div class="m-3 form-floating" style="width:80%">
+                                <div class="d-flex align-items-center m-3">
+                                <div class="form-floating" style="width:80%">
                                     <!-- <label for="email" class="form-label h5 input-text">E-mail</label>-->
                                     <input type="text" class="form-control text-center login-input shadow" placeholder="Přijmení" id="surname" name="surname" data-bs-toggle="tooltip" data-bs-placement="bottom" >
                                     <label for="surname" class="h5 input-text">Přijmení *</label>
