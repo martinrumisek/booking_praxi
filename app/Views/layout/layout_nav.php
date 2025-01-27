@@ -257,7 +257,7 @@
     }
     if($isCompany){
         $home = base_url('home-company');
-        $listPractise = '#company'; //base_url('#');
+        $listPractise = base_url('company-offer-practises');
         $people = base_url('/people');
         $company = '#company'; //base_url('#');
         $info = '#company'; //base_url('#');
