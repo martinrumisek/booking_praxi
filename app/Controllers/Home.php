@@ -311,7 +311,6 @@ class Home extends BaseController
         $idCompany = $this->request->getPost('idCompany');
         if(empty($idCompany)){
             $previousUrl = $this->request->getServer('HTTP_REFERER');
-            log_message('info', 'Nenalezeno $idCompany');
             if ($previousUrl) {
                 return redirect()->to($previousUrl);
             } else {
@@ -325,7 +324,6 @@ class Home extends BaseController
         $isAdmin = in_array('admin', $role);
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $idCompany){
-            log_message('info', 'Není admin, ani správce ani nesedí id company');
             $previousUrl = $this->request->getServer('HTTP_REFERER');
             if ($previousUrl) {
                 return redirect()->to($previousUrl);
@@ -405,6 +403,116 @@ class Home extends BaseController
             } else {
                 return redirect()->to('/home-student');
             }
+    }
+    public function profilEditPractiseManager(){
+        $id = $this->request->getPost('id');
+        $degreeBefore = $this->request->getPost('degree_before');
+        $name = $this->request->getPost('name');
+        $surname = $this->request->getPost('surname');
+        $degreeAfter = $this->request->getPost('degree_after');
+        $mail = $this->request->getPost('mail');
+        $phone = $this->request->getPost('phone');
+        $positionWork = $this->request->getPost('position_work');
+        if(empty($id && $name && $surname && $phone && $positionWork && $mail)){
+            $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+        }
+        $role = $this->session->get('role');
+        if(!empty($this->companyUser['idCompany'])){
+            $userSession = $this->companyUser['idCompany'];
+        }
+        $manager = $this->practiseManagerModel->find($id);
+        $isAdmin = in_array('admin', $role);
+        $isSpravce = in_array('spravce', $role);
+        if(!$isAdmin && !$isSpravce && $userSession !== $manager['Company_company_id']){
+            log_message('info', 'Není admin, ani správce ani nesedí id company');
+            $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+        }
+        $data = [
+            'manager_degree_before' => $degreeBefore,
+            'manager_name' => $name,
+            'manager_surname' => $surname,
+            'manager_degree_after' => $degreeAfter,
+            'manager_mail' => $mail,
+            'manager_phone' => $phone,
+            'manager_position_works' => $positionWork,
+        ];
+        $this->practiseManagerModel->update($id,$data);
+        $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+    }
+    public function profilDeletePractiseManager($id){
+        $manager = $this->practiseManagerModel->find($id);
+        $role = $this->session->get('role');
+        if(!empty($this->companyUser['idCompany'])){
+            $userSession = $this->companyUser['idCompany'];
+        }
+        $manager = $this->practiseManagerModel->find($id);
+        $isAdmin = in_array('admin', $role);
+        $isSpravce = in_array('spravce', $role);
+        if(!$isAdmin && !$isSpravce && $userSession !== $manager['Company_company_id']){
+            log_message('info', 'Není admin, ani správce ani nesedí id company');
+            $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+        }
+        $offers = $this->offerPractise->where('Practise_manager_manager_id', $id)->find();
+        foreach($offers as $offer){
+            $this->skill_offerPractise->where('Offer_practise_offer_id', $offer['offer_id'])->delete();
+            $this->user_practiseModel->where('Offer_practise_offer_id', $offer['offer_id'])->delete();
+        }
+        $this->offerPractise->where('Practise_manager_manager_id', $id)->delete();
+        $this->practiseManagerModel->delete($id);
+        $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-student');
+            }
+    }
+
+
+    public function companyOfferPractiseView(){
+        $companyIdSession = $this->companyUser['idCompany'];
+        $allCompanyManagers = $this->practiseManagerModel->where('Company_company_id', $companyIdSession)->join('Offer_practise', 'Practise_manager.manager_id = Offer_practise.Practise_manager_manager_id AND Offer_practise.offer_del_time IS NULL', 'left')->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL')->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL')->find();
+        $resultOfferPractise = [];
+        foreach($allCompanyManagers as $result){
+            $idOffer = $result['offer_id'];
+            if(!isset($resultOfferPractise[$idOffer])){
+                $resultOfferPractise[$idOffer] = [
+                    'offer_name' => $result['offer_name'],
+                    'manager_name' => $result['manager_name'],
+                    'practise_name' => $result['practise_name'],
+                    'dates' => [],
+                ];
+            }
+            $resultOfferPractise[$idOffer]['dates'][] = [
+                'date_date_from' => $result['date_date_from'],
+                'date_date_to' => $result['date_date_to'],
+            ];
+        }
+        log_message('info', 'Data, která se mají zobrazit' . json_encode($resultOfferPractise));
+        $data = [
+            'title' => 'Nabídky praxí',
+            'offerPractises' => $resultOfferPractise,
+        ];
+        return view('company/our_practise_offer', $data);
     }
     public function profileView(){
         $id = $this->userSession['id'];

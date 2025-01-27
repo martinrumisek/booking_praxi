@@ -25,8 +25,11 @@ $routes->get('company-profil/(:num)', 'Home::companyProfilAllView/$1', ['filter'
 $routes->get('edit-company-profile/(:num)', 'Home::editCompanyProfilView/$1', ['filter' => 'role:admin,spravce,company']);
 $routes->post('/edit-company-profile', 'Home::editCompanyProfil', ['filter' => 'role:admin,spravce,company']);
 $routes->post('/profilAdd-practiseManager', 'Home::profilAddPractiseManager', ['filter' => 'role:admin,spravce,company']);
+$routes->post('/profilEdit-practiseManager', 'Home::profilEditPractiseManager', ['filter' => 'role:admin,spravce,company']);
+$routes->get('/profilDelete-practiseManager/(:num)', 'Home::profilDeletePractiseManager/$1', ['filter' => 'role:admin,spravce,company']);
 $routes->get('edit-profile/(:num)','Home::editProfileView/$1', ['filter' => 'role:student,teacher']);
 $routes->post('/edit-profile','Home::editProfile', ['filter' => 'role:student,teacher']);
+$routes->get('company-offer-practises', 'Home::companyOfferPractiseView', ['filter' => 'role:company']);
 
 //ROUTY PRO BTN - SCRIPT
 $routes->get('azure-users', 'UserAzureSync::getAllUsers', ['filter' => 'role:admin, spravce']); //routa pro btn - pro script (načtení všech uživatelů z db - azure)

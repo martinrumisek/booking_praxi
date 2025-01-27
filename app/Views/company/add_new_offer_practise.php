@@ -247,6 +247,9 @@
     <div class="col-12 col-md-4">
         <h4 class="text-center">Termíny praxí</h4>
         <p>Zde jsou všechny volitelné termíny pro praxe. Prosím vyberte pouze jeden termín. Vybraní termínu je nutné.</p>
+        <?php if(empty($practises)){ ?>
+            <div class="container bg-white p-3 text-center shadow">Je nám líto. Nejsou žádné termíny</div>
+        <?php } ?>
         <?php foreach($practises as $practise){ ?>
         <div class="m-2">
         <div class="d-flex">
@@ -280,6 +283,9 @@
             <div class="d-flex align-items-center p-2"><i class="fa-solid fa-clipboard-user h3 m-0"></i></div>
             <select name="practise_manager" id="practise_manager">
                 <option disabled selected value="">Vyberte vedoucího praxe</option>
+                <?php if(empty($managers)){ ?>
+                    <div class="container bg-white p-3 text-center shadow">Nemáté žádného vedoucího</div>
+                <?php } ?>
                 <?php foreach($managers as $manager){ ?>
                     <option value="<?= $manager['manager_id'] ?>"><?php if(!empty($manager['manager_degree_before'])){echo $manager['manager_degree_before'] . ' ';} echo $manager['manager_name'] . ' ' . $manager['manager_surname']; if(!empty($manager['manager_degree_after'])){echo ' '. $manager['manager_degree_after'];} ?></option>
                 <?php } ?>
@@ -294,7 +300,9 @@
     </div>
 </div>
 </div>
+<?php if(!empty($practises && $managers)){ ?>
 <input type="submit" class="btn-right-display-submit" value="Vytvořit">
+<?php } ?>
 </form>
 <script>
     document.querySelectorAll('.select-practise').forEach((checkbox) => {

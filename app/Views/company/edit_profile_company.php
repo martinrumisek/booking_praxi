@@ -277,7 +277,7 @@
                 <div class="card-icon-people d-flex align-items-center justify-content-center"><i class="fa-regular fa-user h4"></i></div>
             </div>
             <div class="d-flex justify-content-center align-items-center" style="height: 75%;">
-                <a class="add-new-people" href=""><i class="fa-solid fa-plus"></i> Přidat zástupce</a>
+                <a class="add-new-people" href="#modal" data-bs-toggle="modal" data-bs-target="#modalAddRepresentativeCompany" ><i class="fa-solid fa-plus"></i> Přidat zástupce</a>
             </div>
         </div>
         <!-- Začátek karty -->
@@ -340,8 +340,8 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center">
-                <a class="icon-edit-people edit-repair" href="" data-bs-toggle="modal" data-bs-target="#modalEditPractiseManager" data-id-practiseManager="<?= $user['manager_id'] ?>" data-degreeBefore-practiseManager="<?= $user['manager_degree_before'] ?>" data-name-practiseManager="<?= $user['manager_name'] ?>" data-surname-practiseManager="<?= $user['manager_surname'] ?>" data-degreeAfter-practiseManager="<?= $user['manager_degree_after'] ?>" data-mail-practiseManager="<?= $user['manager_mail'] ?>" data-phone-practiseManager="<?= $user['manager_phone'] ?>" data-positionWorks-practiseManager="<?= $user['manager_position_works'] ?>"><i class="fa-solid fa-pencil"></i></a>
-                <a class="icon-edit-people edit-del" href=""><i class="fa-solid fa-trash"></i></a>
+                <a class="icon-edit-people edit-repair" href="#modal" data-bs-toggle="modal" data-bs-target="#modalEditPractiseManager" data-id-practiseManager="<?= $user['manager_id'] ?>" data-degreeBefore-practiseManager="<?= $user['manager_degree_before'] ?>" data-name-practiseManager="<?= $user['manager_name'] ?>" data-surname-practiseManager="<?= $user['manager_surname'] ?>" data-degreeAfter-practiseManager="<?= $user['manager_degree_after'] ?>" data-mail-practiseManager="<?= $user['manager_mail'] ?>" data-phone-practiseManager="<?= $user['manager_phone'] ?>" data-positionWorks-practiseManager="<?= $user['manager_position_works'] ?>"><i class="fa-solid fa-pencil"></i></a>
+                <a class="icon-edit-people edit-del" href="<?= base_url('/profilDelete-practiseManager/'.$user['manager_id']) ?>"><i class="fa-solid fa-trash"></i></a>
             </div>
         </div>
         <?php } ?>
@@ -465,6 +465,26 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('edit-practiseManager-positionWorks').value = positionWorks;
       }
     });
+  }
+});
+const checkboxAddPass = document.getElementById('checkboxAddPass');
+const passwd1AddPass = document.getElementById('passwd1AddPass');
+const passwd2AddPass = document.getElementById('passwd2AddPass');
+checkboxAddPass.addEventListener('change', function(){
+  if(this.checked){
+    passwd1AddPass.setAttribute('disabled', 'true');
+    passwd2AddPass.setAttribute('disabled', 'true');
+    passwd1AddPass.value = 'Heslo nezadáváte!'
+    passwd2AddPass.value = 'Heslo nezadáváte!'
+    passwd1AddPass.type = 'text';
+    passwd2AddPass.type = 'text';
+  }else{
+    passwd1AddPass.removeAttribute('disabled');
+    passwd2AddPass.removeAttribute('disabled');
+    passwd1AddPass.value = ''
+    passwd2AddPass.value = ''
+    passwd1AddPass.type = 'password';
+    passwd2AddPass.type = 'password';
   }
 });
 </script>
