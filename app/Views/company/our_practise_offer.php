@@ -2,15 +2,77 @@
 
 <?= $this->section('content') ?>
 <style>
-
-</style>
-<?php 
-foreach($offerPractises as $offer){
-    echo $offer['manager_name'] . '   ' . $offer['offer_name'] . '    ' . $offer['practise_name'];
-    foreach($offer['dates'] as $date){
-        echo $date['date_date_from'];
+    .icon-practise{
+        background-color: #006DBC;
+        color: white;
+        padding: 15px;
+        margin: 5px;
+        border-radius: 100%;
+        box-shadow: 0px 3px 6px #00000029;
     }
-    echo '<br>';
-}
-?>
+    .container-practise{
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .practise-break{
+        height: 2px;
+        background-color: #006DBC;
+    }
+    .card-people-offer-practise{
+        width: 20rem;
+        height: 100px;
+        box-shadow: 0px 1px 3px #00000029;
+        border-radius: 10px;
+    }
+    .text-user-practise{
+        font-size: 12px;
+    }
+</style>
+<div class="container-fluid">
+    <h2>Přehled naších nabídek praxí</h2>
+    <div class="row">
+    <?php foreach($offerPractises as $offer){ ?>
+        <div class="col-12 col-lg-4 d-flex align-items-center mt-2 container-practise">
+            <div class="container">
+            <div class="d-flex justify-content-center">
+                <div><i class="fa-solid fa-briefcase h1 icon-practise"></i></div>
+            </div>
+            <div class="d-flex"><div class="p-1 fw-bold">Název praxe: </div><div class="p-1"> <?= $offer['offer_name'] ?> </div></div>
+            <?php $count = 1; foreach($offer['dates'] as $date){ ?>
+                <div class="d-flex"><div class="p-1 fw-bold">Termín <?= $count  . ':'?></div><div class="p-1"> <?=  date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_from'])) ?> </div></div>
+            <?php $count++; }  ?>
+            <div class="container d-flex justify-content-end flex-wrap">
+                <a class="m-1" href=""><i class="fa-solid fa-eye p-1"></i>Zobrazit</a>
+                <a class="m-1" href=""><i class="fa-solid fa-pencil p-1"></i>Upravit</a>
+                <a class="m-1" href=""><i class="fa-solid fa-trash p-1"></i>Smazat</a>
+            </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 mt-2 d-flex flex-wrap">
+           <?php foreach($offer['users'] as $user){ ?>
+            <?php if($user['user_offer_id'] == null){ ?>
+                <div class="d-flex justify-content-center align-items-center" style="width: 100%">Praxi si nikdo nevybral</div>
+            <?php }else{ ?>
+                <div class="card-people-offer-practise d-flex flex-column">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-user p-2 h5 m-0"></i>
+                        <p class=" m-0 h6"><?= $user['user_name'] . ' ' . $user['user_surname'] ?></p>
+                        </div>
+                        <a href=""><i class="fa-solid fa-eye p-1"></i></a>
+                    </div>
+                    <div class="d-flex">
+                        <p class="m-0 text-user-practise p-1">Třida: <?= $user['class_class'] . '.' . $user['class_letter_class'] ?></p>
+                        <p class="m-0 text-user-practise p-1">Obor: <?= $user['field_name'] ?></p>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <a class="m-2" href=""><i class="fa-solid fa-xmark"></i></a>
+                        <a class="m-2" href=""><i class="fa-solid fa-check"></i></a>
+                    </div>
+                </div>
+           <?php }}  ?>
+        </div>
+        <div class="col-12 mt-2 practise-break"></div>
+    <?php } ?>
+    </div>
+</div>
 <?= $this->endSection() ?>

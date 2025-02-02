@@ -22,6 +22,8 @@ use App\Models\Skill;
 use App\Models\User_OfferPractise;
 use App\Models\SocialLink;
 use App\Models\SocialLink_User;
+use App\Models\ResetPassword;
+use App\Controllers\Email;
 class Home extends BaseController
 {
     var $session;
@@ -47,6 +49,8 @@ class Home extends BaseController
     var $socialLink;
     var $socialLink_user;
     var $skill_offerPractise;
+    var $mail;
+    var $resetPassword;
     public function __construct(){
         $this->session = session();
         $this->userSession = $this->session->get('user');
@@ -72,6 +76,8 @@ class Home extends BaseController
         $this->socialLink_user = new SocialLink_User();
         $this->user_skill = new User_Skill();
         $this->skill_offerPractise = new Skill_OfferPractise();
+        $this->mail = new Email();
+        $this->resetPassword = new ResetPassword();
     }
     public function homeStudent(){
         $user = $this->userModel->find($this->userSession['id']);
@@ -354,6 +360,106 @@ class Home extends BaseController
                 return redirect()->to('/home-student');
             }
     }
+    public function profilAddRepresentativeCompany(){
+        $companyId = $this->request->getPost('companyId');
+        $degreeBefore = $this->request->getPost('degree_before');
+        $name = $this->request->getPost('name_representative');
+        $surname = $this->request->getPost('surname_representative');
+        $degreeAfter = $this->request->getPost('degree_after');
+        $mail = $this->request->getPost('mail');
+        $phone = $this->request->getPost('phone');
+        $positionWork = $this->request->getPost('position_work');
+        $checkbox = $this->request->getPost('checkbox');
+        $passwd1 = $this->request->getPost('passwd1');
+        $passwd2 = $this->request->getPost('passwd2');
+        if(!empty($user)){
+            //return redirect()->to(base_url('dashboard-company'));
+        }
+        $role = $this->session->get('role');
+        if(!empty($this->companyUser['idCompany'])){
+            $userSession = $this->companyUser['idCompany'];
+        }
+        $isAdmin = in_array('admin', $role);
+        $isSpravce = in_array('spravce', $role);
+        if(!$isAdmin && !$isSpravce && $userSession !== $companyId){
+            log_message('info', 'Není admin, ani správce ani nesedí id company');
+            $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to('/home-company');
+            }
+        }
+        if(empty($name && $surname && $mail && $phone && $companyId && $passwd1 && $passwd2)){
+            //return redirect()->to(base_url('dashboard-company'));
+        }
+        if(empty($checkbox)){
+            if($passwd1 !== $passwd2){
+                //return redirect()->to(base_url('dashboard-company'));
+            }
+        }
+        if(!empty($checkbox)){
+            $passwd1 = bin2hex(random_bytes(16));
+        }
+        $hashPassword = password_hash($passwd1, PASSWORD_DEFAULT);
+        $data = [
+            'representative_degree_before' => $degreeBefore,
+            'representative_name' => $name,
+            'representative_surname' => $surname,
+            'representative_degree_after' => $degreeAfter,
+            'representative_mail' => $mail,
+            'representative_password' => $hashPassword,
+            'representative_phone' => $phone,
+            'representative_function' => $positionWork,
+            'Company_company_id' => $companyId, 
+        ];
+        $idInsert = $this->representativeCompanyModel->insert($data);
+        if(!empty($checkbox)){
+            $secretCode = bin2hex(random_bytes(16));
+            $hashMail = password_hash($mail, PASSWORD_DEFAULT);
+            $linkReset = base_url('/reset-password?code='.urlencode($secretCode).'&idcode='.urlencode($hashMail).'&id='.$idInsert);
+            $messageHtml = '
+            <h1>Vytvoření účtu v aplikaci Booking praxí</h1>
+            <p>Vážený uživateli,</p>
+            <p>byl Vám vytvořen účet v aplikaci Booking praxí. Pro jeho aktivaci je potřeba si nastavit heslo. Odkaz pro vytvoření hesla je platný jednu hodinu od doručení tohoto e-mailu.</p>
+            <p>Pokud se Vám heslo nepodaří nastavit včas, obraťte se prosím na správce aplikace Booking praxí.</p>
+            <br>
+            <a href="' . $linkReset . '" style="background-color: #007BFF; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-family: Arial, sans-serif;">Obnovit heslo</a>
+            <br>
+            <p>Děkujeme za spolupráci.</p>
+            ';
+            $subjectEmail = 'Informace o vytvoření účtu - Booking praxí';
+            $this->mail->sentEmail($mail, $messageHtml, $subjectEmail);
+        }
+        if(!empty($checkbox)){
+            $nowTime = Time::now();
+            $expire = $nowTime->addHours(1);
+            $hashSecretCode = password_hash($secretCode, PASSWORD_DEFAULT);
+            $dataResetPass = [
+                'reset_token' => $hashSecretCode,
+                'reset_expires_at' => $expire,
+                'reset_use' => 0,
+                'Representative_company_representative_id' => $idInsert,
+            ] ;
+            $this->resetPassword->insert($dataResetPass);
+        }
+    }
+    public function profilEditRepresentativeCompany(){
+        $id = $this->request->getPost('id');
+        $degreeBefore = $this->request->getPost('degree_before');
+        $name = $this->request->getPost('name');
+        $surname = $this->request->getPost('surname');
+        $degreeAfter = $this->request->getPost('degree_after');
+        $mail = $this->request->getPost('mail');
+        $phone = $this->request->getPost('phone');
+        $positionWork = $this->request->getPost('position_work');
+        if(empty($name && $surname && $mail && $phone && $positionWork)){
+
+        }
+    }
+    public function profilDeleteRepresentativeCompany(){
+
+    }
     public function profilAddPractiseManager(){
         $idCompany = $this->request->getPost('companyId');
         $degreeBefore = $this->request->getPost('degree_before');
@@ -486,28 +592,53 @@ class Home extends BaseController
                 return redirect()->to('/home-student');
             }
     }
-
-
     public function companyOfferPractiseView(){
         $companyIdSession = $this->companyUser['idCompany'];
-        $allCompanyManagers = $this->practiseManagerModel->where('Company_company_id', $companyIdSession)->join('Offer_practise', 'Practise_manager.manager_id = Offer_practise.Practise_manager_manager_id AND Offer_practise.offer_del_time IS NULL', 'left')->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL')->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL')->find();
+        $allCompanyManagers = $this->practiseManagerModel->where('Company_company_id', $companyIdSession)->join('Offer_practise', 'Practise_manager.manager_id = Offer_practise.Practise_manager_manager_id AND Offer_practise.offer_del_time IS NULL', 'left')->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL')->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL')->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')->join('User', 'User_has_Offer_practise.User_user_id = User.user_id AND User.user_del_time IS NULL', 'left')->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')->find();
         $resultOfferPractise = [];
         foreach($allCompanyManagers as $result){
             $idOffer = $result['offer_id'];
             if(!isset($resultOfferPractise[$idOffer])){
                 $resultOfferPractise[$idOffer] = [
+                    'offer_id' => $idOffer,
                     'offer_name' => $result['offer_name'],
+                    'offer_requirements' => $result['offer_requirements'],
+                    'offer_copy_next_year' => $result['offer_copy_next_year'],
+                    'offer_edit_time' => $result['offer_edit_time'],
+                    'manager_degree_before' => $result['manager_degree_before'],
                     'manager_name' => $result['manager_name'],
+                    'manager_surname' => $result['manager_surname'],
+                    'manager_degree_after' => $result['manager_degree_after'],
+                    'manager_mail' => $result['manager_mail'],
+                    'manager_phone' => $result['manager_phone'],
                     'practise_name' => $result['practise_name'],
                     'dates' => [],
+                    'users' => [],
                 ];
             }
-            $resultOfferPractise[$idOffer]['dates'][] = [
-                'date_date_from' => $result['date_date_from'],
-                'date_date_to' => $result['date_date_to'],
-            ];
+            $dateId = $result['date_id'];
+            if(!isset($resultOfferPractise[$idOffer]['dates'][$dateId])){
+                $resultOfferPractise[$idOffer]['dates'][$dateId] = [
+                    'date_date_from' => $result['date_date_from'],
+                    'date_date_to' => $result['date_date_to'],
+                ];
+            }
+            $userId = $result['user_id'];
+            if(!isset($resultOfferPractise[$idOffer]['users'][$userId])){
+                $resultOfferPractise[$idOffer]['users'][$userId] = [
+                    'user_offer_id' => $result['user_offer_id'],
+                    'user_offer_accepted' => $result['user_offer_accepted'],
+                    'user_offer_select' => $result['user_offer_select'],
+                    'user_id' => $result['user_id'],
+                    'user_name' => $result['user_name'],
+                    'user_surname' => $result['user_surname'],
+                    'user_mail' => $result['user_mail'],
+                    'class_class' => $result['class_class'],
+                    'class_letter_class' => $result['class_letter_class'],
+                    'field_name' => $result['field_name'],
+                ];
+            }
         }
-        log_message('info', 'Data, která se mají zobrazit' . json_encode($resultOfferPractise));
         $data = [
             'title' => 'Nabídky praxí',
             'offerPractises' => $resultOfferPractise,
