@@ -235,7 +235,7 @@
     $isSpravce = in_array('spravce', $role);
     if($isStudent){
         $home = base_url('/home-student');
-        $listPractise = '#student'; //base_url('#');
+        $listPractise = base_url('/practise-offer');
         $people = base_url('/people');
         $company = base_url('/company');
         $info = '#student'; //base_url('#');
