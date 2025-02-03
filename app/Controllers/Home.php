@@ -131,7 +131,68 @@ class Home extends BaseController
         return view('registration', $data);
     }
     public function offerView(){
-        $data = ['title' => 'Nabídky praxe'];
+        $userClassId = $this->userSession['class'];
+        $userId = $this->userSession['id'];
+        $search = $this->request->getGet('search');
+        $search = urldecode($search);
+        $order = $this->request->getGet('order');
+        //$this->class_practiseModel->where('Class_class_id', $userClassId)->join('Practise', 'Class_has_Practise.Class_class_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'right');//->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL')->join('Offer_practise', 'Practise.practise_id = Offer_practise.Practise_practise_id AND Offer_practise.offer_del_time IS NULL')->join('Skill_has_Offer_practise', 'Offer_practise.offer_id = Skill_has_Offer_practise.Offer_practise_offer_id AND Skill_has_Offer_practise.skill_offer_del_time IS NULL')->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.User_user_id = ' . $userId .' AND User_has_Offer_practise.user_offer_del_time IS NULL')->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL')->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL');
+        $this->offerPractise->join('Class_has_Practise AS ClassPractise', 'Offer_practise.Practise_practise_id = ClassPractise.Practise_practise_id AND ClassPractise.Class_class_id = ' . $userClassId . ' AND ClassPractise.class_practise_del_time IS NULL')->join('Practise', 'ClassPractise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL')->join('Date_practise AS date', 'Practise.practise_id = date.Practise_practise_id AND date.date_del_time IS NULL')->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')->join('Skill_has_Offer_practise', 'Offer_practise.offer_id = Skill_has_Offer_practise.Skill_skill_id AND Skill_has_Offer_practise.skill_offer_del_time IS NULL', 'left')->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.User_user_id = '. $userId .' AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')->join('User_has_Skill', 'Skill_has_Offer_practise.Skill_skill_id = User_has_Skill.Skill_skill_id AND User_has_Skill.User_user_id =' . $userId .' AND User_has_Skill.user_skill_del_time IS NULL', 'left')->groupBy('Offer_practise.offer_id, User_has_Offer_practise.user_offer_id, Practise_manager.manager_id, Company.company_id, ClassPractise.class_practise_id, Skill_has_Offer_practise.skill_offer_id, Practise.practise_id, User_has_Skill.user_skill_id, date.date_id')->orderBy('COUNT(User_has_Skill.Skill_skill_id)', 'DESC', false);
+        if(!empty($search)){
+            $this->offerPractise->groupStart()->like('offer_name', $search)->orLike("CONCAT(manager_name, ' ', manager_surname)", $search)->orLike('company_name', $search)->orLike('company_ico', $search)->orLike('offer_city', $search)->orLike('offer_street', $search)->orLike('offer_post_code', $search)->groupEnd();
+        }
+        $resultPractises = $this->offerPractise->find();
+        $offerPractises = [];
+        $userHavePractise = 0;
+        foreach($resultPractises as $offer){
+            $offerId = $offer['offer_id'];
+            if(!isset($offerPractises[$offerId])){
+                $offerPractises[$offerId] = [
+                    'offer_id' => $offerId,
+                    'offer_name' => $offer['offer_name'],
+                    'offer_city' => $offer['offer_city'],
+                    'offer_street' => $offer['offer_street'],
+                    'offer_post_code' => $offer['offer_post_code'],
+                    'practise_name' => $offer['practise_name'],
+                    'manager_degree_before' => $offer['manager_degree_before'],
+                    'manager_name' => $offer['manager_name'],
+                    'manager_surname' => $offer['manager_surname'],
+                    'manager_degree_after' => $offer['manager_degree_after'],
+                    'manager_mail' => $offer['manager_mail'],
+                    'manager_phone' => $offer['manager_phone'],
+                    'company_name' => $offer['company_name'],
+                    'company_ico' => $offer['company_ico'],
+                    'company_logo' => $offer['company_logo'],
+                    'user_offer_accepted' => $offer['user_offer_accepted'],
+                    'user_offer_like' => $offer['user_offer_like'],
+                    'user_offer_select' => $offer['user_offer_select'],
+                    'skills' => [],
+                    'dates' => [],
+                ];
+            }
+            $skillId = $offer['skill_offer_id'];
+            if(!isset($offerPractises[$offerId][$skillId])){
+                $offerPractises[$offerId][$skillId] = [
+                    'Skill_skill_id' => $offer['Skill_skill_id'],
+                ];
+            }
+            $dateId = $offer['date_id'];
+            if(!isset($offerPractises[$offerId][$dateId])){
+                $offerPractises[$offerId][$dateId] = [
+                    'date_date_from' => $offer['date_date_from'],
+                    'date_date_to' => $offer['date_date_to'],
+                ];
+            }
+            if($offer['user_offer_accepted'] == 1){
+                $userHavePractise = 1;
+            }
+        }
+        //log_message('info', 'Hodnota z db::  ' . json_encode($offerPractises));
+        $data = [
+            'title' => 'Nabídky praxe',
+            'offers' => $offerPractises,
+            'accepted' => $userHavePractise,
+        ];
         return view ('practise_offer', $data);
     }
     public function addNewOfferPractiseView(){
