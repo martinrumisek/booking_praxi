@@ -13,7 +13,7 @@ $routes->get('reset-password', 'Auth::resetPassword');
 // ROUTY PRO VIEWČKA
 $routes->get('/home-student', 'Home::homeStudent', ['filter' => 'role:student']); //routa na hlavní stránku pro studenty
 $routes->get('/home-company', 'Home::homeCompany', ['filter' => 'role:company']); //routa na hlavní stránku pro firmy
-$routes->get('practise_offer', 'Home::offerView'); //stránka pro nabídky praxe
+$routes->get('practise-offer', 'Home::offerView', ['filter' => 'role:student']); //stránka pro nabídky praxe
 $routes->get('people','Home::people', ['filter' => 'role:student,teacher,company']); //stránka pro zobrazení lidí z oauh
 $routes->get('company','Home::companyView', ['filter' => 'role:student,teacher']); //stránka pro zobrazení firem
 $routes->get('profile','Home::profileView', ['filter' => 'role:student']); //stránka pro zobrazení profilu
