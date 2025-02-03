@@ -610,7 +610,9 @@ class Dashboard extends Controller
         foreach($dates as $date){
             if($date['date-from'] > $date['date-to']){
                 if($countDate == 1 ){
+                    $this->practiseModel->delete($id);
                     return redirect()->to(base_url('dashboard-calendar'));
+                    //!validační hláška se musí přidat před směrováním
                 }else{
                     $countDate--;
                     continue;
@@ -631,6 +633,11 @@ class Dashboard extends Controller
             foreach ($classes as $class) {
                 if(in_array($class, $existingClass)){
                     if($countClass == 1){
+                        $this->practiseModel->delete($id);
+                        $datePractises = $this->datePractiseModel->where('Practise_practise_id', $id)->find();
+                        foreach($datePractises as $date){
+                            $this->datePractiseModel->delete($date['date_id']);
+                        }
                         return redirect()->to(base_url('dashboard-calendar'));
                     }else{
                         $countClass--;
