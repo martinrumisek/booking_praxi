@@ -137,7 +137,20 @@ class Home extends BaseController
         $search = urldecode($search);
         $order = $this->request->getGet('order');
         //$this->class_practiseModel->where('Class_class_id', $userClassId)->join('Practise', 'Class_has_Practise.Class_class_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'right');//->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL')->join('Offer_practise', 'Practise.practise_id = Offer_practise.Practise_practise_id AND Offer_practise.offer_del_time IS NULL')->join('Skill_has_Offer_practise', 'Offer_practise.offer_id = Skill_has_Offer_practise.Offer_practise_offer_id AND Skill_has_Offer_practise.skill_offer_del_time IS NULL')->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.User_user_id = ' . $userId .' AND User_has_Offer_practise.user_offer_del_time IS NULL')->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL')->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL');
-        $this->offerPractise->join('Class_has_Practise AS ClassPractise', 'Offer_practise.Practise_practise_id = ClassPractise.Practise_practise_id AND ClassPractise.Class_class_id = ' . $userClassId . ' AND ClassPractise.class_practise_del_time IS NULL')->join('Practise', 'ClassPractise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL')->join('Date_practise AS date', 'Practise.practise_id = date.Practise_practise_id AND date.date_del_time IS NULL')->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')->join('Skill_has_Offer_practise', 'Offer_practise.offer_id = Skill_has_Offer_practise.Skill_skill_id AND Skill_has_Offer_practise.skill_offer_del_time IS NULL', 'left')->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.User_user_id = '. $userId .' AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')->join('User_has_Skill', 'Skill_has_Offer_practise.Skill_skill_id = User_has_Skill.Skill_skill_id AND User_has_Skill.User_user_id =' . $userId .' AND User_has_Skill.user_skill_del_time IS NULL', 'left')->groupBy('Offer_practise.offer_id, User_has_Offer_practise.user_offer_id, Practise_manager.manager_id, Company.company_id, ClassPractise.class_practise_id, Skill_has_Offer_practise.skill_offer_id, Practise.practise_id, User_has_Skill.user_skill_id, date.date_id')->orderBy('COUNT(User_has_Skill.Skill_skill_id)', 'DESC', false);
+        $this->offerPractise
+        //->select('Offer_practise.*, Practise.*, Practise_manager.*, Company.*, User_has_Offer_practise.*, date.*, ClassPractise.*, Skill_has_Offer_practise.*, User_has_Offer_practise.*, User_has_Skill.*')
+        ->join('Class_has_Practise AS ClassPractise', 'Offer_practise.Practise_practise_id = ClassPractise.Practise_practise_id AND ClassPractise.Class_class_id = ' . $userClassId . ' AND ClassPractise.class_practise_del_time IS NULL')
+        ->join('Practise', 'ClassPractise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL')
+        ->join('Date_practise AS date', 'Practise.practise_id = date.Practise_practise_id AND date.date_del_time IS NULL')
+        ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
+        ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
+        ->join('Skill_has_Offer_practise', 'Offer_practise.offer_id = Skill_has_Offer_practise.Offer_practise_offer_id AND Skill_has_Offer_practise.skill_offer_del_time IS NULL', 'left')
+        ->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.User_user_id = '. $userId .' AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')
+        ->join('User_has_Skill', 'Skill_has_Offer_practise.Skill_skill_id = User_has_Skill.Skill_skill_id AND User_has_Skill.User_user_id =' . $userId .' AND User_has_Skill.user_skill_del_time IS NULL', 'left')
+        //->groupBy('Offer_practise.offer_id, User_has_Offer_practise.user_offer_id, Practise_manager.manager_id, Company.company_id, ClassPractise.class_practise_id, Skill_has_Offer_practise.skill_offer_id, Practise.practise_id, User_has_Skill.user_skill_id, date.date_id')
+        ->groupBy('Offer_practise.offer_id, Practise.practise_id, Practise_manager.manager_id, Company.company_id, User_has_Offer_practise.user_offer_id, date.date_id, ClassPractise.class_practise_id, Skill_has_Offer_practise.skill_offer_id, User_has_Offer_practise.user_offer_id, User_has_Skill.user_skill_id')
+        //->selectCount('User_has_Skill.Skill_skill_id', 'skill_count')
+        ->orderBy('COUNT(User_has_Skill.Skill_skill_id)', 'DESC');
         if(!empty($search)){
             $this->offerPractise->groupStart()->like('offer_name', $search)->orLike("CONCAT(manager_name, ' ', manager_surname)", $search)->orLike('company_name', $search)->orLike('company_ico', $search)->orLike('offer_city', $search)->orLike('offer_street', $search)->orLike('offer_post_code', $search)->groupEnd();
         }
@@ -170,15 +183,9 @@ class Home extends BaseController
                     'dates' => [],
                 ];
             }
-            $skillId = $offer['skill_offer_id'];
-            if(!isset($offerPractises[$offerId][$skillId])){
-                $offerPractises[$offerId][$skillId] = [
-                    'Skill_skill_id' => $offer['Skill_skill_id'],
-                ];
-            }
             $dateId = $offer['date_id'];
-            if(!isset($offerPractises[$offerId][$dateId])){
-                $offerPractises[$offerId][$dateId] = [
+            if(!isset($offerPractises[$offerId]['dates'][$dateId])){
+                $offerPractises[$offerId]['dates'][$dateId] = [
                     'date_date_from' => $offer['date_date_from'],
                     'date_date_to' => $offer['date_date_to'],
                 ];
@@ -187,11 +194,11 @@ class Home extends BaseController
                 $userHavePractise = 1;
             }
         }
-        //log_message('info', 'Hodnota z db::  ' . json_encode($offerPractises));
         $data = [
             'title' => 'Nabídky praxe',
             'offers' => $offerPractises,
             'accepted' => $userHavePractise,
+            'search' => $search,
         ];
         return view ('practise_offer', $data);
     }

@@ -31,8 +31,8 @@
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
     }
-    .card-offer:hover{
-        border: 0.5px solid #006DBC;
+    .card-offer-select{
+        border: 1px solid #006DBC;
     }
     .card-icon-company{
         width: 50px;
@@ -59,7 +59,7 @@
         color:black;
     }
     .card-star-deactive:hover{
-        color: yellow;
+        color: #f2e394;
     }
     .card-text{
         font-size: 13px;
@@ -74,6 +74,30 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         -webkit-line-clamp: 5;
+    }
+    .check-active{
+        color: black;
+    }
+    .check-active:hover{
+        color:green;
+    }
+    .xmark-active{
+        color: black;
+    }
+    .xmark-active:hover{
+        color: red;
+    }
+    .btn-show-offer{
+        padding: 5px;
+        margin: 5px;
+        margin-bottom: 10px;
+        border: 0.5px solid #006DBC;
+        border-radius: 15px;
+    }
+    .btn-show-offer:hover{
+        background-color: #006DBC;
+        color: white;
+        box-shadow: 0px 3px 6px #00000029;
     }
 </style>
 <div class="container-fluid">
@@ -93,37 +117,47 @@
             </div>
         <?php }
         foreach($offers as $offer){ ?>
-            <div class="card-offer m-3">
-            <div class="d-flex m-2">
-                <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
-                <p class="card-title fw-bold"><?= $offer['company_name'] ?></p>
-                <a href="#"><i class="fa-solid fa-star <?php if($offer['user_offer_like'] == 0 || empty($offer['user_offer_like'])){echo 'card-star-deactive';}else{echo 'card-star-active';} ?> p-1"></i></a>
+            <div class="card-offer d-flex flex-column <?php if($offer['user_offer_select'] == 1){echo 'card-offer-select';} ?> m-3">
+            <div class="d-flex flex-column">
+                <div class="d-flex m-2">
+                    <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
+                    <p class="card-title fw-bold"><?= $offer['company_name'] ?></p>
+                    <?php if($accepted == 0){ ?>
+                    <div class="d-flex flex-column justify-content-center">
+                        <a href="#"><i class="fa-solid fa-star <?php if($offer['user_offer_like'] == 0 || empty($offer['user_offer_like'])){echo 'card-star-deactive';}else{echo 'card-star-active';} ?> p-1"></i></a>
+                        <a href="#"><?php if($offer['user_offer_select'] == 0 || empty($offer['user_offer_select'])){ echo '<i class="fa-solid fa-check check-active p-1"></i>' ;} if($offer['user_offer_select'] == 1){echo '<i class="fa-solid fa-xmark xmark-active p-1"></i>';} ?></a>
+                    </div>
+                    <?php } ?>
+                </div>
+                <p class="card-text d-flex justify-content-center align-items-center m-1 fw-bold"><?= $offer['offer_name'] ?></p>
+                <div class="d-flex">
+                    <i class="fa-regular fa-calendar h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?php $count = count($offer['dates']); foreach($offer['dates'] as $date){echo date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])); if($count > 1){echo ' / ';}}?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-location-dot h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?= $offer['offer_street'] . ', ' . $offer['offer_post_code'] . '  ' . $offer['offer_city'] ?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-user h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?php if(!empty($offer['manager_degree_before'])){echo $offer['manager_degree_before'];} echo ' ' . $offer['manager_name'] . ' ' . $offer['manager_surname'] . ' '; if(!empty($offer['manager_degree_after'])){echo $offer['manager_degree_after'];} ?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-envelope h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?= $offer['manager_mail'] ?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-phone h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?= $offer['manager_phone'] ?></p>
+                </div>
             </div>
-            <p class="card-text d-flex justify-content-center align-items-center m-1 fw-bold"><?= $offer['offer_name'] ?></p>
-            <div class="d-flex">
-                <i class="fa-regular fa-calendar h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center"><?php $count = count($offer['dates']); echo $count; foreach($offer['dates'] as $date){echo $date['date_date_from'];}?>20.03 - 21.03.2024 / 20.05 - 21.05.2024</p>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-                <i class="fa-solid fa-location-dot h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center"><?= $offer['offer_street'] . ', ' . $offer['offer_post_code'] . '  ' . $offer['offer_city'] ?></p>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-                <i class="fa-solid fa-user h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center"><?php if(!empty($offer['manager_degree_before'])){echo $offer['manager_degree_before'];} echo ' ' . $offer['manager_name'] . ' ' . $offer['manager_surname'] . ' '; if(!empty($offer['manager_degree_after'])){echo $offer['manager_degree_after'];} ?></p>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-                <i class="fa-solid fa-envelope h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center"><?= $offer['manager_mail'] ?></p>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-                <i class="fa-solid fa-phone h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center"><?= $offer['manager_phone'] ?></p>
+            <div class="d-flex justify-content-center mt-auto p-1">
+                <a class="card-text btn-show-offer" href="">Zobrazit nabídku <?= ''// $offer['skill_count'] ?></a>
             </div>
         </div>
         <?php } ?>
         <?php for ($i=0; $i < 20; $i++) { ?>
-        <div class="card-offer m-3">
+        <!---<div class="card-offer m-3">
             <div class="d-flex m-3">
                 <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
                 <p class="card-title fw-bold">Obchodní akademie, Vyšší odborná škola a Jazyková škola s právem státní jazykové zkoušky Uherské Hradiště</p>
@@ -145,7 +179,7 @@
             <div class="p-2">
                 <p class="text-praxe">Popis dané praxe</p>
             </div>
-        </div>
+        </div> --->
         <?php }?>
     </div>
 </div>
