@@ -99,8 +99,13 @@
         color: white;
         box-shadow: 0px 3px 6px #00000029;
     }
+    .container-no-offer{
+        padding: 30px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
 </style>
-<div class="container-fluid">
+<div class="container-fluid" style="min-height: 90vh;">
 <form action="" method="GET">
     <div class="d-flex flex-wrap justify-content-between m-3">
             <div class="d-flex">
@@ -109,11 +114,11 @@
             </div>
         </form>
     </div>
-    <div class="d-flex flex-wrap justify-content-center">
+    <div class="d-flex flex-wrap justify-content-center" style="min-height: 80vh">
         <?php 
         if(empty($offers)){?>
             <div class="d-flex justify-content-center align-items-center">
-                Nejsou žádné praxe
+                <div class="container-no-offer fw-bold">Nejsou žádné praxe</div>
             </div>
         <?php }
         foreach($offers as $offer){ ?>
@@ -124,8 +129,16 @@
                     <p class="card-title fw-bold"><?= $offer['company_name'] ?></p>
                     <?php if($accepted == 0){ ?>
                     <div class="d-flex flex-column justify-content-center">
-                        <a href="#"><i class="fa-solid fa-star <?php if($offer['user_offer_like'] == 0 || empty($offer['user_offer_like'])){echo 'card-star-deactive';}else{echo 'card-star-active';} ?> p-1"></i></a>
-                        <a href="#"><?php if($offer['user_offer_select'] == 0 || empty($offer['user_offer_select'])){ echo '<i class="fa-solid fa-check check-active p-1"></i>' ;} if($offer['user_offer_select'] == 1){echo '<i class="fa-solid fa-xmark xmark-active p-1"></i>';} ?></a>
+                        <form id="form-like-<?= $offer['offer_id'] ?>" action="<?= base_url('/edit-like-offer') ?>" method="POST">
+                        <input type="hidden" name="id-offer" value="<?= $offer['offer_id'] ?>">
+                        <input type="hidden" name="like-offer" value="<?= $offer['user_offer_like'] ?>">
+                        </form>
+                        <a href="#" onclick="document.getElementById('form-like-<?= $offer['offer_id']?>').submit(); return false;"><i class="fa-solid fa-star <?php if($offer['user_offer_like'] == 0 || empty($offer['user_offer_like'])){echo 'card-star-deactive';}else{echo 'card-star-active';} ?> p-1"></i></a>
+                        <form id="form-select-<?= $offer['offer_id']?>" action="<?= base_url('/edit-select-offer')?>" method="POST">
+                        <input type="hidden" name="id-offer" value="<?= $offer['offer_id'] ?>">
+                        <input type="hidden" name="select-offer" value="<?= $offer['user_offer_select'] ?>">
+                        </form>
+                        <a href="#" onclick="document.getElementById('form-select-<?= $offer['offer_id']?>').submit(); return false;"><?php if($offer['user_offer_select'] == 0 || empty($offer['user_offer_select'])){ echo '<i class="fa-solid fa-check check-active p-1"></i>' ;} if($offer['user_offer_select'] == 1){echo '<i class="fa-solid fa-xmark xmark-active p-1"></i>';} ?></a>
                     </div>
                     <?php } ?>
                 </div>
