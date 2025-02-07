@@ -79,6 +79,14 @@ class Home extends BaseController
         $this->mail = new Email();
         $this->resetPassword = new ResetPassword();
     }
+    private function backUrl($url){
+        $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to($url);
+            }
+    }
     public function homeStudent(){
         $user = $this->userModel->find($this->userSession['id']);
         $userClass = $this->classModel->find($user['Class_class_id']);
@@ -145,11 +153,15 @@ class Home extends BaseController
         ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
         ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
         ->join('Skill_has_Offer_practise', 'Offer_practise.offer_id = Skill_has_Offer_practise.Offer_practise_offer_id AND Skill_has_Offer_practise.skill_offer_del_time IS NULL', 'left')
+        ->join('User_has_Offer_practise AS active_user_offer', 'Offer_practise.offer_id = active_user_offer.Offer_practise_offer_id AND active_user_offer.user_offer_accepted = 1 AND active_user_offer.user_offer_del_time IS NULL', 'left')
         ->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.User_user_id = '. $userId .' AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')
         ->join('User_has_Skill', 'Skill_has_Offer_practise.Skill_skill_id = User_has_Skill.Skill_skill_id AND User_has_Skill.User_user_id =' . $userId .' AND User_has_Skill.user_skill_del_time IS NULL', 'left')
         //->groupBy('Offer_practise.offer_id, User_has_Offer_practise.user_offer_id, Practise_manager.manager_id, Company.company_id, ClassPractise.class_practise_id, Skill_has_Offer_practise.skill_offer_id, Practise.practise_id, User_has_Skill.user_skill_id, date.date_id')
-        ->groupBy('Offer_practise.offer_id, Practise.practise_id, Practise_manager.manager_id, Company.company_id, User_has_Offer_practise.user_offer_id, date.date_id, ClassPractise.class_practise_id, Skill_has_Offer_practise.skill_offer_id, User_has_Offer_practise.user_offer_id, User_has_Skill.user_skill_id')
+        ->groupBy('Offer_practise.offer_id, Practise.practise_id, Practise_manager.manager_id, Company.company_id, User_has_Offer_practise.user_offer_id, date.date_id, ClassPractise.class_practise_id, Skill_has_Offer_practise.skill_offer_id, User_has_Offer_practise.user_offer_id, User_has_Skill.user_skill_id, active_user_offer.user_offer_id')
+        ->having('active_user_offer.Offer_practise_offer_id IS NULL')
         //->selectCount('User_has_Skill.Skill_skill_id', 'skill_count')
+        ->orderBy('User_has_Offer_practise.user_offer_select', 'DESC')
+        ->orderBy('User_has_Offer_practise.user_offer_like', 'DESC')
         ->orderBy('COUNT(User_has_Skill.Skill_skill_id)', 'DESC');
         if(!empty($search)){
             $this->offerPractise->groupStart()->like('offer_name', $search)->orLike("CONCAT(manager_name, ' ', manager_surname)", $search)->orLike('company_name', $search)->orLike('company_ico', $search)->orLike('offer_city', $search)->orLike('offer_street', $search)->orLike('offer_post_code', $search)->groupEnd();
@@ -202,6 +214,197 @@ class Home extends BaseController
         ];
         return view ('practise_offer', $data);
     }
+    public function completeOfferView($idOffer){
+        $userClassId = $this->userSession['class'];
+        //$userId = $this->userSession['id'];
+        $companyId = $this->companyUser['idCompany'];
+        if(!empty($userClassId)){
+            $offers = $this->offerPractise->where('offer_id', $idOffer)->join('Class_has_Practise', 'Offer_practise.Practise_practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')->find();
+            $classIds = array_column($offers, 'Class_class_id');
+            if(!in_array($userClassId, $classIds)){
+                log_message('info', 'Nejsi z dané třídy');
+            }
+        }
+        if(!empty($companyId)){
+            $offer = $this->offerPractise->where('offer_id', $idOffer)->join('Practise_manager', 'Offer_Practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')->first();
+            if(empty($offer)){
+                log_message('info', 'Nastala nečekaná chyba (je to prázdné)');
+            }
+            if($offer['Company_company_id'] !== $companyId){
+                log_message('info', 'Tohle není nabídka pro vaši firmu');
+            }
+        }
+        $resultOffer = $this->offerPractise
+        ->where('offer_id', $idOffer)->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
+        ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
+        ->join('Date_practise', 'Offer_practise.Practise_practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL', 'left')
+        ->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'left')
+        ->join('Class_has_Practise', 'Practise.practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')
+        ->join('Class', 'Class_has_Practise.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')
+        ->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')
+        ->join('Skill_has_Offer_practise', 'Offer_practise.offer_id = Skill_has_Offer_practise.Offer_practise_offer_id AND Skill_has_Offer_practise.skill_offer_del_time IS NULL', 'left')
+        ->join('Skill', 'Skill_has_Offer_practise.Skill_skill_id = Skill.skill_id AND Skill.skill_del_time IS NULL', 'left')
+        ->join('Category_skill', 'Skill.Category_skill_category_id = Category_skill.category_id AND Category_skill.category_del_time IS NULL', 'left')
+        ->find();
+        $practiseOffer = [];
+        foreach($resultOffer as $offer){
+            $idOffer = $offer['offer_id'];
+            if(!isset($practiseOffer[$idOffer])){
+                $practiseOffer[$idOffer] = [
+                    'offer_id' => $idOffer,
+                    'offer_name' => $offer['offer_name'],
+                    'offer_requirements' => $offer['offer_requirements'],
+                    'offer_description' => $offer['offer_description'],
+                    'offer_city' => $offer['offer_city'],
+                    'offer_street' => $offer['offer_street'],
+                    'offer_post_code' => $offer['offer_post_code'],
+                    'manager_degree_before' => $offer['manager_degree_before'],
+                    'manager_name' => $offer['manager_name'],
+                    'manager_surname' => $offer['manager_surname'],
+                    'manager_degree_after' => $offer['manager_degree_after'],
+                    'manager_mail' => $offer['manager_mail'],
+                    'manager_phone' => $offer['manager_phone'],
+                    'manager_position_works' => $offer['manager_position_works'],
+                    'company_name' => $offer['company_name'],
+                    'company_ico' => $offer['company_ico'],
+                    'company_logo' => $offer['company_logo'],
+                    'practise_name' => $offer['practise_name'],
+                    'categoryes' => [],
+                    'classes' => [],
+                    'dates' => [],
+                ];
+            }
+            $idCategory = $offer['category_id'];
+            if(!isset($practiseOffer[$idOffer][$idCategory])){
+                $practiseOffer[$idOffer][$idCategory] = [
+                    'category_name' => $offer['category_name'],
+                    'skills' => [],
+                ];
+            }
+            $idSkill = $offer['skill_id'];
+            if(!isset($practiseOffer[$idOffer][$idCategory][$idSkill])){
+                $practiseOffer[$idOffer][$idCategory][$idSkill] = [
+                    'skill_name' => $offer['skill_name'],
+                ];   
+            }
+            $idClass = $offer['class_id'];
+            if(!isset($practiseOffer[$idOffer][$idClass])){
+                $practiseOffer[$idOffer][$idClass] = [
+                    'class_class' => $offer['class_class'],
+                    'class_letter_class' => $offer['class_letter_class'],
+                    'field_shortcut' => $offer['field_shortcut'],
+                ];
+            }
+            $idDate = $offer['date_id'];
+            if(!isset($practiseOffer[$idOffer][$idDate])){
+                $practiseOffer[$idOffer][$idDate] = [
+                    'date_date_from' => $offer['date_date_from'],
+                    'date_date_to' => $offer['date_date_to'],
+                ];
+            }
+        }
+        $data = [
+            'title' => 'Zobrazení nabídky',
+            'practiseOffer' => $practiseOffer,
+        ];
+        return view('', $data);
+    }
+    //!Metody pro dodělání
+    public function editLikeOffer(){
+        $userId = $this->userSession['id'];
+        $userClassId = $this->userSession['class'];
+        if(empty($userId && $userClassId)){
+            //!chybová hláška
+            log_message('info', 'chyba: 1');
+            return $this->backUrl('/practise-offer'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+        }
+        $offerId = $this->request->getPost('id-offer');
+        $like = $this->request->getPost('like-offer');
+        $offers = $this->offerPractise->where('offer_id', $offerId)->join('Class_has_Practise', 'Offer_practise.Practise_practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')->find();
+        if(empty($offers)){
+            //!Chybová hláška
+            log_message('info', 'chyba: 2');
+            return $this->backUrl('/practise-offer');
+        }
+        $classIds = array_column($offers, 'Class_class_id');
+        if(!in_array($userClassId, $classIds)){
+            //!Chybová hláška
+            log_message('info', 'chyba: 3');
+            return $this->backUrl('/practise-offer');
+        }
+        if($like == 0 || empty($like)){
+            $like = 1;
+        }else{
+            $like = 0;
+        }
+        $userOffer = $this->user_practiseModel->where('User_user_id', $userId)->where('Offer_practise_offer_id', $offerId)->first();
+        if(empty($userOffer)){
+            $data = [
+                'User_user_id' => $userId,
+                'Offer_practise_offer_id' => $offerId,
+                'user_offer_like' => $like,
+                'user_offer_select' => 0,
+                'user_offer_accepted' => null,
+            ];
+            $this->user_practiseModel->insert($data);
+            return $this->backUrl('/practise-offer');
+        }else{
+            $userOfferId = $userOffer['user_offer_id'];
+            $data = [
+                'user_offer_like' => $like,
+            ];
+            $this->user_practiseModel->update($userOfferId, $data);
+            return $this->backUrl('/practise-offer');
+        }
+    }
+    public function editSelectOffer(){
+        $userId = $this->userSession['id'];
+        $userClassId = $this->userSession['class'];
+        if(empty($userId && $userClassId)){
+            //!chybová hláška
+            log_message('info', 'chyba: 1');
+            return $this->backUrl('/practise-offer'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+        }
+        $offerId = $this->request->getPost('id-offer');
+        $select = $this->request->getPost('select-offer');
+        $offers = $this->offerPractise->where('offer_id', $offerId)->join('Class_has_Practise', 'Offer_practise.Practise_practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')->find();
+        if(empty($offers)){
+            //!Chybová hláška
+            log_message('info', 'chyba: 2');
+            return $this->backUrl('/practise-offer');
+        }
+        $classIds = array_column($offers, 'Class_class_id');
+        if(!in_array($userClassId, $classIds)){
+            //!Chybová hláška
+            log_message('info', 'chyba: 3');
+            return $this->backUrl('/practise-offer');
+        }
+        if($select == 0 || empty($select)){
+            $select = 1;
+        }else{
+            $select = 0;
+        }
+        $userOffer = $this->user_practiseModel->where('User_user_id', $userId)->where('Offer_practise_offer_id', $offerId)->first();
+        if(empty($userOffer)){
+            $data = [
+                'User_user_id' => $userId,
+                'Offer_practise_offer_id' => $offerId,
+                'user_offer_like' => 0,
+                'user_offer_select' => $select,
+                'user_offer_accepted' => null,
+            ];
+            $this->user_practiseModel->insert($data);
+            return $this->backUrl('/practise-offer');
+        }else{
+            $userOfferId = $userOffer['user_offer_id'];
+            $data = [
+                'user_offer_select' => $select,
+            ];
+            $this->user_practiseModel->update($userOfferId, $data);
+            return $this->backUrl('/practise-offer');
+        }
+    }
+
     public function addNewOfferPractiseView(){
         $id = $this->companyUser['idCompany'];
         $company = $this->companyModel->find($id);
@@ -296,6 +499,12 @@ class Home extends BaseController
         }
         return redirect()->to(base_url('/company-add-offer-practise'));
     }
+    //!Metody pro dodělání
+    public function editOfferPractiseView(){}
+    public function editOfferPractise(){}
+    public function deleteOfferPractise(){}
+    public function acceptedUserForOfferPractise(){}
+
     public function people(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
@@ -384,12 +593,7 @@ class Home extends BaseController
     public function editCompanyProfil(){
         $idCompany = $this->request->getPost('idCompany');
         if(empty($idCompany)){
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $role = $this->session->get('role');
         if(!empty($this->companyUser['idCompany'])){
@@ -398,35 +602,20 @@ class Home extends BaseController
         $isAdmin = in_array('admin', $role);
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $idCompany){
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $nameCompany = $this->request->getPost('nameCompany');
         $descriptionCompany = $this->request->getPost('description_company');
         if(empty($nameCompany)){
             log_message('info', 'prázdné jméno firmy');
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $data = [
             'company_name' => $nameCompany,
             'company_description' => $descriptionCompany,
         ];
         $this->companyModel->update($idCompany, $data);
-        $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+        return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
     }
     public function profilAddRepresentativeCompany(){
         $companyId = $this->request->getPost('companyId');
@@ -451,12 +640,7 @@ class Home extends BaseController
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $companyId){
             log_message('info', 'Není admin, ani správce ani nesedí id company');
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-company');
-            }
+            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         if(empty($name && $surname && $mail && $phone && $companyId && $passwd1 && $passwd2)){
             //return redirect()->to(base_url('dashboard-company'));
@@ -538,12 +722,7 @@ class Home extends BaseController
         $phone = $this->request->getPost('phone');
         $positionWork = $this->request->getPost('position_work');
         if(empty($idCompany && $name && $surname && $phone && $positionWork && $mail)){
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $role = $this->session->get('role');
         if(!empty($this->companyUser['idCompany'])){
@@ -553,12 +732,7 @@ class Home extends BaseController
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $idCompany){
             log_message('info', 'Není admin, ani správce ani nesedí id company');
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $data = [
             'manager_degree_before' => $degreeBefore,
@@ -571,12 +745,7 @@ class Home extends BaseController
             'Company_company_id' => $idCompany,
         ];
         $this->practiseManagerModel->insert($data);
-        $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+        return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
     }
     public function profilEditPractiseManager(){
         $id = $this->request->getPost('id');
@@ -588,12 +757,7 @@ class Home extends BaseController
         $phone = $this->request->getPost('phone');
         $positionWork = $this->request->getPost('position_work');
         if(empty($id && $name && $surname && $phone && $positionWork && $mail)){
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $role = $this->session->get('role');
         if(!empty($this->companyUser['idCompany'])){
@@ -604,12 +768,7 @@ class Home extends BaseController
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $manager['Company_company_id']){
             log_message('info', 'Není admin, ani správce ani nesedí id company');
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $data = [
             'manager_degree_before' => $degreeBefore,
@@ -621,12 +780,7 @@ class Home extends BaseController
             'manager_position_works' => $positionWork,
         ];
         $this->practiseManagerModel->update($id,$data);
-        $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+        return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
     }
     public function profilDeletePractiseManager($id){
         $manager = $this->practiseManagerModel->find($id);
@@ -639,12 +793,7 @@ class Home extends BaseController
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $manager['Company_company_id']){
             log_message('info', 'Není admin, ani správce ani nesedí id company');
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $offers = $this->offerPractise->where('Practise_manager_manager_id', $id)->find();
         foreach($offers as $offer){
@@ -653,16 +802,19 @@ class Home extends BaseController
         }
         $this->offerPractise->where('Practise_manager_manager_id', $id)->delete();
         $this->practiseManagerModel->delete($id);
-        $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+        return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
     }
     public function companyOfferPractiseView(){
         $companyIdSession = $this->companyUser['idCompany'];
-        $allCompanyManagers = $this->practiseManagerModel->where('Company_company_id', $companyIdSession)->join('Offer_practise', 'Practise_manager.manager_id = Offer_practise.Practise_manager_manager_id AND Offer_practise.offer_del_time IS NULL', 'left')->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL')->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL')->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')->join('User', 'User_has_Offer_practise.User_user_id = User.user_id AND User.user_del_time IS NULL', 'left')->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')->find();
+        $allCompanyManagers = $this->practiseManagerModel
+        ->where('Company_company_id', $companyIdSession)
+        ->join('Offer_practise', 'Practise_manager.manager_id = Offer_practise.Practise_manager_manager_id AND Offer_practise.offer_del_time IS NULL', 'left')
+        ->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL')
+        ->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL')
+        ->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.user_offer_select = 1 AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')
+        ->join('User', 'User_has_Offer_practise.User_user_id = User.user_id AND User.user_del_time IS NULL', 'left')
+        ->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')
+        ->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')->find();
         $resultOfferPractise = [];
         foreach($allCompanyManagers as $result){
             $idOffer = $result['offer_id'];
@@ -782,12 +934,7 @@ class Home extends BaseController
         $isAdmin = in_array('admin', $role);
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession['id'] !== $id){
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $user = $this->userModel->where('User.user_id', $id)->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL')->first();
         $socialLinks = $this->socialLink->join('Social_link_has_User', 'Social_link.social_id = Social_link_has_User.Social_link_social_id AND Social_link_has_User.user_social_del_time IS NULL AND Social_link_has_User.User_user_id = '. $id, 'left')->find();
@@ -904,13 +1051,6 @@ class Home extends BaseController
         }
 
 
-
-        $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
-
+        return $this->backUrl('/home-student');
     }
 }
