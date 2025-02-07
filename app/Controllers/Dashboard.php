@@ -43,6 +43,7 @@ class Dashboard extends Controller
     var $email;
     var $socialLink_user;
     var $socialLink;
+    var $session;
     public function __construct(){
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
@@ -62,6 +63,7 @@ class Dashboard extends Controller
         $this->email = new Email();
         $this->socialLink = new SocialLink();
         $this->socialLink_user = new SocialLink_User();
+        $this->session = session();
     }
     //Metody pro zobrazení viewček
     public function homeView(){
@@ -263,6 +265,7 @@ class Dashboard extends Controller
         $shortcut = $this->request->getPost('shortcut');
         $description = $this->request->getPost('description');
         if(empty($name && $shortcut)){
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste název nebo zkratku typu školy');
             return redirect()->to(base_url('dashboard-class'));
         }
         $data = [
