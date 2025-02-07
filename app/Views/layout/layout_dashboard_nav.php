@@ -263,7 +263,7 @@
         <div class="d-block block-nav">
             <div class="d-block nav-container d-flex sticky-top flex-column">
                 <div class="d-flex align-items-center">
-                <a href="#"><h1 alt="Booking praxí"><img src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" class="nav-logo" alt="Logo - OAUH"></h1></a>
+                <a href="<?= $backApp?>"><h1 alt="Booking praxí"><img src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" class="nav-logo" alt="Logo - OAUH"></h1></a>
                 <p class="nav-text m-0 p-2 bold h5">BOOKING PRAXÍ</p>
                 </div>
                 <div class="nav-items">
@@ -285,7 +285,7 @@
             </div>
         </div>
         <!-----Konec navigačního panelu a začátek hlavního obsahu stránky--------->
-        <div class="main-content"><?= $this->renderSection('content')?></div>
+        <div class="main-content"><?= $this->renderSection('content')?><?= view('layout/errModal') ?></div>
         <!-- Navigační panel pro mobil -->
         <nav class="navbar navbar-expand-sm fixed-bottom nav-mobile p-0">
             <div class="container-fluid p-0">
@@ -321,6 +321,16 @@
                 </div>
             </div>
     </div>
-
+<script>
+<?php if(session()->getFlashdata('err_message')){ ?>
+    document.addEventListener("DOMContentLoaded", function() {
+            var modalElement = document.getElementById("errMessageModal");
+            if (modalElement) {
+                var errorModal = new bootstrap.Modal(modalElement);
+                errorModal.show();
+            }
+        });
+<?php } ?>
+</script>
 </body>
 </html>

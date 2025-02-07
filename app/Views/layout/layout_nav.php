@@ -266,12 +266,13 @@
         $logOut = base_url('/logOutCompany'); // #company
     }
 ?>
+<?= view('layout/errModal') ?>
     <div class="d-flex">
         <!----Navigační panel pro pc----->
         <div class="d-block block-nav">
             <div class="d-block nav-container d-flex sticky-top flex-column">
                 <div class="d-flex align-items-center">
-                <a href="#"><h1 alt="Booking praxí"><img src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" class="nav-logo" alt="Logo - OAUH"></h1></a>
+                <a href="<?= $home?>"><h1 alt="Booking praxí"><img src="<?=base_url('assets/img/logo/logo_oauh_modra.svg')?>" class="nav-logo" alt="Logo - OAUH"></h1></a>
                 <p class="nav-text m-0 p-2 bold h5">BOOKING PRAXÍ</p>
                 </div>
                 <div class="nav-items">
