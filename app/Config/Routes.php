@@ -31,6 +31,9 @@ $routes->get('edit-profile/(:num)','Home::editProfileView/$1', ['filter' => 'rol
 $routes->post('/edit-profile','Home::editProfile', ['filter' => 'role:student,teacher']);
 $routes->get('company-offer-practises', 'Home::companyOfferPractiseView', ['filter' => 'role:company']);
 
+$routes->post('/edit-like-offer', 'Home::editLikeOffer', ['filter', 'role:student']);
+$routes->post('/edit-select-offer', 'Home::editSelectOffer', ['filter', 'role:student']);
+
 //ROUTY PRO BTN - SCRIPT
 $routes->get('azure-users', 'UserAzureSync::getAllUsers', ['filter' => 'role:admin, spravce']); //routa pro btn - pro script (načtení všech uživatelů z db - azure)
 $routes->get('plus-graduationClass', 'UserAzureSync::upUsersClass', ['filter' => 'role:admin, spravce']); //Routa pro přidání jednoho roku pro rok ukončení maturity "mělo by se to dělat jedenkrát za rok o prázninách, takže přes cron" !!! //!!Routa pro cron
