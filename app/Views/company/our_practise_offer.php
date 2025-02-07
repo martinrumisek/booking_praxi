@@ -41,7 +41,7 @@
                 <div class="d-flex"><div class="p-1 fw-bold">Termín <?= $count  . ':'?></div><div class="p-1"> <?=  date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_from'])) ?> </div></div>
             <?php $count++; }  ?>
             <div class="container d-flex justify-content-end flex-wrap">
-                <a class="m-1" href=""><i class="fa-solid fa-eye p-1"></i>Zobrazit</a>
+                <a class="m-1" href="<?= base_url('practise-offer-view/'.$offer['offer_id']) ?>"><i class="fa-solid fa-eye p-1"></i>Zobrazit</a>
                 <a class="m-1" href=""><i class="fa-solid fa-pencil p-1"></i>Upravit</a>
                 <a class="m-1" href=""><i class="fa-solid fa-trash p-1"></i>Smazat</a>
             </div>

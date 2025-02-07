@@ -165,7 +165,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center mt-auto p-1">
-                <a class="card-text btn-show-offer" href="">Zobrazit nabídku <?= ''// $offer['skill_count'] ?></a>
+                <a class="card-text btn-show-offer" href="<?= base_url('practise-offer-view/'.$offer['offer_id']) ?>">Zobrazit nabídku</a>
             </div>
         </div>
         <?php } ?>
