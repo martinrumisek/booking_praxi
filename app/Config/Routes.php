@@ -30,6 +30,7 @@ $routes->get('/profilDelete-practiseManager/(:num)', 'Home::profilDeletePractise
 $routes->get('edit-profile/(:num)','Home::editProfileView/$1', ['filter' => 'role:student,teacher']);
 $routes->post('/edit-profile','Home::editProfile', ['filter' => 'role:student,teacher']);
 $routes->get('company-offer-practises', 'Home::companyOfferPractiseView', ['filter' => 'role:company']);
+$routes->get('practise-offer-view/(:num)', 'Home::completeOfferView/$1', ['filter' => 'role:student,company']);
 
 $routes->post('/edit-like-offer', 'Home::editLikeOffer', ['filter', 'role:student']);
 $routes->post('/edit-select-offer', 'Home::editSelectOffer', ['filter', 'role:student']);

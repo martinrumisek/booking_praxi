@@ -215,9 +215,9 @@ class Home extends BaseController
         return view ('practise_offer', $data);
     }
     public function completeOfferView($idOffer){
-        $userClassId = $this->userSession['class'];
+        if(!empty($this->userSession['class'])){$userClassId = $this->userSession['class'];}
         //$userId = $this->userSession['id'];
-        $companyId = $this->companyUser['idCompany'];
+        if(!empty($this->companyUser['idCompany'])){$companyId = $this->companyUser['idCompany'];}
         if(!empty($userClassId)){
             $offers = $this->offerPractise->where('offer_id', $idOffer)->join('Class_has_Practise', 'Offer_practise.Practise_practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')->find();
             $classIds = array_column($offers, 'Class_class_id');
@@ -234,80 +234,46 @@ class Home extends BaseController
                 log_message('info', 'Tohle není nabídka pro vaši firmu');
             }
         }
-        $resultOffer = $this->offerPractise
-        ->where('offer_id', $idOffer)->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
+        $offer = $this->offerPractise
+        ->where('offer_id', $idOffer)
+        ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
         ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
-        ->join('Date_practise', 'Offer_practise.Practise_practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL', 'left')
-        ->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'left')
-        ->join('Class_has_Practise', 'Practise.practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')
+        ->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'left')->first();
+        $dates = $this->offerPractise->where('offer_id', $idOffer)
+        ->join('Date_practise', 'Offer_practise.Practise_practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL', 'left')->find();
+        $classes = $this->offerPractise->where('offer_id', $idOffer)
+        ->join('Class_has_Practise', 'Offer_practise.Practise_practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')
         ->join('Class', 'Class_has_Practise.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')
-        ->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')
+        ->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')->find();
+        $resultSkills = $this->offerPractise->where('offer_id', $idOffer)
         ->join('Skill_has_Offer_practise', 'Offer_practise.offer_id = Skill_has_Offer_practise.Offer_practise_offer_id AND Skill_has_Offer_practise.skill_offer_del_time IS NULL', 'left')
         ->join('Skill', 'Skill_has_Offer_practise.Skill_skill_id = Skill.skill_id AND Skill.skill_del_time IS NULL', 'left')
-        ->join('Category_skill', 'Skill.Category_skill_category_id = Category_skill.category_id AND Category_skill.category_del_time IS NULL', 'left')
-        ->find();
-        $practiseOffer = [];
-        foreach($resultOffer as $offer){
-            $idOffer = $offer['offer_id'];
-            if(!isset($practiseOffer[$idOffer])){
-                $practiseOffer[$idOffer] = [
-                    'offer_id' => $idOffer,
-                    'offer_name' => $offer['offer_name'],
-                    'offer_requirements' => $offer['offer_requirements'],
-                    'offer_description' => $offer['offer_description'],
-                    'offer_city' => $offer['offer_city'],
-                    'offer_street' => $offer['offer_street'],
-                    'offer_post_code' => $offer['offer_post_code'],
-                    'manager_degree_before' => $offer['manager_degree_before'],
-                    'manager_name' => $offer['manager_name'],
-                    'manager_surname' => $offer['manager_surname'],
-                    'manager_degree_after' => $offer['manager_degree_after'],
-                    'manager_mail' => $offer['manager_mail'],
-                    'manager_phone' => $offer['manager_phone'],
-                    'manager_position_works' => $offer['manager_position_works'],
-                    'company_name' => $offer['company_name'],
-                    'company_ico' => $offer['company_ico'],
-                    'company_logo' => $offer['company_logo'],
-                    'practise_name' => $offer['practise_name'],
-                    'categoryes' => [],
-                    'classes' => [],
-                    'dates' => [],
-                ];
-            }
-            $idCategory = $offer['category_id'];
-            if(!isset($practiseOffer[$idOffer][$idCategory])){
-                $practiseOffer[$idOffer][$idCategory] = [
-                    'category_name' => $offer['category_name'],
+        ->join('Category_skill', 'Skill.Category_skill_category_id = Category_skill.category_id AND Category_skill.category_del_time IS NULL', 'left')->find();
+        $skills = [];
+        foreach($resultSkills as $skill){
+            $categoryId = $skill['category_id'];
+            if(!isset($skills[$categoryId])){
+                $skills[$categoryId] = [
+                    'category_name' => $skill['category_name'],
                     'skills' => [],
                 ];
             }
-            $idSkill = $offer['skill_id'];
-            if(!isset($practiseOffer[$idOffer][$idCategory][$idSkill])){
-                $practiseOffer[$idOffer][$idCategory][$idSkill] = [
-                    'skill_name' => $offer['skill_name'],
-                ];   
-            }
-            $idClass = $offer['class_id'];
-            if(!isset($practiseOffer[$idOffer][$idClass])){
-                $practiseOffer[$idOffer][$idClass] = [
-                    'class_class' => $offer['class_class'],
-                    'class_letter_class' => $offer['class_letter_class'],
-                    'field_shortcut' => $offer['field_shortcut'],
-                ];
-            }
-            $idDate = $offer['date_id'];
-            if(!isset($practiseOffer[$idOffer][$idDate])){
-                $practiseOffer[$idOffer][$idDate] = [
-                    'date_date_from' => $offer['date_date_from'],
-                    'date_date_to' => $offer['date_date_to'],
+            $skillId = $skill['skill_id'];
+            if(!isset($skills[$categoryId]['skills'][$skillId])){
+                $skills[$categoryId]['skills'][$skillId] = [
+                    'skill_name' => $skill['skill_name'],
                 ];
             }
         }
+        //log_message('info', 'data: ' . json_encode($skills));
         $data = [
             'title' => 'Zobrazení nabídky',
-            'practiseOffer' => $practiseOffer,
+            'offer' => $offer,
+            'dates' => $dates,
+            'classes' => $classes,
+            'skills' => $skills,
         ];
-        return view('', $data);
+        return view('offer_view', $data);
     }
     //!Metody pro dodělání
     public function editLikeOffer(){
