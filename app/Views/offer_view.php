@@ -190,6 +190,11 @@
         background-color: white;
         border: 1px solid #006DBC;
     }
+    .short-description{
+        height: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>
 <div class="container-fluid">
     <div class="row">
@@ -198,11 +203,11 @@
                 <div class="p-5 container">
                     <div class="d-md-flex d-block">
                         <div class="d-flex justify-content-center align-items-center"><div class="icon-user d-flex align-items-center justify-content-center"><i class="fa-solid fa-briefcase h1"></i></div></div>
-                        <div class="d-flex justify-content-center align-items-center p-0 m-4" style="width: 100%;"><h4><?= $offer['offer_name']?></h4></div>
+                        <div class="d-flex justify-content-start align-items-center p-0 m-4" style="width: 100%;"><h4><?= $offer['offer_name']?></h4></div>
                     </div>
                     <div class="container mt-3 d-flex flex-column">
-                        <span>Krátky popis praxe</span>
-                        <p><?= $offer['offer_requirements'] ?></p>
+                        <span class="fw-bold">Krátky popis praxe</span>
+                        <p class="short-description"><?php if(empty($offer['offer_requirements'])){echo 'Praxe nemá žádný popis';} ?><?= $offer['offer_requirements'] ?></p>
                     </div>
                 </div>
             </div>
@@ -215,12 +220,12 @@
                              <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h4">Název firmy/instituce</div><span><?= $offer['company_name'] ?></span><br><span class="fw-bold">IČO: </span><span><?= $offer['company_ico'] ?></span></div></div>
                         </div>
                         <div class="container d-flex flex-column">
-                            <h5>Lokace praxe</h5>
-                            <span>Město/vesnice</span>
+                            <h5 class="mt-2">Lokace praxe</h5>
+                            <span class="fw-bold">Město/vesnice</span>
                             <p><?= $offer['offer_city'] ?></p>
-                            <span>Ulice</span>
+                            <span class="fw-bold">Ulice</span>
                             <p><?= $offer['offer_street'] ?></p>
-                            <span>PSČ</span>
+                            <span class="fw-bold">PSČ</span>
                             <p><?= $offer['offer_post_code'] ?></p>
                         </div>
                     </div>
@@ -230,11 +235,25 @@
 </div>
 <div class="container-fluid mt-2">
 <div class="row">
+<?php
+$countDateText = count($dates);
+$countSkillText = count($skills);
+if($countDateText == 1){
+    $dateText = 'Termín praxe';
+}else{
+    $dateText = 'Termíny praxí';
+}
+if($countSkillText <= 1){
+    $skillText = 'Dovednost pro praxi';
+}else{
+    $skillText = 'Dovednosti pro praxi';
+}
+?>
     <div class="col-12 col-md-4">
-        <h4 class="text-center">Termín/y praxí</h4>
+        <h4 class="text-center"><?= $dateText ?></h4>
         <div class="m-2">
         <div class="d-flex">
-            <div class="d-flex align-items-center p-2 fw-bold"><?= $offer['practise_name'] ?></div>
+            <div class="d-flex align-items-center"><p class="fw-bold">Název termínu: </p><p class="p-2"><?= $offer['practise_name'] ?></p></div>
         </div>
         <div>
             <span class="fw-bold">Pro třídy:</span> <?php foreach($classes as $class){ echo $class['class_class'] . '.' . $class['class_letter_class'] . ' (' . $class['field_shortcut'] . '), '; } ?>
@@ -245,27 +264,37 @@
         <div class="m-2"><a target="_blank" class="view-contract-file" href="<?= base_url('assets/document/'.$offer['practise_contract_file']) ?>"><i class="fa-solid fa-file-pdf"></i> Smlouva pro praxi</a></div>
         </div>
         <div class="blue-line"></div>
-        <h4 class="text-center mt-2">Dovednosti pro praxi</h4>
-        <?php foreach($skills as $category){ ?>
+        <h4 class="text-center mt-2"><?= $skillText ?></h4>
+        <?php if(!empty($category['skills']) && $category['skills'] == ''){ foreach($skills as $category){ ?>
         <div class="h5 fw-bold"><?= $category['category_name'] ?></div>
-        <div class="m-2">
+        <div class="m-1">
+            <ul>
             <?php foreach($category['skills'] as $skill){ ?>
-            <div class="d-flex">
-                <div class="d-flex align-items-center p-2"><?= $skill['skill_name'] ?></div>
-            </div>
+                <li><?= $skill['skill_name'] ?></li>
             <?php } ?>
+            </ul>
         </div>
-        <?php } ?>
+        <?php }}else{ echo 'Není uvedena žádná dovednost';} ?>
         <h4 class="text-center">Vedoucí pro praxi</h4>
-        <div class="d-flex flex-wrap">
-            <div class="d-flex align-items-center p-2"><i class="fa-solid fa-clipboard-user h3 m-0"></i></div>
-            <div><?= $offer['manager_name']?></div>
+        <div class="container bg-white shadow">
+            <div class="d-flex flex-wrap">
+                <div class="d-flex align-items-center p-2"><i class="fa-solid fa-clipboard-user h2 m-0"></i></div>
+                <div class="d-flex align-items-center fw-bold h5 m-0"><?php if(!empty($offer['manager_degree_before'])){echo $offer['manager_degree_before'];} echo ' ' . $offer['manager_name'] . ' ' . $offer['manager_surname'] . ' '; if(!empty($offer['manager_degree_after'])){echo $offer['manager_degree_after'];}?></div>
+            </div>
+            <div class="d-flex flex-wrap">
+                <div class="d-flex align-items-center p-2"><i class="fa-solid fa-envelope h4 m-0"></i></div>
+                <div class="d-flex align-items-center"><?= $offer['manager_mail'] ?></div>
+            </div>
+            <div class="d-flex flex-wrap">
+                <div class="d-flex align-items-center p-2"><i class="fa-solid fa-phone h4 m-0"></i></div>
+                <div class="d-flex align-items-center"><?= $offer['manager_phone'] ?></div>
+            </div>
         </div>
     </div>
     <div class="col-12 col-md-8">
         <h4>Popis praxe</h4>
         <div class="container" style="height: 100%;">
-            <?= $offer['offer_description'] ?>
+            <?php if(empty($offer['offer_description'])){echo 'Není uveden žádný popis praxe';} ?><?= $offer['offer_description'] ?>
         </div>
     </div>
 </div>
