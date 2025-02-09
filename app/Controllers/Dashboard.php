@@ -265,7 +265,7 @@ class Dashboard extends Controller
         $shortcut = $this->request->getPost('shortcut');
         $description = $this->request->getPost('description');
         if(empty($name && $shortcut)){
-            $this->session->setFlashdata('err_message', 'Nevyplnili jste název nebo zkratku typu školy');
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste název nebo zkratku typu školy. Typ školy jsme nemohli vytvořit.');
             return redirect()->to(base_url('dashboard-class'));
         }
         $data = [
@@ -290,6 +290,7 @@ class Dashboard extends Controller
         $shortcut = $this->request->getPost('shortcut');
         $description = $this->request->getPost('description');
         if(empty($name && $shortcut)){
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste název nebo zkratku. Nemohli jsme typ školy upravit.');
             return redirect()->to(base_url('dashboard-class'));
         }
         $data = [
@@ -305,6 +306,7 @@ class Dashboard extends Controller
         $shortcut = $this->request->getPost('shortcut');
         $typeSchoolId = $this->request->getPost('type_school');
         if(empty($name && $shortcut && $typeSchoolId)){
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste název / zkratku / typ školy. Nemohli jsme obor vytvořit.');
             return redirect()->to(base_url('dashboard-class'));
         }
         $data = [
@@ -330,6 +332,7 @@ class Dashboard extends Controller
         $shortcut = $this->request->getPost('shortcut');
         $id = $this->request->getPost('id');
         if(empty($name && $shortcut && $id)){
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste název / zkratku / typ školy. Nemohli jsme obor vytvořit.');
             return redirect()->to(base_url('dashboard-class'));
         }
         $data = [
@@ -345,6 +348,7 @@ class Dashboard extends Controller
         $graduatClass = $this->request->getPost('year_graduation');
         $fieldId = $this->request->getPost('fieldId');
         if(empty($numberClass && $letterClass && $graduatClass && $fieldId)){
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste všechny potřebná políčka. Nemohli jsme přidat novou třídu.');
             return redirect()->to(base_url('dashboard-class'));
         }
         $data = [
@@ -366,6 +370,7 @@ class Dashboard extends Controller
         $letterClass = $this->request->getPost('letter');
         $graduatClass = $this->request->getPost('year_graduation');
         if(empty($numberClass && $letterClass && $graduatClass && $id)){
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste všechny potřebná políčka. Nemohli jsme upravit danou třídu.');
             return redirect()->to(base_url('dashboard-class'));
         }
         $data = [
@@ -380,6 +385,7 @@ class Dashboard extends Controller
         $name = $this->request->getPost('name');
         $icon = $this->request->getPost('icon_name');
         if(empty($icon)){
+            $this->session->setFlashdata('err_message', 'Nebyla vytvořena nová ikonka, protože nebylo vyplněno políčko ikonky.');
             return redirect()->to(base_url('dashboard-people'));
         }
         $data = [
@@ -399,7 +405,7 @@ class Dashboard extends Controller
         $name = $this->request->getPost('name');
         $description = $this->request->getPost('description');
         if(empty($name)){
-            //! Je potřeba přidat hlášku pro vrácení, že musí být pole povíné
+            $this->session->setFlashdata('err_message', 'Nová kategorie pro dovednosti nebyla přidána, protože nebyl vyplněn název.');
             return false;
         }
         $data = [
@@ -414,7 +420,7 @@ class Dashboard extends Controller
         $description = $this->request->getPost('description');
         $idCategory = $this->request->getPost('category_id');
         if(empty($name && $idCategory)){
-            //! Je potřeba přidat hlášku, která se zobrazí uživateli při vrácení, že nebylo něco vyplněno.
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste všechny potřebná políčka. Nemohli jsme přidat novou dovednost.');
             return false;
         }
         $data = [
@@ -430,7 +436,14 @@ class Dashboard extends Controller
         $name = $this->request->getPost('name');
         $description = $this->request->getPost('description');
         if(empty($id && $name)){
-            return redirect()->to(base_url('/dashboard-skill'));
+            if(empty($id)){
+                $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci ještě jednou.');
+                return redirect()->to(base_url('/dashboard-skill'));
+            }
+            if(empty($name)){
+                $this->session->setFlashdata('err_message', 'Nemohli jsme kategorii upravit, protože jsem nevyplnili název.');
+                return redirect()->to(base_url('/dashboard-skill'));
+            }
         }
         $data = [
             'category_name' => $name,
@@ -445,6 +458,11 @@ class Dashboard extends Controller
         $description = $this->request->getPost('description');
         $categoryId = $this->request->getPost('category_id');
         if(empty($id && $name && $categoryId)){
+            if(empty($id)){
+                $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znovu.');
+                return redirect()->to(base_url('/dashboard-skill'));
+            }
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste všechny potřebná políčka. Nemohli jsme přidat novou dovednost.');
             return redirect()->to(base_url('/dashboard-skill'));
         }
         $data = [
@@ -466,6 +484,7 @@ class Dashboard extends Controller
     }
     public function editUserRole(){
         if (!$this->request->isAJAX()) {
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znovu.');
             return $this->response->setJSON(['success' => false, 'error' => 'Neplatný požadavek'])->setStatusCode(400);
         }
         $data = $this->request->getJSON();
@@ -596,9 +615,11 @@ class Dashboard extends Controller
         $dates = $this->request->getPost('dates');
         $classes = $this->request->getPost('classes');
         if(empty($file && $name && $dates && $classes && $dateEndNewOffer)){
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste všechny potřebná políčka. Danou akci jsme nemohli provést.');
             return redirect()->to(base_url('dashboard-calendar'));
         }
         if($file->getClientMimeType() !== 'application/pdf'){
+            $this->session->setFlashdata('err_message', 'Soubor není ve formátu, který požadujeme.');
             return redirect()->to(base_url('dashboard-calendar'));
         }
         $fileName = bin2hex(random_bytes(10)) . '.pdf';
@@ -614,8 +635,8 @@ class Dashboard extends Controller
             if($date['date-from'] > $date['date-to']){
                 if($countDate == 1 ){
                     $this->practiseModel->delete($id);
+                    $this->session->setFlashdata('err_message', 'Datum praxe od musí být menší než datum praxe do. Praxe nemůže skončit dřív než začne.');
                     return redirect()->to(base_url('dashboard-calendar'));
-                    //!validační hláška se musí přidat před směrováním
                 }else{
                     $countDate--;
                     continue;
@@ -641,8 +662,10 @@ class Dashboard extends Controller
                         foreach($datePractises as $date){
                             $this->datePractiseModel->delete($date['date_id']);
                         }
+                        $this->session->setFlashdata('err_message', 'Nový termín praxe nemůže obsahovat třídy, které již v nějakém termínu jsou.');
                         return redirect()->to(base_url('dashboard-calendar'));
                     }else{
+                        $this->session->setFlashdata('err_message', 'Nějaké třídy museli být vyřazeny, protože již jsou v nějakém z dřívějších vytvořených termínů.');
                         $countClass--;
                         continue;
                     }
@@ -679,6 +702,7 @@ class Dashboard extends Controller
         $description = $this->request->getPost('description');
         $practise = $this->practiseModel->find($id);
         if(empty($id && $name && $endOffer && $classes)){
+            $this->session->setFlashdata('err_message', 'Nebyli vyplněny všechny potřebné políčka, proto jsme nemohli provést úpravu.');
             return redirect()->to(base_url('dashboard-calendar'));
         }
         if(!empty($file)){
@@ -689,6 +713,7 @@ class Dashboard extends Controller
                 if(unlink($path . $practise['practise_contract_file'])){
                     $file->move($path, $fileName);
                 }else{
+                    $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat.');
                     return redirect()->to(base_url('dashboard-calendar'));
                 }
             }
@@ -715,8 +740,10 @@ class Dashboard extends Controller
         foreach($classes as $class){
             if(in_array($class, $existingClass)){
                 if($countClass == 1){
+                    $this->session->setFlashdata('err_message', 'Všechny zvolené třídy jsou již v jiných termínech.');
                     return redirect()->to(base_url('dashboard-calendar'));
                 }else{
+                    $this->session->setFlashdata('err_message', 'Některé zvolené třídy nemohli být použity, protože jsou již v jiných termínech.');
                     $countClass--;
                     continue;
                 }
@@ -776,9 +803,11 @@ class Dashboard extends Controller
         $dateFrom = $this->request->getPost('dateFrom');
         $dateTo = $this->request->getPost('dateTo');
         if(empty($id && $dateFrom && $dateTo)){
+            $this->session->setFlashdata('err_message', 'Políčka nebyli vyplněny. Úprava termínu nebyla provedena.');
             return redirect()->to(base_url('dashboard-calendar'));
         }
         if($dateFrom > $dateTo){
+            $this->session->setFlashdata('err_message', 'Termín praxe od nemůže být větší než termín praxe do. Praxe nemůže dřív skončit jak začít.');
             return redirect()->to(base_url('dashboard-calendar'));
         }
         $data = [
@@ -797,9 +826,11 @@ class Dashboard extends Controller
         $dateTo = $this->request->getPost('dateTo');
         $practiseId = $this->request->getPost('id');
         if(empty($dateFrom && $dateTo && $practiseId)){
+            $this->session->setFlashdata('err_message', 'Všechny potřebná políčka nebyli vyplněny. Nový termín nebyl přidán.');
             return redirect()->to(base_url('dashboard-calendar'));
         }
         if($dateFrom > $dateTo){
+            $this->session->setFlashdata('err_message', 'Termín praxe od nemůže být větší než termín praxe do. Praxe nemůže dřív skončit jak začít.');
             return redirect()->to(base_url('dashboard-calendar'));
         }
         $data = [
@@ -820,6 +851,7 @@ class Dashboard extends Controller
         $positionWork = $this->request->getPost('position_work');
         $companyId = $this->request->getPost('companyId');
         if(empty($name && $surname && $phone && $mail && $companyId)){
+            $this->session->setFlashdata('err_message', 'Všechny potřebná políčka nebyli vyplněny. Nový vedoucí praxe nebyl vytvořen.');
             return redirect()->to(base_url('dashboard-company'));
         }
         $data = [
@@ -846,6 +878,7 @@ class Dashboard extends Controller
         $positionWork = $this->request->getPost('position_work');
         $companyId = $this->request->getPost('companyId');
         if(empty($name && $surname && $phone && $mail && $companyId && $id)){
+            $this->session->setFlashdata('err_message', 'Všechny potřebná políčka nebyli vyplněny. Vedoucí praxe nemohl být upraven.');
             return redirect()->to(base_url('dashboard-company'));
         }
         $data = [
@@ -875,13 +908,16 @@ class Dashboard extends Controller
         $companyId = $this->request->getPost('companyId');
         $user = $this->representativeCompanyModel->where('representative_mail',$mail)->first();
         if(!empty($user)){
+            $this->session->setFlashdata('err_message', 'Bohužel Vámi zadaný e-mail již je využívaný.');
             return redirect()->to(base_url('dashboard-company'));
         }
         if(empty($name && $surname && $mail && $phone && $companyId)){
+            $this->session->setFlashdata('err_message', 'Všechny potřebná políčka nebyli vyplněny. Nový zástupce firmy nebyl vytvořen.');
             return redirect()->to(base_url('dashboard-company'));
         }
         if(empty($checkbox)){
             if($passwd1 !== $passwd2){
+                $this->session->setFlashdata('err_message', 'Nastala nečeká chyba, zkuste akci opakovat.');
                 return redirect()->to(base_url('dashboard-company'));
             }
         }
@@ -942,6 +978,7 @@ class Dashboard extends Controller
         $mail = $this->request->getPost('mail');
         $positionWork = $this->request->getPost('position_work');
         if(empty($name && $surname && $phone && $mail && $id)){
+            $this->session->setFlashdata('err_message', 'Všechny potřebná políčka nebyli vyplněny. Daný zástupce firmy nemohl být upraven.');
             return redirect()->to(base_url('dashboard-company'));
         }
         $data = [
@@ -960,6 +997,7 @@ class Dashboard extends Controller
         $id = $this->request->getPost('id');
         $name = $this->request->getPost('name');
         if(empty($id && $name)){
+            $this->session->setFlashdata('err_message', 'Políčko název firmy zůstal prázdný. Nemohli jsme proto aktualizovat název firmy.');
             return redirect()->to(base_url('dashboard-company'));
         }
         $data = [
@@ -983,21 +1021,21 @@ class Dashboard extends Controller
         $passwd2 = $this->request->getPost('passwd2');
         $checkbox = $this->request->getPost('checkbox');
         if(empty($ico && $legalForm && $name && $surname && $mail && $phone && $position_work)){
-            log_message('info', 'Chyba: prázdné');
+            $this->session->setFlashdata('err_message', 'Všechny potřebná políčka nebyli vyplněny. Firma nemohla být vytvořena.');
             return redirect()->to(base_url('dashboard-company'));
         }
         if($passwd1 !== $passwd2){
-            log_message('info', 'Chyba: Heslo');
+            $this->session->setFlashdata('err_message', 'Firma nebyla vytvořena, protože se hesla neshodují.');
             return redirect()->to(base_url('dashboard-company'));
         }
         $existCompany = $this->companyModel->where('company_ico', $ico)->find();
         if(!empty($existCompany)){
-            log_message('info', 'Chyba: existuje firma');
+            $this->session->setFlashdata('err_message', 'Vámi vytvářená firma již existuje.');
             return redirect()->to(base_url('dashboard-company'));
         }
         $existUser = $this->representativeCompanyModel->where('representative_mail', $mail)->find();
         if(!empty($existUser)){
-            log_message('info', 'Chyba: existuje uživatel');
+            $this->session->setFlashdata('err_message', 'Firma nemohla být vytvořena, protože zadaný e-mail již existuje.');
             return redirect()->to(base_url('dashboard-company'));
         }
         $isValid = $this->verifyCompany($ico);
@@ -1111,10 +1149,12 @@ class Dashboard extends Controller
         $passwd2 = $this->request->getPost('passwd2');
         $checkbox = $this->request->getPost('checkbox');
         if($passwd1 !== $passwd2){
+            $this->session->setFlashdata('err_message', 'Heslo uživatele se nemohlo změnit, protože se hesla neshodují.');
             return redirect()->to(base_url('dashboard-company'));
         }
         if(empty($checkbox)){
             if(empty($passwd1 && $passwd2)){
+                $this->session->setFlashdata('err_message', 'Všechny potřebná políčka nebyli vyplněny. Heslo uživatele nebylo změněno.');
                 return redirect()->to(base_url('dashboard-company'));
             }
             $data = [
@@ -1129,6 +1169,7 @@ class Dashboard extends Controller
             $expire = $nowTime->addHours(1);
             foreach($resetCodes as $resetCode){
                 if($resetCode['reset_expires_at'] > $nowTime){
+                    $this->session->setFlashdata('err_message', 'Expirační doba již vypršela. Heslo nemůže být změněno.');
                     return redirect()->to(base_url('dashboard-company'));
                 }
             }
@@ -1168,6 +1209,7 @@ class Dashboard extends Controller
     public function deleteCompany($id){
         $company = $this->companyModel->find($id);
         if(empty($company)){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba.');
             return redirect()->to(base_url('dashboard-company'));
         }
         $representativeCompanyes = $this->representativeCompanyModel->where('Company_company_id', $id)->find();

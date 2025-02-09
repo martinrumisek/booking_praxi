@@ -222,16 +222,19 @@ class Home extends BaseController
             $offers = $this->offerPractise->where('offer_id', $idOffer)->join('Class_has_Practise', 'Offer_practise.Practise_practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')->find();
             $classIds = array_column($offers, 'Class_class_id');
             if(!in_array($userClassId, $classIds)){
-                log_message('info', 'Nejsi z dané třídy');
+                $this->session->setFlashdata('err_message', 'Vyhledaná praxe neexistuje.');
+                return $this->backUrl('practise-offer');
             }
         }
         if(!empty($companyId)){
             $offer = $this->offerPractise->where('offer_id', $idOffer)->join('Practise_manager', 'Offer_Practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')->first();
             if(empty($offer)){
-                log_message('info', 'Nastala nečekaná chyba (je to prázdné)');
+                $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, nemůže pro Vás najít danou praxi.');
+                return $this->backUrl('company-offer-practises');
             }
             if($offer['Company_company_id'] !== $companyId){
-                log_message('info', 'Tohle není nabídka pro vaši firmu');
+               $this->session->setFlashdata('err_message', 'Vyhledaná praxe neexistuje.');
+                return $this->backUrl('company-offer-practises');
             }
         }
         $offer = $this->offerPractise
@@ -280,22 +283,19 @@ class Home extends BaseController
         $userId = $this->userSession['id'];
         $userClassId = $this->userSession['class'];
         if(empty($userId && $userClassId)){
-            //!chybová hláška
-            log_message('info', 'chyba: 1');
-            return $this->backUrl('/practise-offer'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, proveďte akci znovu.');
+            return $this->backUrl('/practise-offer');
         }
         $offerId = $this->request->getPost('id-offer');
         $like = $this->request->getPost('like-offer');
         $offers = $this->offerPractise->where('offer_id', $offerId)->join('Class_has_Practise', 'Offer_practise.Practise_practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')->find();
         if(empty($offers)){
-            //!Chybová hláška
-            log_message('info', 'chyba: 2');
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
             return $this->backUrl('/practise-offer');
         }
         $classIds = array_column($offers, 'Class_class_id');
         if(!in_array($userClassId, $classIds)){
-            //!Chybová hláška
-            log_message('info', 'chyba: 3');
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
             return $this->backUrl('/practise-offer');
         }
         if($like == 0 || empty($like)){
@@ -327,24 +327,22 @@ class Home extends BaseController
         $userId = $this->userSession['id'];
         $userClassId = $this->userSession['class'];
         if(empty($userId && $userClassId)){
-            //!chybová hláška
-            log_message('info', 'chyba: 1');
-            return $this->backUrl('/practise-offer'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
+            return $this->backUrl('/practise-offer');
         }
         $offerId = $this->request->getPost('id-offer');
         $select = $this->request->getPost('select-offer');
         $offers = $this->offerPractise->where('offer_id', $offerId)->join('Class_has_Practise', 'Offer_practise.Practise_practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')->find();
         if(empty($offers)){
-            //!Chybová hláška
-            log_message('info', 'chyba: 2');
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
             return $this->backUrl('/practise-offer');
         }
         $classIds = array_column($offers, 'Class_class_id');
         if(!in_array($userClassId, $classIds)){
-            //!Chybová hláška
-            log_message('info', 'chyba: 3');
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
             return $this->backUrl('/practise-offer');
         }
+
         if($select == 0 || empty($select)){
             $select = 1;
         }else{
@@ -435,6 +433,7 @@ class Home extends BaseController
         $managerPractiseOffer = $this->request->getPost('practise_manager');
         $fullDescription = $this->request->getPost('full_description');
         if(empty($name && $cityOfferPractise && $streetOfferPractise && $postCodeOfferPractise && $countPractise && $datePractise && $managerPractiseOffer)){
+            $this->session->setFlashdata('err_message', 'Musíte vyplnit všechna potřebná políčka (*), jako jsou (název praxe, město, psč, ulice, vybrat datum praxe a vybrat vedoucího praxe.');
             return redirect()->to(base_url('/company-add-offer-practise'));
         }
         if(empty($copyNextYear)){
@@ -536,12 +535,8 @@ class Home extends BaseController
         $isAdmin = in_array('admin', $role);
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $id){
-            $previousUrl = $this->request->getServer('HTTP_REFERER');
-            if ($previousUrl) {
-                return redirect()->to($previousUrl);
-            } else {
-                return redirect()->to('/home-student');
-            }
+            $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
+            return $this->backUrl('home-student');
         }
         $company = $this->companyModel->find($id);
         $representatives = $this->representativeCompanyModel->where('Company_company_id', $id)->find();
@@ -559,7 +554,8 @@ class Home extends BaseController
     public function editCompanyProfil(){
         $idCompany = $this->request->getPost('idCompany');
         if(empty($idCompany)){
-            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat.');
+            return $this->backUrl('/home-student');
         }
         $role = $this->session->get('role');
         if(!empty($this->companyUser['idCompany'])){
@@ -568,12 +564,13 @@ class Home extends BaseController
         $isAdmin = in_array('admin', $role);
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $idCompany){
-            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+            $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
+            return $this->backUrl('/home-student');
         }
         $nameCompany = $this->request->getPost('nameCompany');
         $descriptionCompany = $this->request->getPost('description_company');
         if(empty($nameCompany)){
-            log_message('info', 'prázdné jméno firmy');
+            $this->session->setFlashdata('err_message', 'Název firmy/instituce je povinný. Prosím, nenechávejte políčko prázdné.');
             return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $data = [
@@ -595,9 +592,6 @@ class Home extends BaseController
         $checkbox = $this->request->getPost('checkbox');
         $passwd1 = $this->request->getPost('passwd1');
         $passwd2 = $this->request->getPost('passwd2');
-        if(!empty($user)){
-            //return redirect()->to(base_url('dashboard-company'));
-        }
         $role = $this->session->get('role');
         if(!empty($this->companyUser['idCompany'])){
             $userSession = $this->companyUser['idCompany'];
@@ -605,7 +599,7 @@ class Home extends BaseController
         $isAdmin = in_array('admin', $role);
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $companyId){
-            log_message('info', 'Není admin, ani správce ani nesedí id company');
+            $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
             return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         if(empty($name && $surname && $mail && $phone && $companyId && $passwd1 && $passwd2)){
@@ -688,6 +682,7 @@ class Home extends BaseController
         $phone = $this->request->getPost('phone');
         $positionWork = $this->request->getPost('position_work');
         if(empty($idCompany && $name && $surname && $phone && $positionWork && $mail)){
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste všechny povinná políčka, proto jsme nemohli vedoucího praxe přidat.');
             return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $role = $this->session->get('role');
@@ -697,7 +692,7 @@ class Home extends BaseController
         $isAdmin = in_array('admin', $role);
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $idCompany){
-            log_message('info', 'Není admin, ani správce ani nesedí id company');
+            $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
             return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $data = [
@@ -723,6 +718,7 @@ class Home extends BaseController
         $phone = $this->request->getPost('phone');
         $positionWork = $this->request->getPost('position_work');
         if(empty($id && $name && $surname && $phone && $positionWork && $mail)){
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste všechny povinná políčka, proto jsme nemohli vedoucího praxí upravit.');
             return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $role = $this->session->get('role');
@@ -733,7 +729,7 @@ class Home extends BaseController
         $isAdmin = in_array('admin', $role);
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $manager['Company_company_id']){
-            log_message('info', 'Není admin, ani správce ani nesedí id company');
+            $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
             return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $data = [
@@ -758,7 +754,7 @@ class Home extends BaseController
         $isAdmin = in_array('admin', $role);
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $manager['Company_company_id']){
-            log_message('info', 'Není admin, ani správce ani nesedí id company');
+            $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
             return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $offers = $this->offerPractise->where('Practise_manager_manager_id', $id)->find();
@@ -825,6 +821,7 @@ class Home extends BaseController
                 ];
             }
         }
+        log_message('info', 'data: ' . json_encode($resultOfferPractise));
         $data = [
             'title' => 'Nabídky praxí',
             'offerPractises' => $resultOfferPractise,
@@ -900,6 +897,7 @@ class Home extends BaseController
         $isAdmin = in_array('admin', $role);
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession['id'] !== $id){
+            $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
             return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
         }
         $user = $this->userModel->where('User.user_id', $id)->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL')->first();

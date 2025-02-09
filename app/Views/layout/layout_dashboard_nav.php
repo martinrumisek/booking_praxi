@@ -258,6 +258,7 @@
     $logOut = base_url('/logout');
         
 ?>
+<?= view('layout/errModal') ?>
     <div class="d-flex">
         <!----Navigační panel pro pc----->
         <div class="d-block block-nav">
@@ -321,16 +322,15 @@
                 </div>
             </div>
     </div>
-<script>
-<?php if(session()->getFlashdata('err_message')){ ?>
-    document.addEventListener("DOMContentLoaded", function() {
-            var modalElement = document.getElementById("errMessageModal");
-            if (modalElement) {
-                var errorModal = new bootstrap.Modal(modalElement);
-                errorModal.show();
-            }
+<?php if ($error = session()->getFlashdata('err_message')){ ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var errorMessage = "<?= esc($error); ?>"; 
+            document.getElementById('errorMessage').textContent = errorMessage;
+            var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+            errorModal.show();
         });
-<?php } ?>
-</script>
+    </script>
+<?php }?>   
 </body>
 </html>

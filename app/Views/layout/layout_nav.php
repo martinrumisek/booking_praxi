@@ -325,11 +325,21 @@
                 </div>
             </div>
     </div>
-    <script>
-        tinymce.init({
+<script>
+tinymce.init({
   selector: 'textarea#editor',
   license_key: 'gpl'
 });
+</script>
+<?php if ($error = session()->getFlashdata('err_message')){ ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var errorMessage = "<?= esc($error); ?>"; 
+            document.getElementById('errorMessage').textContent = errorMessage;
+            var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+            errorModal.show();
+        });
     </script>
+<?php }?>    
 </body>
 </html>

@@ -59,8 +59,7 @@ class Auth extends Controller
         $passwd = $this->request->getPost('password');
         $user = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
         if(!$user || !password_verify($passwd, $user['representative_password'])){
-            //když uživatel neexistuje nebo nesprávné heslo
-            //!!Je potřeba dodělat hlášku
+            $this->session->setFlashdata('err_message', 'Zadali jste špatné přihlašovací údaje.');
             return redirect()->to(base_url('/login'));
         }
         $this->session->set('companyUser',[
@@ -95,23 +94,23 @@ class Auth extends Controller
         $passwd1 = $this->request->getPost('passwd1');
         $pattern = '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/';
         if(!preg_match($pattern, $passwd1)){
+            $this->session->setFlashdata('err_message', 'V registraci firmy nemůžete pokračovat, protože nebyli dodrženy podmínky pro obsah hesla.');
             return redirect()->to(base_url('/registration'));
-            //!Je potřeba doplnit chybějící hlášku
         }
         $representativeUser = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
         $companyExist = $this->companyModel->where('company_ico', $ico)->first();
         if($representativeUser || $companyExist){
+            $this->session->setFlashdata('err_message', 'Firma/e-mail je v systému již existuje.');
             return redirect()->to(base_url('/registration'));
-            //!JE potřeba doplnit chybějící hlášku, co se stalo.
         }
         if(empty($ico && $mail && $passwd1)){
+            $this->session->setFlashdata('err_message', 'Všechny potřebná políčka nebyli vyplněny. Nemůžete pokračovat v registraci.');
             return redirect()->to(base_url('/registration'));
-            //!Je potřeba doplnit chybějící hlášku
         }
         $isValid = $this->verifyCompany($ico);
         if (!$isValid) {
+            $this->session->setFlashdata('err_message', 'Danou firmu nemůže v našem systému vytvořit.');
             return redirect()->to(base_url('/registration'));
-            //!Je potřeba přidat hlášku, když to přesměruje zpět na registrační stránku, tak aby uživatel věděl důvod
         }
         $hashPasswd = password_hash($passwd1, PASSWORD_DEFAULT);
         $nameCompany = $isValid['obchodniJmeno'];
@@ -157,6 +156,7 @@ class Auth extends Controller
     public function continuationRegister(){
         $session = session();
         if (!$session->has('registration_start') || $session->get('registration_start') !== true) {
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste registraci znovu.');
             return redirect()->to(base_url('/registration'));
         }
         $companyData = $session->get('company');
@@ -192,24 +192,31 @@ class Auth extends Controller
         $functionPerson = $this->request->getPost('function');
         $mail = $this->request->getPost('mail');
         if($namePerson == null){
+            $this->session->setFlashdata('err_message', 'Políčko jméno zastupující osoby je povinné.');
             return redirect()->to(base_url('/next-step-register'));
         }
         if($surnamePerson == null){
+            $this->session->setFlashdata('err_message', 'Políčko příjmení zastupující osoby je povinné.');
             return redirect()->to(base_url('/next-step-register'));
         }
         if($phonePerson == null){
+            $this->session->setFlashdata('err_message', 'Políčko tel. číslo je povinné.');
             return redirect()->to(base_url('/next-step-register'));
         }
         if($functionPerson == null){
+            $this->session->setFlashdata('err_message', 'Políčko funkce zastupující osoby je povinné.');
             return redirect()->to(base_url('/next-step-register'));
         }
         if($mail == null){
+            $this->session->setFlashdata('err_message', 'Políčko e-mail zastupující osoby je povinné.');
             return redirect()->to(base_url('/next-step-register'));
         }
         if($legalForm == 0){
+            $this->session->setFlashdata('err_message', 'Musíte vybrat právní formu.');
             return redirect()->to(base_url('/next-step-register'));
         }
         if($agreeDocument == null){
+            $this->session->setFlashdata('err_message', 'Pokud nebude souhlasit s našími podmínkami, tak Vás nemůžeme registrovat v našem systému.');
             return redirect()->to(base_url('/next-step-register'));
         }
         $dataCompany = [
@@ -256,12 +263,14 @@ class Auth extends Controller
         //state a code se odešle při přihlášení na danou redirect_url, kterou jsme si zvolili a od url se to musí zpracovat a získat token pomocí které získám informace o uživatelích.
         $code = $this->request->getVar('code');
         if (empty($code)) {
-            throw new \Exception('Autorizační kód nebyl poskytnut.'); // !!!!Je potřeba ještě změnit. Tak aby se kdyžtak chyba úkládala do sesion.
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat.');
+            return redirect()->to('/login');
         }
         $state = $this->request->getVar('state');
         if (empty($state) || $state !== $this->session->get('oauth2state')) {
             $this->session->remove('oauth2state');
-            throw new \Exception('Neplatný stav.'); //!Je potřeba změnit
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat.');
+            return redirect()->to('/login');
         }
         //Získá token pomoci code, který si vezme z url
             $token = $this->provider->getAccessToken('authorization_code', [
@@ -368,13 +377,16 @@ class Auth extends Controller
         }
         $user = $this->representativeCompanyModel->find($id);
         if(empty($user)){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat.');
             return redirect()->to(base_url('/login'));
         }
         if(!password_verify($user['representative_mail'], $idCode)){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba.');
             return redirect()->to(base_url('/login'));
         }
         $resetPasswd = $this->resetPassword->where('Representative_company_representative_id', $user['representative_id'])->find();
         if(empty($resetPasswd)){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat.');
             return redirect()->to(base_url('/login'));
         }
         foreach($resetPasswd as $resetPassword){
@@ -391,6 +403,7 @@ class Auth extends Controller
                 }
             }
         }
+        $this->session->setFlashdata('err_message', 'Nové heslo si nemůžete nastavit, expirační doba vypršela.');
         return redirect()->to(base_url('/login'));
     }
     public function newPassword(){
@@ -398,9 +411,11 @@ class Auth extends Controller
         $passwd1 = $this->request->getPost('passwd1');
         $passwd2 = $this->request->getPost('passwd2');
         if(empty($id && $passwd1 && $passwd2)){
+            $this->session->setFlashdata('err_message', 'Nevyplnili jste potřebná povinná políčka.');
             return redirect()->back();
         }
         if($passwd1 !== $passwd2){
+            $this->session->setFlashdata('err_message', 'Hesla se neshodují.');
             return redirect()->back();
         }
         $passwordHash = password_hash($passwd1, PASSWORD_DEFAULT);
@@ -424,10 +439,12 @@ class Auth extends Controller
         $expire = $nowTime->addHours(1);
         foreach($resetPasswd as $resetPassword){
             if($resetPassword['reset_expires_at'] > $nowTime){
+                $this->session->setFlashdata('err_message', 'Vypršel expirační čas.');
                 return redirect()->to(base_url('/login'));
             }
         }
         if(empty($user && $mail)){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat.');
             return redirect()->to(base_url('/login'));
         }
         $secretCode = bin2hex(random_bytes(16));
