@@ -117,26 +117,27 @@ if(in_array('admin', $role)){
         <div class="col-12 col-lg-6">
                 <div class="container-company">
                     <div class="p-5 container">
-                        <?php foreach($practise as $practiss){ if(!empty($practis) || $practiss['user_offer_accepted'] == 1){ ?>
+                        <?php if(!empty($practise) && $practise['user_offer_accepted'] == 1){ ?>
                         <div class="d-md-flex d-block">
                             <div class="d-flex justify-content-center align-items-center"><div class="icon-company d-flex align-items-center justify-content-center"><i class="fa-solid fa-building h1"></i></div></div>
-                             <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h4">Název firmy/instituce</div><span>Indorama Ventures Company Moravia a.s.</span><br><span class="fw-bold">IČO: </span><span>234324533</span></div></div>
+                             <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h4">Název firmy/instituce</div><span><?= $practise['company_name'] ?></span><br><span class="fw-bold">IČO: </span><span><?= $practise['company_ico'] ?></span></div></div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-md-6"><div class="h5 mt-2">Telefon</div><div class="">+420 222 333 444</div></div>
-                            <div class="col-12 col-md-6"><div class="h5 mt-2">E-mail</div><div class="">jakub.sleskv@cz.indorama.net</div></div>
-                            <div class="col-12 col-md-6"><div class="h5 mt-2">Vedoucí praxe</div><div class="">Jakub Sleskv</div></div>
-                            <div class="col-12 col-md-6"><div class="h5 mt-2">E-mail na vedoucí</div><div class="">jakub.sleskv@cz.indorama.net</div></div>
-                            <div class="col-12 col-md-6"><div class="h5 mt-2">Termín 1</div><div class="">12.04 - 30.4.2024</div></div>
-                            <div class="col-12 col-md-6"><div class="h5 mt-2">Termín 2</div><div class="">02.06 - 10.06.2024</div></div>
+                            <div class="col-12 col-md-6"><div class="h6 mt-2">Název praxe</div><div class=""><?= $practise['offer_name'] ?></div></div>
+                            <div class="col-12 col-md-6"><div class="h6 mt-2">Místo praxe</div><div class=""><?= $practise['offer_post_code'] . '  ' . $practise['offer_city'] . ', ' .  $practise['offer_street'] ?></div></div>
+                            <div class="col-12 col-md-6"><div class="h6 mt-2">Vedoucí praxe</div><div class=""><?php if(!empty($practise['manager_degree_before'])){echo $practise['manager_degree_before'];} echo ' ' . $practise['manager_name'] . ' ' . $practise['manager_surname'] . ' '; if(!empty($practise['manager_degree_after'])){echo $practise['manager_degree_after'];} ?></div></div>
+                            <div class="col-12 col-md-6"><div class="h6 mt-2">E-mail na vedoucí</div><div class=""><?= $practise['manager_mail'] ?></div></div>
+                            <?php $count = 1; foreach($dates as $date){ ?>
+                                <div class="col-12 col-md-6"><div class="h6 mt-2">Termín <?= $count ?></div><div class=""><?= date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])) ?></div></div>
+                            <?php } ?>
                         </div>
-                        <?php }}?>
+                        <?php }?>
                     </div>
                 </div>
             </div>
     </div>
 </div>
-<div class="btn-container d-flex justify-content-center align-items-center"><a href="" class="btn-document-export d-flex justify-content-center align-items-center p-2"><i class="fa-solid fa-file p-2"></i> Smlouva k praxi</a></div>
+<div class="btn-container d-flex justify-content-center align-items-center"><a href="" class="btn-document-export d-flex justify-content-center align-items-center p-2 disabled"><i class="fa-solid fa-file p-2"></i> Smlouva k praxi</a></div>
 <div class="d-flex justify-content-center mt-2"><h3>Oblíbené nabídky</h3></div>
 <div class="d-flex align-items-center container d-none">
     <!-- Tlačítko pro předchozí kartu -->
