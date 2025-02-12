@@ -42,8 +42,8 @@
             <?php $count++; }  ?>
             <div class="container d-flex justify-content-end flex-wrap">
                 <a class="m-1" href="<?= base_url('practise-offer-view/'.$offer['offer_id']) ?>"><i class="fa-solid fa-eye p-1"></i>Zobrazit</a>
-                <a class="m-1" href=""><i class="fa-solid fa-pencil p-1"></i>Upravit</a>
-                <a class="m-1" href=""><i class="fa-solid fa-trash p-1"></i>Smazat</a>
+                <?php if(empty($offer['users']) || isset($offer['users']['']) && is_null($offer['users']['']['user_id'])){ ?><a class="m-1" href=""><i class="fa-solid fa-pencil p-1"></i>Upravit</a><?php } ?>
+                <?php  ?><a class="m-1" href=""><i class="fa-solid fa-trash p-1"></i>Smazat</a><?php  ?>
             </div>
             </div>
         </div>
@@ -52,21 +52,33 @@
             <?php if($user['user_offer_id'] == null){ ?>
                 <div class="d-flex justify-content-center align-items-center" style="width: 100%">Praxi si nikdo nevybral</div>
             <?php }else{ ?>
-                <div class="card-people-offer-practise d-flex flex-column">
+                <div class="card-people-offer-practise d-flex flex-column m-1">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                         <i class="fa-solid fa-user p-2 h5 m-0"></i>
                         <p class=" m-0 h6"><?= $user['user_name'] . ' ' . $user['user_surname'] ?></p>
                         </div>
-                        <a href=""><i class="fa-solid fa-eye p-1"></i></a>
+                        <a href="<?= base_url('profile/'.$user['user_id']) ?>"><i class="fa-solid fa-eye p-1"></i></a>
                     </div>
                     <div class="d-flex">
                         <p class="m-0 text-user-practise p-1">Třida: <?= $user['class_class'] . '.' . $user['class_letter_class'] ?></p>
                         <p class="m-0 text-user-practise p-1">Obor: <?= $user['field_name'] ?></p>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <a class="m-2" href=""><i class="fa-solid fa-xmark"></i></a>
-                        <a class="m-2" href=""><i class="fa-solid fa-check"></i></a>
+                        <form id="not-accepted-user-<?= $user['user_id'] ?>" action="<?= base_url('/not-accepted-user-practise') ?>" method="POST">
+                            <input type="hidden" name="offer_id" value="<?= $offer['offer_id'] ?>">
+                            <input type="hidden" name="user_offer_id" value="<?= $user['user_offer_id'] ?>">
+                            <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
+                            <input type="hidden" name="manager_id" value="<?= $offer['manager_id'] ?>">
+                        </form>
+                        <a class="m-2" onclick="document.getElementById('not-accepted-user-<?= $user['user_id']?>').submit(); return false;" href="#"><i class="fa-solid fa-xmark"></i></a>
+                        <form id="accepted-user-<?= $user['user_id']?>" action="<?= base_url('/accepted-user-practise') ?>" method="POST">
+                            <input type="hidden" name="offer_id" value="<?= $offer['offer_id'] ?>">
+                            <input type="hidden" name="user_offer_id" value="<?= $user['user_offer_id'] ?>">
+                            <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
+                            <input type="hidden" name="manager_id" value="<?= $offer['manager_id'] ?>">
+                        </form>
+                        <a class="m-2" href="#" onclick="document.getElementById('accepted-user-<?= $user['user_id']?>').submit(); return false;"><i class="fa-solid fa-check"></i></a>
                     </div>
                 </div>
            <?php }}  ?>
