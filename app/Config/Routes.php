@@ -34,6 +34,8 @@ $routes->get('practise-offer-view/(:num)', 'Home::completeOfferView/$1', ['filte
 
 $routes->post('/edit-like-offer', 'Home::editLikeOffer', ['filter', 'role:student']);
 $routes->post('/edit-select-offer', 'Home::editSelectOffer', ['filter', 'role:student']);
+$routes->post('/accepted-user-practise', 'Home::acceptedUserForOfferPractise', ['filter', 'role:company']);
+$routes->post('/not-accepted-user-practise', 'Home::noAcceptedUserForOfferPractise', ['filter', 'role:company']);
 
 //ROUTY PRO BTN - SCRIPT
 $routes->get('azure-users', 'UserAzureSync::getAllUsers', ['filter' => 'role:admin, spravce']); //routa pro btn - pro script (načtení všech uživatelů z db - azure)

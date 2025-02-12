@@ -92,8 +92,19 @@ class Home extends BaseController
         $userClass = $this->classModel->find($user['Class_class_id']);
         $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_field_id']);
         //$practise = $this->user_practiseModel->select('user_practise.*, practise_offer.*, practise_manager.*, company.*, practise.*, date_practise.*')->join('practise_offer', 'practise_offer.id = user_practise.Offer_practise_id')->join('practise_manager', 'practise_manager.id = practise_offer.Practise_manager_id')->join('company', 'company.id = practise_manager.Company_id')->join('practise', 'practise.id = practise_offer.Practise_id')->join('date_practise', 'date_practise.Practise_id = practise.id', 'left')->where('user_practise.User_id', $user['id'])->findAll();
-        $userPractiseOffers = $this->user_practiseModel->where('User_user_id', value: $user['user_id'])->findAll();
-        $data = ['title' => 'Hlavní stránka', 'user' => $user, 'class' => $userClass, 'fieldStudy' => $userFieldStudy, 'practise' => $userPractiseOffers,];
+        $userPractiseOffer = $this->user_practiseModel->where('User_user_id', $user['user_id'])->where('user_offer_accepted != ', null)->where('user_offer_accepted', 1)->join('Offer_practise', 'User_has_Offer_practise.Offer_practise_offer_id = Offer_practise.offer_id AND Offer_practise.offer_del_time IS NULL', 'left')->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')->first();
+        $practiseDates = '';
+        if(!empty($userPractiseOffer)){
+            $practiseDates = $this->datePractiseModel->where('Practise_practise_id', $userPractiseOffer['Practise_practise_id'])->find();
+        }
+        $data = [
+            'title' => 'Hlavní stránka',
+            'user' => $user,
+            'class' => $userClass,
+            'fieldStudy' => $userFieldStudy,
+            'practise' => $userPractiseOffer,
+            'dates' => $practiseDates,
+        ];
         return view('home_student', $data);
     }
     public function homeCompany(){
@@ -153,7 +164,7 @@ class Home extends BaseController
         ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
         ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
         ->join('Skill_has_Offer_practise', 'Offer_practise.offer_id = Skill_has_Offer_practise.Offer_practise_offer_id AND Skill_has_Offer_practise.skill_offer_del_time IS NULL', 'left')
-        ->join('User_has_Offer_practise AS active_user_offer', 'Offer_practise.offer_id = active_user_offer.Offer_practise_offer_id AND active_user_offer.user_offer_accepted = 1 AND active_user_offer.user_offer_del_time IS NULL', 'left')
+        ->join('User_has_Offer_practise AS active_user_offer', 'Offer_practise.offer_id = active_user_offer.Offer_practise_offer_id AND active_user_offer.user_offer_accepted = 1 AND active_user_offer.User_user_id != '. $userId . ' AND active_user_offer.user_offer_del_time IS NULL', 'left')
         ->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.User_user_id = '. $userId .' AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')
         ->join('User_has_Skill', 'Skill_has_Offer_practise.Skill_skill_id = User_has_Skill.Skill_skill_id AND User_has_Skill.User_user_id =' . $userId .' AND User_has_Skill.user_skill_del_time IS NULL', 'left')
         //->groupBy('Offer_practise.offer_id, User_has_Offer_practise.user_offer_id, Practise_manager.manager_id, Company.company_id, ClassPractise.class_practise_id, Skill_has_Offer_practise.skill_offer_id, Practise.practise_id, User_has_Skill.user_skill_id, date.date_id')
@@ -162,7 +173,8 @@ class Home extends BaseController
         //->selectCount('User_has_Skill.Skill_skill_id', 'skill_count')
         ->orderBy('User_has_Offer_practise.user_offer_select', 'DESC')
         ->orderBy('User_has_Offer_practise.user_offer_like', 'DESC')
-        ->orderBy('COUNT(User_has_Skill.Skill_skill_id)', 'DESC');
+        ->orderBy('COUNT(User_has_Skill.Skill_skill_id)', 'DESC')
+        ->orderBy('User_has_Offer_practise.user_offer_accepted', 'ASC');
         if(!empty($search)){
             $this->offerPractise->groupStart()->like('offer_name', $search)->orLike("CONCAT(manager_name, ' ', manager_surname)", $search)->orLike('company_name', $search)->orLike('company_ico', $search)->orLike('offer_city', $search)->orLike('offer_street', $search)->orLike('offer_post_code', $search)->groupEnd();
         }
@@ -240,7 +252,7 @@ class Home extends BaseController
         $offer = $this->offerPractise
         ->where('offer_id', $idOffer)
         ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
-        ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
+        ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_register_company = 1 AND Company.company_del_time IS NULL', 'left')
         ->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'left')->first();
         $dates = $this->offerPractise->where('offer_id', $idOffer)
         ->join('Date_practise', 'Offer_practise.Practise_practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL', 'left')->find();
@@ -304,6 +316,8 @@ class Home extends BaseController
             $like = 0;
         }
         $userOffer = $this->user_practiseModel->where('User_user_id', $userId)->where('Offer_practise_offer_id', $offerId)->first();
+        //$offer = $this->offerPractise->where('offer_id', $offerId)->join('Practise_manager', '')first();
+        //$offers = $this->offerPractise->where('offer_name', $offer['offer_name'])->where('')
         if(empty($userOffer)){
             $data = [
                 'User_user_id' => $userId,
@@ -467,9 +481,74 @@ class Home extends BaseController
     //!Metody pro dodělání
     public function editOfferPractiseView(){}
     public function editOfferPractise(){}
-    public function deleteOfferPractise(){}
-    public function acceptedUserForOfferPractise(){}
-
+    public function deleteOfferPractise($offerId){
+        $this->offerPractise->delete($offerId);
+        $userOffers = $this->user_practiseModel->where('Offer_practise_offer_id', $offerId)->find();
+        foreach($userOffers as $userOffer){
+            $this->user_practiseModel->delete($userOffer['user_offer_id']);
+        }
+        $offerSkills = $this->skill_offerPractise->where('Offer_practise_offer_id', $offerId)->find();
+        foreach($offerSkills as $offerSkill){
+            $this->skill_offerPractise->delete($offerSkill['skill_offer_id']);
+        }
+        $this->backUrl('/company-offer-practises');
+    }
+    public function acceptedUserForOfferPractise(){
+        $offerId = $this->request->getPost('offer_id');
+        $managerId = $this->request->getPost('manager_id');
+        $studentId = $this->request->getPost('user_id');
+        $userOfferId = $this->request->getPost('user_offer_id');
+        $companyId = $this->companyUser['idCompany'];
+        //Zjištění, zda daná praxe patří firmě.
+        $existUserCompanyOffer = $this->practiseManagerModel->where('manager_id', $managerId)->where('Company_company_id', $companyId)->first();
+        if(!$existUserCompanyOffer){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba. Zkuste akci provést znovu.');
+            return $this->backUrl('/company-offer-practises');
+        }
+        $controllUser = $this->user_practiseModel->where('user_offer_id', $userOfferId)->where('Offer_practise_offer_id', $offerId)->where('User_user_id', $studentId)->first();
+        if(!$controllUser){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba. Zkuste akci provést znovu.');
+            return $this->backUrl('/company-offer-practises');
+        }
+        $offerUsers = $this->user_practiseModel->where('Offer_practise_offer_id', $offerId)->where('User_user_id !=', $studentId)->find();
+        foreach($offerUsers as $offerUser){
+            $this->user_practiseModel->delete($offerUser['user_offer_id']);
+        }
+        $userOffers = $this->user_practiseModel->where('User_user_id', $studentId)->whereNotIn('Offer_practise_offer_id', [$offerId])->find();
+        foreach($userOffers as $userOffer){
+            $this->user_practiseModel->delete($userOffer['user_offer_id']);
+        }
+        $data = [
+            'user_offer_accepted' => 1,
+        ];
+        $this->user_practiseModel->update($userOfferId, $data);
+        return $this->backUrl('/company-offer-practises');
+    }
+    public function noAcceptedForOfferPractise(){
+        $offerId = $this->request->getPost('offer_id');
+        $managerId = $this->request->getPost('manager_id');
+        $studentId = $this->request->getPost('user_id');
+        $userOfferId = $this->request->getPost('user_offer_id');
+        $companyId = $this->companyUser['idCompany'];
+        //Zjištění, zda daná praxe patří firmě.
+        $existUserCompanyOffer = $this->practiseManagerModel->where('manager_id', $managerId)->where('Company_company_id', $companyId)->first();
+        if(!$existUserCompanyOffer){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba. Zkuste akci provést znovu.');
+            return $this->backUrl('/company-offer-practises');
+        }
+        $userOffers = $this->user_practiseModel->where('Offer_practise_offer_id', $offerId)->where('User_user_id', $studentId)->find();
+        if(!$userOffers){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba. Zkuste akci provést znovu.');
+            return $this->backUrl('/company-offer-practises');
+        }
+        foreach($userOffers as $userOffer){
+            $data = [
+                'user_offer_accepted' => 0,
+            ];
+            $this->user_practiseModel->update($userOffer['user_offer_id'], $data);
+        }
+        return $this->backUrl('/company-offer-practises');
+    }
     public function people(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
@@ -773,7 +852,7 @@ class Home extends BaseController
         ->join('Offer_practise', 'Practise_manager.manager_id = Offer_practise.Practise_manager_manager_id AND Offer_practise.offer_del_time IS NULL', 'left')
         ->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL')
         ->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL')
-        ->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.user_offer_select = 1 AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')
+        ->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.user_offer_select = 1 AND (User_has_Offer_practise.user_offer_accepted = 1 OR User_has_Offer_practise.user_offer_accepted IS NULL) AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')
         ->join('User', 'User_has_Offer_practise.User_user_id = User.user_id AND User.user_del_time IS NULL', 'left')
         ->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')
         ->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')->find();
@@ -787,6 +866,7 @@ class Home extends BaseController
                     'offer_requirements' => $result['offer_requirements'],
                     'offer_copy_next_year' => $result['offer_copy_next_year'],
                     'offer_edit_time' => $result['offer_edit_time'],
+                    'manager_id' => $result['manager_id'],
                     'manager_degree_before' => $result['manager_degree_before'],
                     'manager_name' => $result['manager_name'],
                     'manager_surname' => $result['manager_surname'],
