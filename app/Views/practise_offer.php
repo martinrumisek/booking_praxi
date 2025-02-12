@@ -25,14 +25,47 @@
         background-color: #006DBC;
     }
     .card-offer{
+        position: relative;
         width: 320px;
         height: 340px;
         border-radius: 30px;
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
     }
+    .card-selected-label {
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #006DBC;
+        color: white;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+    .card-accepted-label {
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: green;
+        color: white;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
     .card-offer-select{
         border: 1px solid #006DBC;
+    }
+    .card-offer-no-accepted{
+        border: 1px solid red;
+    }
+    .card-offer-accepted{
+        border: 1px solid green;
     }
     .card-icon-company{
         width: 50px;
@@ -122,7 +155,13 @@
             </div>
         <?php }
         foreach($offers as $offer){ ?>
-            <div class="card-offer d-flex flex-column <?php if($offer['user_offer_select'] == 1){echo 'card-offer-select';} ?> m-3">
+            <div class="card-offer d-flex flex-column <?php if($offer['user_offer_select'] == 1){if($offer['user_offer_accepted'] == 0 && $offer['user_offer_accepted'] !== null){echo 'card-offer-no-accepted';}elseif($offer['user_offer_accepted'] == 1 && $offer['user_offer_accepted'] !== null){echo 'card-offer-accepted';}else{echo 'card-offer-select';}} ?> m-3">
+            <?php if($offer['user_offer_select'] == 1){
+                if($offer['user_offer_accepted'] == 1){?>
+                    <div class="card-accepted-label">Potvrzené</div>
+                <?php }else{ ?>
+                    <div class="card-selected-label">Vybrané</div>
+            <?php }} ?>
             <div class="d-flex flex-column">
                 <div class="d-flex m-2">
                     <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
