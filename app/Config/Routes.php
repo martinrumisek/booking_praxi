@@ -51,6 +51,9 @@ $routes->get('dashboard-company','Dashboard::companyView', ['filter' => 'role:ad
 $routes->get('dashboard-log','Dashboard::logView', ['filter' => 'role:admin,spravce']);
 $routes->get('dashboard-log-company','Dashboard::logViewCompany', ['filter' => 'role:admin,spravce']);
 $routes->get('dashboard-class', 'Dashboard::viewClass', ['filter' => 'role:admin,spravce']);
+$routes->get('dashboard-date-practise-offer', 'Dashboard::datePractiseView', ['filter' => 'role:admin,spravce']);
+$routes->get('dashboard-offer-view/(:num)', 'Dashboard::practiseView/$1', ['filter' => 'role:admin,spravce']);
+
 //ZPRACOVÁNÍ (EDITACE) V DASHBOARDU
 $routes->post('/sent-date-practise','Dashboard::addNewDate', ['filter' => 'role:admin,spravce']);
 $routes->post('/edit-practise','Dashboard::editPractise', ['filter' => 'role:admin,spravce']);
@@ -98,7 +101,7 @@ $routes->post('/registerCompany','Auth::registerCompany'); //Routa, která zprac
 $routes->post('/confirmRegister','Auth::completionRegister'); //Routa, která zpracovává data drhého formuláře a zároveň data odesílá do db.
 $routes->post('/loginCompany','Auth::loginCompany'); //Přihlašovací routa pro firmy.
 $routes->get('/logOutCompany', 'Auth::logOutCompany', ['filter' => 'role:company']); //Odhlášení firmy. //! Je potřeba změnit odhlašování na metodu POST.
-$routes->get('/', 'Auth::callback'); // Routa pro zpracování údajů po přihlášení (Microsoft office - OAUH)   //!Změnit routu, ale je potřeba změnit v microsoft Azure zpětnou url
+$routes->get('/azureCallBack', 'Auth::callback'); // Routa pro zpracování údajů po přihlášení (Microsoft office - OAUH)   //!Změnit routu, ale je potřeba změnit v microsoft Azure zpětnou url
 $routes->post('/new-password', 'Auth::newPassword');
 $routes->post('/forgot-password', 'Auth::forgotPassword');
 //ZKUŠEBNÍ ROUTY - PŘI VÝVOJI

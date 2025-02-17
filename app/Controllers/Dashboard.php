@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\OfferPractise;
+use App\Models\User_OfferPractise;
 use CodeIgniter\I18n\Time;
 use App\Models\PractiseManager;
 use App\Models\TypeSchool;
@@ -44,6 +46,8 @@ class Dashboard extends Controller
     var $socialLink_user;
     var $socialLink;
     var $session;
+    var $user_offerPractise;
+    var $offerPractiseModel;
     public function __construct(){
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
@@ -64,6 +68,8 @@ class Dashboard extends Controller
         $this->socialLink = new SocialLink();
         $this->socialLink_user = new SocialLink_User();
         $this->session = session();
+        $this->user_offerPractise = new User_OfferPractise();
+        $this->offerPractiseModel = new OfferPractise();
     }
     //Metody pro zobrazení viewček
     public function homeView(){
@@ -71,6 +77,52 @@ class Dashboard extends Controller
             'title' => 'Administrace'
         ];
         return view('dashboard/dash_home', $data);
+    }
+    public function datePractiseView(){
+        $resultPractises = $this->practiseModel->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL', 'left')->find();
+        $practises = [];
+        foreach($resultPractises as $practise){
+            $idPractise = $practise['practise_id'];
+            if(!isset($practises[$idPractise])){
+                $practises[$idPractise] = [
+                    'practise_id' => $idPractise,
+                    'practise_name' => $practise['practise_name'],
+                ];
+            }
+            $idDate = $practise['date_id'];
+            if(!isset($practises[$idPractise]['dates'][$idDate])){
+                $practises[$idPractise]['dates'][$idDate] = [
+                    'date_id' => $idDate,
+                    'date_date_from' => $practise['date_date_from'],
+                    'date_date_to' => $practise['date_date_to'],
+                ];
+            }
+        }
+        $data = [
+            'title' => 'Administrace',
+            'practises' => $practises,
+        ];
+        return view('dashboard/dash_date_practise', $data);
+    }
+    public function practiseView($idPractise){
+        $offers = $this->offerPractiseModel->where('Practise_practise_id', $idPractise)
+        ->join('Practise', 'Practise.practise_id = ' . $idPractise . ' AND Practise.practise_del_time IS NULL')
+        ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
+        ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
+        ->join('User_has_Offer_practise', 'User_has_Offer_practise.Offer_practise_offer_id = Offer_practise.offer_id AND User_has_Offer_practise.user_offer_accepted = 1 AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')
+        ->join('User', 'User_has_Offer_practise.User_user_id = User.user_id AND User.user_del_time IS NULL', 'left')
+        ->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')
+        ->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')->find();
+        $dates = $this->datePractiseModel->where('Practise_practise_id', $idPractise)->find();
+        $practise = $this->practiseModel->where('practise_id', $idPractise)->first();
+        
+        $data = [
+            'title' => 'Administrace',
+            'offers' => $offers,
+            'dates' => $dates,
+            'practise' => $practise,
+        ];
+        return view ('dashboard/dash_practise_offer', $data);
     }
     public function companyView(){
         $search = $this->request->getGet('search');
