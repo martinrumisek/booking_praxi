@@ -145,6 +145,66 @@ class Home extends BaseController
         ];
         return view('company/home_company', $data);
     }
+    public function homeTeacher(){
+        $userId = $this->userSession['id'];
+        $user = $this->userModel->find($userId);
+        $data = [
+            'title' => 'Hlavní stránka',
+            'user' => $user,
+        ];
+        return view('teacher/home_teacher', $data);
+    }
+    public function classOnPractise(){
+        $resultClassOnPractises = $this->class_practiseModel->join('Practise', 'Class_has_Practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'left')
+        ->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL', 'left')
+        ->join('Class', 'Class_has_Practise.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')->orderBy('Class.class_class, Class.class_letter_class', 'ASC')->find();
+        $classOnPractises = [];
+        foreach($resultClassOnPractises as $classPractise){
+            $idClass = $classPractise['class_id'];
+            if(!isset($classOnPractises[$idClass])){
+                $classOnPractises[$idClass] = [
+                    'class_id' => $idClass,
+                    'class_class' => $classPractise['class_class'],
+                    'class_letter_class' => $classPractise['class_letter_class'],
+                    'practise_name' => $classPractise['practise_name'],
+                    'practise_description' => $classPractise['practise_description'],
+                    'dates' => [],
+                ];
+            }
+            $idDate = $classPractise['date_id'];
+            if(!isset($classOnPractises[$idClass]['dates'][$idDate])){
+                $classOnPractises[$idClass]['dates'][$idDate] = [
+                    'date_date_from' => $classPractise['date_date_from'],
+                    'date_date_to' => $classPractise['date_date_to'],
+                ];
+            }
+        }
+        $data = [
+            'title' => 'Třídy na praxi',
+            'practiseClasses' => $classOnPractises,
+        ];
+        return view ('teacher/class_on_practise', $data);
+    }
+    public function peopleOnPractise($idClass){
+        $existClassPractise = $this->class_practiseModel->where('Class_class_id', $idClass)->first();
+        if(!empty($existClassPractise)){
+            $this->backUrl('/class-on-practise');
+        }
+        $class = $this->classModel->find($idClass);
+        $users = $this->userModel->where('Class_class_id', $idClass)//->find();
+        ->join('User_has_Offer_practise', 'User.user_id = User_has_Offer_practise.User_user_id AND User_has_Offer_practise.user_offer_accepted = 1 AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')
+        ->join('Offer_practise', 'User_has_Offer_practise.Offer_practise_offer_id = Offer_practise.offer_id AND Offer_practise.offer_del_time IS NULL', 'left')
+        ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
+        ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
+        ->orderBy('User.user_surname, User.user_name', 'ASC')
+        ->find();
+        $data = [
+            'title' => 'Praxe třídy (' . $class['class_class'] . '.' . $class['class_letter_class'] . ')',
+            'class' => $class,
+            'users' => $users,
+        ];
+        return view('teacher/people-on-practise', $data);
+    }
     public function login(){
         $data = ['title' => 'Přihlášení'];
         return view('login', $data);

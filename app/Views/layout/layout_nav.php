@@ -245,10 +245,10 @@
         $logOut = base_url('/logout'); // #student
     }
     if($isTeacher){
-        $home = '#teacher'; //base_url('#');
-        $listPractise = '#teacher'; //base_url('#');
-        $people = '#teacher'; //base_url('#');
-        $company = '#teacher'; //base_url('#');
+        $home = base_url('home-teacher');
+        $listPractise = base_url('class-on-practise');
+        $people = base_url('/people');
+        $company = base_url('/company');
         $info = '#teacher'; //base_url('#');
         $dashboard = base_url('/dashboard-home');
         //$profile = '#teacher'; //base_url('#'); //! Učitel nebude mít žádný profil, není potřeba mít profil.
@@ -278,7 +278,8 @@
                 <div class="nav-items">
                     <a class="nav-icon" href="<?= $home?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-house nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Domů</p></div></div></a>
                     <?php if($isCompany){ ?> <a class="nav-icon" href="<?= $listPractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Naše nabídky</p></div></div></a><?php } ?>
-                    <?php if($isTeacher || $isStudent){ ?><a class="nav-icon" href="<?= $listPractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nabídky praxe</p></div></div></a><?php } ?>
+                    <?php if($isStudent){ ?><a class="nav-icon" href="<?= $listPractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Nabídky praxe</p></div></div></a><?php } ?>
+                    <?php if($isTeacher){ ?><a class="nav-icon" href="<?= $listPractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Praxe</p></div></div></a><?php } ?>
                     <a class="nav-icon" href="<?= $people?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-user-group nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Lidé</p></div></div></a>
                     <?php if($isTeacher || $isStudent){ ?><a class="nav-icon" href="<?= $company?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-building nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Firmy</p></div></div></a><?php } ?>
                     <a class="nav-icon" href="<?= $info?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-circle-info nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Informace</p></div></div></a>
@@ -300,7 +301,7 @@
                     <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $home?>"><i class="fa-solid fa-house nav-icon h4 m-0"></i></a>
                     <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $listPractise?>"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></a>
                     <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $company?>"><i class="fa-solid fa-building nav-icon h4 m-0"></i></a>
-                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $profile?>"><i class="fa-solid fa-user nav-icon h4 m-0"></i></a>
+                    <?php if($isStudent || $isCompany){ ?><a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $profile?>"><i class="fa-solid fa-user nav-icon h4 m-0"></i></a><?php } ?>
                     <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="#nav-mobile"  data-bs-toggle="offcanvas" data-bs-target="#nav-mobile"><i class="fa-solid fa-ellipsis-vertical nav-icon h4 m-0"></i></a>
                 </div>
             </div>
