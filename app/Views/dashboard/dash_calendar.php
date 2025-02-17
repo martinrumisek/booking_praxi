@@ -267,7 +267,7 @@ th.date{
         </div>
     </div>
 </div>
-<div class="modal" id="modalAddNewPractiseDate">
+<div class="modal modal-lg" id="modalAddNewPractiseDate">
   <div class="modal-dialog modal-dialog-centered ">
     <div class="modal-content">
       <div class="modal-header d-flex justify-content-between">
@@ -304,7 +304,7 @@ th.date{
                         <?php } ?>
                 </div>
                 <label class="mt-1" for="description">Popis praxe</label>
-                <textarea name="description" class="m-1"></textarea>
+                <textarea id="editor" name="description" class="m-1"></textarea>
                 <p>( * povinná pole)</p>
             </div>
       </div>
