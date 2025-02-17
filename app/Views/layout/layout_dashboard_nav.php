@@ -324,6 +324,12 @@
                 </div>
             </div>
     </div>
+    <script>
+tinymce.init({
+  selector: 'textarea#editor',
+  license_key: 'gpl'
+});
+</script>
 <?php if ($error = session()->getFlashdata('err_message')){ ?>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
