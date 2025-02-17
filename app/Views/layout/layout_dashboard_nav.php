@@ -247,7 +247,7 @@
         $backApp = base_url('/home-teacher');
     }
     $homeDashboard = base_url('/dashboard-home'); //? administrace
-    $listPractise =  '#';    //base_url('/dashboard-'); //? administrace
+    $listPractise = base_url('/dashboard-date-practise-offer'); //? administrace
     $people = base_url('/dashboard-people'); //? administrace / uprava lidí
     $company = base_url('/dashboard-company'); //? administrace / uprava firem
    // $info = '#student'; //base_url('#'); //! Nevím, zda tahle stránka bude existovat
@@ -275,8 +275,10 @@
                     <a class="nav-icon" href="<?= $company?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-building nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Firmy</p></div></div></a>
                     <a class="nav-icon" href="<?= $datePractise?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-regular fa-calendar nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Termíny praxí</p></div></div></a>
                     <a class="nav-icon" href="<?= $skill?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-head-side-virus nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Dovednosti</p></div></div></a>
+                    <?php $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)){ ?>
                     <a class="nav-icon" href="<?= $log?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-chart-column nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Log uživatelů</p></div></div></a>
                     <a class="nav-icon" href="<?= $logCompany?>"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-chart-column nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Log firem</p></div></div></a>
+                    <?php } ?>
                     <!-- <a class="nav-icon" href="#"><div class="nav-item d-flex justify-content-center align-items-center"><div class="nav-item-icon  d-flex justify-content-center aling-items-center"><i class="fa-solid fa-circle-info nav-icon h4 m-0"></i></div><div class="nav-item-text d-flex aling-items-center"><p class="nav-text m-0 h6 text-bold">Informace</p></div></div></a>-->
                 </div>
                 <div class=" mt-auto">

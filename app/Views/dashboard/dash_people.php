@@ -124,9 +124,13 @@
                     <option <?php if(!empty($oder) && $oder == 5){?> selected <?php } ?> value="5">Zobrazit první admin a správce</option>
                 </select>
                 </form>
+                <?php $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)){ ?>
                 <a class="all-user mt-2" href="#modalLoadAllUser" data-bs-toggle="modal" data-bs-target="#modalLoadAllUser"><i class="fa-solid fa-spinner"></i> Načíst uživatele</a>
+                <?php } ?>
                 <a class="all-user mt-2" href="#modalSocialLink" data-bs-toggle="modal" data-bs-target="#modalSocialLink"><i class="fa-solid fa-icons"></i> Sociální sítě</a>
+                <?php $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)){ ?>
                 <a class="all-user mt-2" href="<?= base_url('/dashboard-class') ?>"><i class="fa-solid fa-people-roof"></i> Upravit třídy</a>
+                <?php } ?>
             </div>
     </div>
     <div class="container-fluid">
@@ -139,10 +143,10 @@
                         <th scope="col">Rok ukončení studia</th>
                         <th scope="col">Třída</th>
                         <th scope="col">Obor</th>
-                        <?php // if (!empty(session()->get('role')) && in_array('admin', session()->get('role'))): ?>
+                        <?php $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)){ ?>
                         <th scope="col">A</th>
                         <th scope="col">S</th>
-                        <?php // endif; ?>
+                        <?php } ?>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
@@ -164,14 +168,14 @@
                         <td><?php if(!empty($user['class_class'])){ ?><?= ($user['class_class']??''). '.' .($user['class_letter_class']??''); }?></td>
 
                         <td><?= $user['field_shortcut'] ?? ''?></td>
-                        <?php // $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)): ?>
+                        <?php $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)){ ?>
                         <td>
                             <input type="checkbox" class="role-checkbox checkbox" data-role="admin" data-user-id="<?= $user['user_id']?>" <?= $user['user_admin'] ? 'checked' : '' ?> />
                         </td>
                         <td>
                             <input type="checkbox" class="role-checkbox checkbox" data-role="spravce" data-user-id="<?= $user['user_id']?>" <?= $user['user_spravce'] ? 'checked' : '' ?> />
                         </td>
-                        <?php // endif;?>
+                        <?php } ?>
                     </tr>  
                     <?php }?>
                 </tbody>
