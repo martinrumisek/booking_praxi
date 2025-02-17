@@ -172,12 +172,12 @@
                         <input type="hidden" name="id-offer" value="<?= $offer['offer_id'] ?>">
                         <input type="hidden" name="like-offer" value="<?= $offer['user_offer_like'] ?>">
                         </form>
-                        <a href="#" onclick="document.getElementById('form-like-<?= $offer['offer_id']?>').submit(); return false;"><i class="fa-solid fa-star <?php if($offer['user_offer_like'] == 0 || empty($offer['user_offer_like'])){echo 'card-star-deactive';}else{echo 'card-star-active';} ?> p-1"></i></a>
+                        <a class="d-flex justify-content-center" href="#" onclick="document.getElementById('form-like-<?= $offer['offer_id']?>').submit(); return false;"><i class="fa-solid fa-star <?php if($offer['user_offer_like'] == 0 || empty($offer['user_offer_like'])){echo 'card-star-deactive';}else{echo 'card-star-active';} ?> p-1"></i></a>
                         <form id="form-select-<?= $offer['offer_id']?>" action="<?= base_url('/edit-select-offer')?>" method="POST">
                         <input type="hidden" name="id-offer" value="<?= $offer['offer_id'] ?>">
                         <input type="hidden" name="select-offer" value="<?= $offer['user_offer_select'] ?>">
                         </form>
-                        <a href="#" onclick="document.getElementById('form-select-<?= $offer['offer_id']?>').submit(); return false;"><?php if($offer['user_offer_select'] == 0 || empty($offer['user_offer_select'])){ echo '<i class="fa-solid fa-check check-active p-1"></i>' ;} if($offer['user_offer_select'] == 1){echo '<i class="fa-solid fa-xmark xmark-active p-1"></i>';} ?></a>
+                        <a class="d-flex justify-content-center" href="#" onclick="document.getElementById('form-select-<?= $offer['offer_id']?>').submit(); return false;"><?php if($offer['user_offer_select'] == 0 || empty($offer['user_offer_select'])){ echo '<i class="fa-solid fa-check check-active p-1"></i>' ;} if($offer['user_offer_select'] == 1){echo '<i class="fa-solid fa-xmark xmark-active p-1"></i>';} ?></a>
                     </div>
                     <?php } ?>
                 </div>
