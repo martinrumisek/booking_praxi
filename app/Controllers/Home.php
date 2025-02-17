@@ -88,22 +88,26 @@ class Home extends BaseController
             }
     }
     public function homeStudent(){
-        $user = $this->userModel->find($this->userSession['id']);
-        $userClass = $this->classModel->find($user['Class_class_id']);
-        $userFieldStudy = $this->fieldStudy->find($userClass['Field_study_field_id']);
-        //$practise = $this->user_practiseModel->select('user_practise.*, practise_offer.*, practise_manager.*, company.*, practise.*, date_practise.*')->join('practise_offer', 'practise_offer.id = user_practise.Offer_practise_id')->join('practise_manager', 'practise_manager.id = practise_offer.Practise_manager_id')->join('company', 'company.id = practise_manager.Company_id')->join('practise', 'practise.id = practise_offer.Practise_id')->join('date_practise', 'date_practise.Practise_id = practise.id', 'left')->where('user_practise.User_id', $user['id'])->findAll();
+        $idUser = $this->userSession['id'];
+        $user = $this->userModel->where('user_id', $idUser)->join('Class', 'Class.class_id = User.Class_class_id AND Class.class_del_time IS NULL', 'left')->join('Field_study', 'Field_study.field_id = Class.Field_study_field_id AND Field_study.field_del_time IS NULL', 'left')->first();
         $userPractiseOffer = $this->user_practiseModel->where('User_user_id', $user['user_id'])->where('user_offer_accepted != ', null)->where('user_offer_accepted', 1)->join('Offer_practise', 'User_has_Offer_practise.Offer_practise_offer_id = Offer_practise.offer_id AND Offer_practise.offer_del_time IS NULL', 'left')->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')->first();
-        $practiseDates = '';
-        if(!empty($userPractiseOffer)){
-            $practiseDates = $this->datePractiseModel->where('Practise_practise_id', $userPractiseOffer['Practise_practise_id'])->find();
+        $practiseDate = $this->class_practiseModel->where('Class_class_id', $user['class_id'])->join('Practise', 'Class_has_Practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'left')->first();
+        $dates = '';
+        $userOffer = '';
+        if(!empty($practiseDate)){
+            $dates = $this->datePractiseModel->where('Practise_practise_id', $practiseDate['practise_id'])->find();
+            $userOffer = $this->user_practiseModel->where('User_user_id', $idUser)->where('user_offer_like', 1)->orWhere('user_offer_select', 1)->join('Offer_practise', 'User_has_Offer_Practise.Offer_practise_offer_id = Offer_practise.offer_id AND Offer_practise.offer_del_time IS NULL', 'left')
+            ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
+            ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')->find();
         }
+        log_message('info', 'data: ' . json_encode($userOffer));
         $data = [
             'title' => 'Hlavní stránka',
             'user' => $user,
-            'class' => $userClass,
-            'fieldStudy' => $userFieldStudy,
             'practise' => $userPractiseOffer,
-            'dates' => $practiseDates,
+            'dates' => $dates,
+            'practiseDate' => $practiseDate,
+            'userOffers' => $userOffer,
         ];
         return view('home_student', $data);
     }

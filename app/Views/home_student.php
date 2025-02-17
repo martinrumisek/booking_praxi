@@ -49,11 +49,47 @@
         box-shadow: 0px 3px 6px #00000029;
     }
     .card-offer{
+        position: relative;
         width: 320px;
         height: 340px;
         border-radius: 30px;
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
+    }
+    .card-selected-label {
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #006DBC;
+        color: white;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+    .card-accepted-label {
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: green;
+        color: white;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+    .card-offer-select{
+        border: 1px solid #006DBC;
+    }
+    .card-offer-no-accepted{
+        border: 1px solid red;
+    }
+    .card-offer-accepted{
+        border: 1px solid green;
     }
     .card-icon-company{
         width: 50px;
@@ -70,8 +106,17 @@
         overflow: hidden;
         -webkit-line-clamp: 2;
     }
-    .card-star{
+    .card-star-active{
         color: yellow;
+    }
+    .card-star-active:hover{
+        color:black;
+    }
+    .card-star-deactive{
+        color:black;
+    }
+    .card-star-deactive:hover{
+        color: #f2e394;
     }
     .card-text{
         font-size: 13px;
@@ -87,6 +132,169 @@
         overflow: hidden;
         -webkit-line-clamp: 5;
     }
+    .check-active{
+        color: black;
+    }
+    .check-active:hover{
+        color:green;
+    }
+    .xmark-active{
+        color: black;
+    }
+    .xmark-active:hover{
+        color: red;
+    }
+    .btn-show-offer{
+        padding: 5px;
+        margin: 5px;
+        margin-bottom: 10px;
+        border: 0.5px solid #006DBC;
+        border-radius: 15px;
+    }
+    .btn-show-offer:hover{
+        background-color: #006DBC;
+        color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .container-no-offer{
+        padding: 30px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }.card-offer{
+        position: relative;
+        width: 320px;
+        height: 340px;
+        border-radius: 30px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .card-selected-label {
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #006DBC;
+        color: white;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+    .card-accepted-label {
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: green;
+        color: white;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+    .card-offer-select{
+        border: 1px solid #006DBC;
+    }
+    .card-offer-no-accepted{
+        border: 1px solid red;
+    }
+    .card-offer-accepted{
+        border: 1px solid green;
+    }
+    .card-icon-company{
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .card-title{
+        width: 70%;
+        margin-left: 10px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+    }
+    .card-star-active{
+        color: yellow;
+    }
+    .card-star-active:hover{
+        color:black;
+    }
+    .card-star-deactive{
+        color:black;
+    }
+    .card-star-deactive:hover{
+        color: #f2e394;
+    }
+    .card-text{
+        font-size: 13px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+    }
+    .text-praxe{
+        font-size: 13px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 5;
+    }
+    .check-active{
+        color: black;
+    }
+    .check-active:hover{
+        color:green;
+    }
+    .xmark-active{
+        color: black;
+    }
+    .xmark-active:hover{
+        color: red;
+    }
+    .btn-show-offer{
+        padding: 5px;
+        margin: 5px;
+        margin-bottom: 10px;
+        border: 0.5px solid #006DBC;
+        border-radius: 15px;
+    }
+    .btn-show-offer:hover{
+        background-color: #006DBC;
+        color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .container-no-offer{
+        padding: 30px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .container-no-practise{
+        padding: 15px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .calendar-icon{
+        padding: 50px;
+        border-radius: 135px 140px;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .show-profile-main-menu:hover{
+        color: #006DBC;
+    }
+    .practise-btn{
+        padding: 8px;
+        border-radius: 10px;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .practise-btn:hover{
+        background-color: #006DBC;
+        color: white;
+    }
 </style>
 <?php 
 $role = session()->get('role');
@@ -100,23 +308,23 @@ if(in_array('admin', $role)){
     <div class="row">
         <div class="col-12 col-lg-6 p-0">
             <div class="container-user">
-                <div class="p-5 container">
+                <div class="p-4 container d-flex flex-column" style="min-height: 500px;">
                     <div class="d-md-flex d-block">
                         <div class="d-flex justify-content-center align-items-center"><div class="icon-user d-flex align-items-center justify-content-center"><i class="fa-regular fa-user h1"></i></div></div>
-                        <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h3"><?= $user['user_name'] . ' ' . $user['user_surname']. ', ' . $class['class_class'] . '.' . $class['class_letter_class'] ?></div><div><span class="text-wrap">Žák<?php if(!empty($viewRole)){ echo ' , ' . $viewRole;} ?></span></div></div></div>
+                        <div class="d-flex justify-content-center align-items-center p-0 m-4"><div><div class="h3"><?= $user['user_name'] . ' ' . $user['user_surname']. ', ' . $user['class_class'] . '.' . $user['class_letter_class'] ?></div><div><span class="text-wrap">Žák<?php if(!empty($viewRole)){ echo ' , ' . $viewRole;} ?></span></div></div></div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-12 col-md-6"><div class="h5 mt-2">Obor</div><div class=""><?= $fieldStudy['field_name'] ?></div></div>
+                        <div class="col-12 col-md-6"><div class="h5 mt-2">Obor</div><div class=""><?= $user['field_name'] ?></div></div>
                         <div class="col-12 col-md-6"><div class="h5 mt-2">Telefonní číslo</div><div class=""><?php if(empty($user['user_phone'])){echo "Není uvedeno";}else{echo $user['user_phone'];} ?></div></div>
                         <div class="col-12 col-md-6"><div class="h5 mt-2">E-mail</div><div class=""><?= $user['user_mail'] ?></div></div>
                     </div>
-                    <div class="d-flex justify-content-center aling-items-center p-3"><div><a href="<?= base_url('/profile') ?>"><div>Zobrazit více</div><div class="d-flex justify-content-center"><i class="fa-solid fa-chevron-down"></i></div></a></div></div>
+                    <div class="d-flex justify-content-center mt-auto p-3 "><div><a class="show-profile-main-menu" href="<?= base_url('/profile') ?>"><div>Zobrazit více</div><div class="d-flex justify-content-center"><i class="fa-solid fa-chevron-down"></i></div></a></div></div>
                 </div>
             </div>
         </div>
         <div class="col-12 col-lg-6">
-                <div class="container-company">
-                    <div class="p-5 container">
+                <div class="container-company" style="height: 100%;">
+                    <div class="p-5 container d-flex flex-column" style="height: 100%;">
                         <?php if(!empty($practise) && $practise['user_offer_accepted'] == 1){ ?>
                         <div class="d-md-flex d-block">
                             <div class="d-flex justify-content-center align-items-center"><div class="icon-company d-flex align-items-center justify-content-center"><i class="fa-solid fa-building h1"></i></div></div>
@@ -129,16 +337,92 @@ if(in_array('admin', $role)){
                             <div class="col-12 col-md-6"><div class="h6 mt-2">E-mail na vedoucí</div><div class=""><?= $practise['manager_mail'] ?></div></div>
                             <?php $count = 1; foreach($dates as $date){ ?>
                                 <div class="col-12 col-md-6"><div class="h6 mt-2">Termín <?= $count ?></div><div class=""><?= date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])) ?></div></div>
-                            <?php } ?>
+                            <?php $count++; } ?>
                         </div>
-                        <?php }?>
+                        <?php }else{if(!empty($practiseDate)){ ?>
+                            <div class="d-flex justify-content-center"><i class="fa-regular fa-calendar h1 calendar-icon"></i></div>
+                            <div class="d-flex justify-content-center h4"><?= $practiseDate['practise_name'] ?></div>
+                            <div class="row mt-2">
+                                <?php $countDate = 1; foreach($dates as $date){ ?>
+                                    <div class="col-3 fw-bold">Termín <?= $countDate ?></div>
+                                    <div class="col-9"><?= date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])) ?></div>
+                                <?php $countDate++; } ?>
+                            </div>
+                            <div class="d-flex flex-wrap mt-auto align-items-end mt-auto justify-content-center">
+                                <a class="m-2 practise-btn" href="">Zobrazit informace</a>
+                                <a class="m-2 practise-btn" href="<?= base_url('/practise-offer')?>">Vybrat praxi</a>
+                                <a class="m-2 practise-btn" href="">Zapsat praxi</a>
+                            </div>
+                       <?php }else{ ?>
+                            <!--- Když není zařazen do termínu praxe -->
+                            <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+                                <div class="container-no-practise fw-bold">Nemáš žádný termín pro praxi</div>
+                            </div>  
+                      <?php }}?>
                     </div>
                 </div>
             </div>
     </div>
 </div>
-<div class="btn-container d-flex justify-content-center align-items-center"><a href="" class="btn-document-export d-flex justify-content-center align-items-center p-2 disabled"><i class="fa-solid fa-file p-2"></i> Smlouva k praxi</a></div>
-<div class="d-flex justify-content-center mt-2"><h3>Oblíbené nabídky</h3></div>
+<div class="btn-container d-flex justify-content-center align-items-center"><?php if(!empty($practise) && $practise['user_offer_accepted'] == 1){ ?><a href="" class="btn-document-export d-flex justify-content-center align-items-center p-2 disabled"><i class="fa-solid fa-file p-2"></i> Smlouva k praxi</a> <?php } ?></div>
+<div class="d-flex justify-content-center mt-2"><h3>Oblíbené/vybrané nabídky</h3></div>
+<div class="d-flex flex-wrap justify-content-center">
+<?php 
+        foreach($userOffers as $offer){ ?>
+            <div class="card-offer d-flex flex-column <?php if($offer['user_offer_select'] == 1){if($offer['user_offer_accepted'] == 0 && $offer['user_offer_accepted'] !== null){echo 'card-offer-no-accepted';}elseif($offer['user_offer_accepted'] == 1 && $offer['user_offer_accepted'] !== null){echo 'card-offer-accepted';}else{echo 'card-offer-select';}} ?> m-3">
+            <?php if($offer['user_offer_select'] == 1){
+                if($offer['user_offer_accepted'] == 1){?>
+                    <div class="card-accepted-label">Potvrzené</div>
+                <?php }else{ ?>
+                    <div class="card-selected-label">Vybrané</div>
+            <?php }} ?>
+            <div class="d-flex flex-column">
+                <div class="d-flex m-2">
+                    <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
+                    <p class="card-title fw-bold"><?= $offer['company_name'] ?></p>
+                    <?php if($offer['user_offer_accepted'] !== 1){ ?>
+                    <div class="d-flex flex-column justify-content-center">
+                        <form id="form-like-<?= $offer['offer_id'] ?>" action="<?= base_url('/edit-like-offer') ?>" method="POST">
+                        <input type="hidden" name="id-offer" value="<?= $offer['offer_id'] ?>">
+                        <input type="hidden" name="like-offer" value="<?= $offer['user_offer_like'] ?>">
+                        </form>
+                        <a class="d-flex justify-content-center" href="#" onclick="document.getElementById('form-like-<?= $offer['offer_id']?>').submit(); return false;"><i class="fa-solid fa-star <?php if($offer['user_offer_like'] == 0 || empty($offer['user_offer_like'])){echo 'card-star-deactive';}else{echo 'card-star-active';} ?> p-1"></i></a>
+                        <form id="form-select-<?= $offer['offer_id']?>" action="<?= base_url('/edit-select-offer')?>" method="POST">
+                        <input type="hidden" name="id-offer" value="<?= $offer['offer_id'] ?>">
+                        <input type="hidden" name="select-offer" value="<?= $offer['user_offer_select'] ?>">
+                        </form>
+                        <a class="d-flex justify-content-center" href="#" onclick="document.getElementById('form-select-<?= $offer['offer_id']?>').submit(); return false;"><?php if($offer['user_offer_select'] == 0 || empty($offer['user_offer_select'])){ echo '<i class="fa-solid fa-check check-active p-1"></i>' ;} if($offer['user_offer_select'] == 1){echo '<i class="fa-solid fa-xmark xmark-active p-1"></i>';} ?></a>
+                    </div>
+                    <?php } ?>
+                </div>
+                <p class="card-text d-flex justify-content-center align-items-center m-1 fw-bold"><?= $offer['offer_name'] ?></p>
+                <div class="d-flex">
+                    <i class="fa-regular fa-calendar h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?php $count = count($dates); foreach($dates as $date){echo date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])); if($count > 1){echo ' / ';}}?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-location-dot h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?= $offer['offer_street'] . ', ' . $offer['offer_post_code'] . '  ' . $offer['offer_city'] ?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-user h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?php if(!empty($offer['manager_degree_before'])){echo $offer['manager_degree_before'];} echo ' ' . $offer['manager_name'] . ' ' . $offer['manager_surname'] . ' '; if(!empty($offer['manager_degree_after'])){echo $offer['manager_degree_after'];} ?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-envelope h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?= $offer['manager_mail'] ?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-phone h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?= $offer['manager_phone'] ?></p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center mt-auto p-1">
+                <a class="card-text btn-show-offer" href="<?= base_url('practise-offer-view/'.$offer['offer_id']) ?>">Zobrazit nabídku</a>
+            </div>
+        </div>
+        <?php } ?>
+</div>
 <div class="d-flex align-items-center container d-none">
     <!-- Tlačítko pro předchozí kartu -->
     <a href="#">
