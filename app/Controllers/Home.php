@@ -726,8 +726,8 @@ class Home extends BaseController
     public function profilAddRepresentativeCompany(){
         $companyId = $this->request->getPost('companyId');
         $degreeBefore = $this->request->getPost('degree_before');
-        $name = $this->request->getPost('name_representative');
-        $surname = $this->request->getPost('surname_representative');
+        $name = $this->request->getPost('name');
+        $surname = $this->request->getPost('surname');
         $degreeAfter = $this->request->getPost('degree_after');
         $mail = $this->request->getPost('mail');
         $phone = $this->request->getPost('phone');
@@ -743,14 +743,25 @@ class Home extends BaseController
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $companyId){
             $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
-            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+            return $this->backUrl('/company-profil');
         }
-        if(empty($name && $surname && $mail && $phone && $companyId && $passwd1 && $passwd2)){
-            //return redirect()->to(base_url('dashboard-company'));
+        if(empty($name && $surname && $mail && $phone && $companyId)){
+            $this->session->setFlashdata('err_message', 'Nejsou vyplněna všechna potřebná políčka.');
+            return $this->backUrl('/company-profil');
+        }
+        $existUserMail = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
+        if(!empty($existUserMail)){
+            $this->session->setFlashdata('err_message', 'Daný uživatel již existuje.');
+            return $this->backUrl('/company-profil');
         }
         if(empty($checkbox)){
+            if(empty($passwd1 && $passwd2)){
+                $this->session->setFlashdata('err_message', 'Nejsou vyplněna všechna potřebná políčka01.');
+                return $this->backUrl('/company-profil');  
+            }
             if($passwd1 !== $passwd2){
-                //return redirect()->to(base_url('dashboard-company'));
+                $this->session->setFlashdata('err_message', 'Hesla se neshodují');
+                return $this->backUrl('/company-profil');
             }
         }
         if(!empty($checkbox)){
@@ -798,9 +809,11 @@ class Home extends BaseController
             ] ;
             $this->resetPassword->insert($dataResetPass);
         }
+        return $this->backUrl('/company-profil');
     }
     public function profilEditRepresentativeCompany(){
         $id = $this->request->getPost('id');
+        $idCompany = $this->request->getPost('companyId');
         $degreeBefore = $this->request->getPost('degree_before');
         $name = $this->request->getPost('name');
         $surname = $this->request->getPost('surname');
@@ -808,12 +821,63 @@ class Home extends BaseController
         $mail = $this->request->getPost('mail');
         $phone = $this->request->getPost('phone');
         $positionWork = $this->request->getPost('position_work');
-        if(empty($name && $surname && $mail && $phone && $positionWork)){
-
+        if(empty($id && $name && $surname && $mail && $phone && $positionWork)){
+            $this->session->setFlashdata('err_message', 'Nemáte vyplněné všechna potřebná políčka.');
+            return $this->backUrl('/company-profil');
         }
+        $role = $this->session->get('role');
+        if(!empty($this->companyUser['idCompany'])){
+            $userSession = $this->companyUser['idCompany'];
+        }
+        $isAdmin = in_array('admin', $role);
+        $isSpravce = in_array('spravce', $role);
+        if(!$isAdmin && !$isSpravce && $userSession !== $idCompany){
+            $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
+            return $this->backUrl('/company-profil'); 
+        }
+        if(empty($name && $surname && $mail && $phone && $idCompany)){
+            $this->session->setFlashdata('err_message', 'Nejsou vyplněna všechna potřebná políčka.');
+            return $this->backUrl('/company-profil');
+        }
+        $existUserMail = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
+        if(!empty($existUserMail)){
+            $this->session->setFlashdata('err_message', 'Daný uživatel již existuje.');
+            return $this->backUrl('/company-profil');
+        }
+        $existUser = $this->representativeCompanyModel->where('representative_id', $id)->where('Company_company_id', $idCompany)->first();
+        if(empty($existUser)){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat znova.');
+            return $this->backUrl('/company-profil');
+        }
+        $data = [
+            'representative_degree_before' => $degreeBefore,
+            'representative_name' => $name,
+            'representative_surname' => $surname,
+            'representative_degree_after' => $degreeAfter,
+            'representative_mail' => $mail,
+            'representative_phone' => $phone,
+            'representative_function' => $positionWork,
+        ];
+        $this->representativeCompanyModel->update($id, $data);
+        return $this->backUrl('/company-profil');
     }
-    public function profilDeleteRepresentativeCompany(){
-
+    public function profilDeleteRepresentativeCompany($idUser){
+        $user = $this->representativeCompanyModel->find($idUser);
+        $userSession = $this->companyUser['idCompany'];
+        if($user['Company_company_id'] !== $userSession){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat znova.');
+            return $this->backUrl('/company-profil');
+        }
+        $logsUser = $this->logCompany->where('Representative_company_representative_id', $idUser)->find();
+        foreach($logsUser as $log){
+            $this->logCompany->delete($log['log_company_id']);
+        }
+        $resetPasswords = $this->resetPassword->where('Representative_company_representative_id', $idUser)->find();
+        foreach($resetPasswords as $reset){
+            $this->resetPassword->delete($reset['reset_id']);
+        }
+        $this->representativeCompanyModel->delete($idUser);
+        return $this->backUrl('/company-profil');
     }
     public function profilAddPractiseManager(){
         $idCompany = $this->request->getPost('companyId');
@@ -826,7 +890,7 @@ class Home extends BaseController
         $positionWork = $this->request->getPost('position_work');
         if(empty($idCompany && $name && $surname && $phone && $positionWork && $mail)){
             $this->session->setFlashdata('err_message', 'Nevyplnili jste všechny povinná políčka, proto jsme nemohli vedoucího praxe přidat.');
-            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+            return $this->backUrl('/company-profil');
         }
         $role = $this->session->get('role');
         if(!empty($this->companyUser['idCompany'])){
@@ -836,7 +900,7 @@ class Home extends BaseController
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $idCompany){
             $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
-            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+            return $this->backUrl('/company-profil');
         }
         $data = [
             'manager_degree_before' => $degreeBefore,
@@ -849,7 +913,7 @@ class Home extends BaseController
             'Company_company_id' => $idCompany,
         ];
         $this->practiseManagerModel->insert($data);
-        return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+        return $this->backUrl('/company-profil');
     }
     public function profilEditPractiseManager(){
         $id = $this->request->getPost('id');
@@ -862,7 +926,7 @@ class Home extends BaseController
         $positionWork = $this->request->getPost('position_work');
         if(empty($id && $name && $surname && $phone && $positionWork && $mail)){
             $this->session->setFlashdata('err_message', 'Nevyplnili jste všechny povinná políčka, proto jsme nemohli vedoucího praxí upravit.');
-            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+            return $this->backUrl('/company-profil');
         }
         $role = $this->session->get('role');
         if(!empty($this->companyUser['idCompany'])){
@@ -873,7 +937,7 @@ class Home extends BaseController
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $manager['Company_company_id']){
             $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
-            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+            return $this->backUrl('/company-profil');
         }
         $data = [
             'manager_degree_before' => $degreeBefore,
@@ -885,7 +949,7 @@ class Home extends BaseController
             'manager_position_works' => $positionWork,
         ];
         $this->practiseManagerModel->update($id,$data);
-        return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+        return $this->backUrl('/company-profil');
     }
     public function profilDeletePractiseManager($id){
         $manager = $this->practiseManagerModel->find($id);
@@ -898,7 +962,7 @@ class Home extends BaseController
         $isSpravce = in_array('spravce', $role);
         if(!$isAdmin && !$isSpravce && $userSession !== $manager['Company_company_id']){
             $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
-            return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+            return $this->backUrl('/profil-company');
         }
         $offers = $this->offerPractise->where('Practise_manager_manager_id', $id)->find();
         foreach($offers as $offer){
@@ -907,7 +971,7 @@ class Home extends BaseController
         }
         $this->offerPractise->where('Practise_manager_manager_id', $id)->delete();
         $this->practiseManagerModel->delete($id);
-        return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+        return $this->backUrl('/profil-company');
     }
     public function companyOfferPractiseView(){
         $companyIdSession = $this->companyUser['idCompany'];

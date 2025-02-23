@@ -22,6 +22,11 @@ $routes->get('company-profil', 'Home::companyProfilView', ['filter' => 'role:com
 $routes->post('/add-offer-practise', 'Home::addNewOfferPractise', ['filter' => 'role:company,admin,spravce']);
 $routes->get('company-add-offer-practise', 'Home::addNewOfferPractiseView', ['filter' => 'role:company,admin,spravce']);
 $routes->get('company-profil/(:num)', 'Home::companyProfilAllView/$1', ['filter' => 'role:student,teacher,company']);
+
+$routes->post('/add-representative-company-profil', 'Home::profilAddRepresentativeCompany', ['filter' => 'role:company, admin, spravce']);
+$routes->post('/edit-representative-company-profil', 'Home::profilEditRepresentativeCompany', ['filter' => 'role:company, admin, spravce']);
+$routes->get('/delete-representative-company-profil/(:num)', 'Home::profilDeleteRepresentativeCompany/$1', ['filter' => 'role:company, admin, spravce']);
+
 $routes->get('edit-company-profile/(:num)', 'Home::editCompanyProfilView/$1', ['filter' => 'role:admin,spravce,company']);
 $routes->post('/edit-company-profile', 'Home::editCompanyProfil', ['filter' => 'role:admin,spravce,company']);
 $routes->post('/profilAdd-practiseManager', 'Home::profilAddPractiseManager', ['filter' => 'role:admin,spravce,company']);

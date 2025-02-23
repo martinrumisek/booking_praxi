@@ -277,7 +277,7 @@
                 <div class="card-icon-people d-flex align-items-center justify-content-center"><i class="fa-regular fa-user h4"></i></div>
             </div>
             <div class="d-flex justify-content-center align-items-center" style="height: 75%;">
-                <a class="add-new-people" href="#modal" data-bs-toggle="modal" data-bs-target="#modalAddRepresentativeCompany" ><i class="fa-solid fa-plus"></i> Přidat zástupce</a>
+                <a class="add-new-people" href="#modal" data-bs-toggle="modal" data-bs-target="#modalAddRepresentativeCompany" data-idCompany-representative="<?= $company['company_id'] ?>" ><i class="fa-solid fa-plus"></i> Přidat zástupce</a>
             </div>
         </div>
         <!-- Začátek karty -->
@@ -298,8 +298,8 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center">
-                <a class="icon-edit-people edit-repair" href=""><i class="fa-solid fa-pencil"></i></a>
-               <?php if($countRepresentative > 1){ ?>  <a class="icon-edit-people edit-del" href=""><i class="fa-solid fa-trash"></i></a> <?php } ?>
+                <a class="icon-edit-people edit-repair" data-bs-toggle="modal" data-bs-target="#modalEditRepresentativeCompany" data-companyId-representative="<?= $user['Company_company_id'] ?>" data-representativeId-representative="<?= $user['representative_id'] ?>" data-degreeBefore-representative="<?= $user['representative_degree_before'] ?>" data-name-representative="<?= $user['representative_name'] ?>" data-surname-representative="<?= $user['representative_surname'] ?>" data-degreeAfter-representative="<?= $user['representative_degree_after'] ?>" data-mail-representative="<?= $user['representative_mail'] ?>" data-phone-representative="<?= $user['representative_phone'] ?>" data-position-representative="<?= $user['representative_function'] ?>" href=""><i class="fa-solid fa-pencil"></i></a>
+               <?php if($countRepresentative > 1){ ?>  <a class="icon-edit-people edit-del" href="<?= base_url('/delete-representative-company-profil/'.$user['representative_id']) ?>"><i class="fa-solid fa-trash"></i></a> <?php } ?>
             </div>
         </div>
         <?php } ?>
@@ -408,7 +408,7 @@
         <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('/add-representativeCompany')?>" method="POST">
+        <form action="<?= base_url('/add-representative-company-profil')?>" method="POST">
             <div class="container d-flex flex-column">
               <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
               <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
@@ -428,6 +428,32 @@
     </div>
   </div>
 </div>
+<div class="modal" id="modalEditRepresentativeCompany">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">Upravit zástupce pro firmu</h4>
+        <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
+      </div>
+      <div class="modal-body">
+        <form action="<?= base_url('/edit-representative-company-profil')?>" method="POST">
+            <div class="container d-flex flex-column">
+              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před." id="representative-edit-degreeBefore"><input class="m-1" type="text" name="name" style="width: 80%;" placeholder="Jméno" id="representative-edit-name"></div>
+              <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení" id="representative-edit-surname"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za" id="representative-edit-degreeAfter"></div>
+              <input type="mail" class="m-1" name="mail" placeholder="E-mail" id="representative-edit-mail">
+              <input class="m-1" placeholder="Tel. č" name="phone" type="tel" id="representative-edit-phone">
+              <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text" id="representative-edit-position">
+              <input class="m-1" id="representative-edit-companyId" name="companyId" type="hidden">
+              <input type="hidden" id="representative-edit-representativeId" name="id">
+            </div>
+      </div>
+      <div class="modal-footer">
+        <input class="btn-create" type="submit" placeholder="Upravit" value="Upravit">
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
   const modalEditCategory = document.getElementById('modalAddPractiseManager');
@@ -441,6 +467,48 @@
     });
   }
 });
+document.addEventListener('DOMContentLoaded', function () {
+  const modalEditCategory = document.getElementById('modalAddRepresentativeCompany');
+  if (modalEditCategory) {
+    modalEditCategory.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      if (button) {
+        const companyId = button.getAttribute('data-idCompany-representative') || '';
+        document.getElementById('add-representativeCompany-companyId').value = companyId;
+      }
+    });
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const modalEditCategory = document.getElementById('modalEditRepresentativeCompany');
+  if (modalEditCategory) {
+    modalEditCategory.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      if (button) {
+        const companyId = button.getAttribute('data-companyId-representative') || '';
+        const representativeId = button.getAttribute('data-representativeId-representative') || '';
+        const degreeBefore = button.getAttribute('data-degreeBefore-representative') || '';
+        const name = button.getAttribute('data-name-representative') || '';
+        const surname = button.getAttribute('data-surname-representative') || '';
+        const degreeAfter = button.getAttribute('data-degreeAfter-representative') || '';
+        const mail = button.getAttribute('data-mail-representative') || '';
+        const phone = button.getAttribute('data-phone-representative') || '';
+        const positionWork = button.getAttribute('data-position-representative') || '';
+        document.getElementById('representative-edit-companyId').value = companyId;
+        document.getElementById('representative-edit-representativeId').value = representativeId;
+        document.getElementById('representative-edit-degreeBefore').value = degreeBefore;
+        document.getElementById('representative-edit-name').value = name;
+        document.getElementById('representative-edit-surname').value = surname;
+        document.getElementById('representative-edit-degreeAfter').value = degreeAfter;
+        document.getElementById('representative-edit-mail').value = mail;
+        document.getElementById('representative-edit-phone').value = phone;
+        document.getElementById('representative-edit-position').value = positionWork;
+      }
+    });
+  }
+});
+
 document.addEventListener('DOMContentLoaded', function () {
   const modalEditCategory = document.getElementById('modalEditPractiseManager');
   if (modalEditCategory) {
