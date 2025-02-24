@@ -225,9 +225,11 @@
       <div class="modal-body">
         <form action="<?= base_url('/add-new-category')?>" method="POST">
             <div class="container d-flex flex-column">
-              <input type="text" name="name" placeholder="Název kategorie">
-              <br>
-              <textarea name="description" placeholder="Poznámka" id=""></textarea>
+              <label class="mt-1" for="name">Název kategorie *</label>
+              <input class="m-1" type="text" name="name">
+              <label class="mt-1" for="description">Poznámka</label>
+              <textarea name="description" class="m-1" id="description"></textarea>
+              <p>( * povinná pole)</p>
             </div>
       </div>
       <div class="modal-footer">
@@ -248,12 +250,13 @@
       <div class="modal-body">
         <form action="<?= base_url('/add-new-skill')?>" method="POST">
             <div class="container d-flex flex-column">
-              <input type="text" name="name" placeholder="Název dovednosti">
-              <br>
-              <textarea name="description" placeholder="Poznámky" id=""></textarea>
-              <br>
-              <select class="form-select" name="category_id">
-                  <option>Vyberte možnost</option>
+              <label class="mt-1" for="name">Název dovednosti *</label>
+              <input type="text" name="name" class="m-1">
+              <label class="mt-1" for="description-skill">Popis dovednosti</label>
+              <textarea name="description" class="m-1" id="description-skill"></textarea>
+              <label class="mt-1" for="select-category">Kategorie dovedností *</label>
+              <select class="m-1" name="category_id" id="select-category">
+                  <option select disabled>Vyberte možnost</option>
                   <?php foreach($categoryes as $category){ ?>
                       <option value="<?= $category['category_id']?>"><?=$category['category_name']?></option>
                   <?php } ?>
@@ -279,9 +282,10 @@
         <form action="<?= base_url('/edit-category')?>" method="POST">
             <div class="container d-flex flex-column">
               <input type="hidden" name="id" id="edit-category-id">
-              <input type="text" id="edit-category-name" name="name" placeholder="Název kategorie">
-              <br>
-              <textarea name="description" id="edit-category-description" placeholder="Poznámka" id=""></textarea>
+              <label class="mt-1" for="edit-category-name">Název kategorie *</label>
+              <input class="m-1" type="text" id="edit-category-name" name="name">
+              <label class="mt-1" for="edit-category-description">Popis kategorie</label>
+              <textarea class="m-1" name="description" id="edit-category-description"></textarea>
             </div>
       </div>
       <div class="modal-footer">
@@ -303,12 +307,13 @@
         <form action="<?= base_url('/edit-skill')?>" method="POST">
             <div class="container d-flex flex-column">
               <input type="hidden" name="id" id="edit-skill-id">
-              <input type="text" id="edit-skill-name" name="name" placeholder="Název dovednosti">
-              <br>
-              <textarea name="description" id="edit-skill-description" placeholder="Poznámky" id=""></textarea>
-              <br>
+              <label class="mt-1" for="edit-skill-name">Název dovednosti *</label>
+              <input class="m-1" type="text" id="edit-skill-name" name="name">
+              <label class="mt-1" for="edit-skill-description">Popis dovednosti</label>
+              <textarea name="description" id="edit-skill-description"></textarea>
+              <label class="mt-1" for="edit-skill-categoryId">Kategorie dovedností *</label>
               <select class="form-select" id="edit-skill-categoryId" name="category_id">
-                  <option>Vyberte možnost</option>
+                  <option disabled>Vyberte možnost</option>
                   <?php foreach($categoryes as $category){ ?>
                       <option value="<?= $category['category_id']?>"><?=$category['category_name']?></option>
                   <?php } ?>
