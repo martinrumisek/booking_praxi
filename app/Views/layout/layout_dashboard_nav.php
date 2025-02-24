@@ -293,11 +293,11 @@
         <nav class="navbar navbar-expand-sm fixed-bottom nav-mobile p-0">
             <div class="container-fluid p-0">
                 <div class="d-flex justify-content-center" style="width:100%">
-                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $homeDashboard?>"><i class="fa-solid fa-house nav-icon h4 m-0"></i></a>
-                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $listPractise?>"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i></a>
-                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $datePractise?>"><i class="fa-regular fa-calendar nav-icon h4 m-0"></i></a>
-                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $people?>"><i class="fa-solid fa-user nav-icon h4 m-0"></i></a>
-                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="#nav-mobile-admin"  data-bs-toggle="offcanvas" data-bs-target="#nav-mobile-admin"><i class="fa-solid fa-ellipsis-vertical nav-icon h4 m-0"></i></a>
+                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $homeDashboard?>"><div class="d-flex flex-column align-items-center justify-content-center"><i class="fa-solid fa-house nav-icon h4 m-0"></i><span class="mt-auto p-0" style="font-size: 9px;">Domů</span></div></a>
+                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $listPractise?>"><div class="d-flex flex-column justify-content-center align-items-center"><i class="fa-solid fa-list-ul nav-icon h4 m-0"></i><span class="mt-auto p-0" style="font-size: 9px;">Praxe</span></div></a>
+                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $datePractise?>"><div class="d-flex flex-column justify-content-center align-items-center"><i class="fa-regular fa-calendar nav-icon h4 m-0"></i><span class="mt-auto p-0" style="font-size: 9px;">Termíny</span></div></a>
+                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="<?= $people?>"><div class="d-flex flex-column justify-content-center align-items-center"><i class="fa-solid fa-user nav-icon h4 m-0"></i><span class="mt-auto p-0" style="font-size: 9px;">Lidé</span></div></a>
+                    <a class="nav-icon-mobile d-flex align-items-center justify-content-center" href="#nav-mobile-admin"  data-bs-toggle="offcanvas" data-bs-target="#nav-mobile-admin"><div class="d-flex flex-column justify-content-center align-items-center"><i class="fa-solid fa-ellipsis-vertical nav-icon h4 m-0"></i><span class="mt-auto p-0" style="font-size: 9px;">Více</span></div></a>
                 </div>
             </div>
         </nav>
@@ -326,7 +326,7 @@
     </div>
     <script>
 tinymce.init({
-  selector: 'textarea#editor',
+  selector: 'textarea.editor-mce',
   license_key: 'gpl'
 });
 </script>
