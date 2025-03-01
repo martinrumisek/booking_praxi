@@ -295,6 +295,26 @@
         background-color: #006DBC;
         color: white;
     }
+    .modal-header{
+      background-color: #006DBC;
+      color: white;
+      box-shadow: 0px 3px 6px #00000029;
+    }
+    .modal-footer{
+      background-color: white;
+      color: white;
+      box-shadow: 0px 3px 6px #00000029;
+      border-top: 1px solid #006DBC;
+    }
+    .btn-close-modal{
+      background-color: #006DBC;
+      color: white;
+      border: none;
+      border-radius: 100%;
+    }
+    .btn-close-modal:hover{
+      color: red;
+    }
 </style>
 <?php 
 $role = session()->get('role');
@@ -349,9 +369,9 @@ if(in_array('admin', $role)){
                                 <?php $countDate++; } ?>
                             </div>
                             <div class="d-flex flex-wrap mt-auto align-items-end mt-auto justify-content-center">
-                                <a class="m-2 practise-btn" href="">Zobrazit informace</a>
+                                <a class="m-2 practise-btn" data-bs-toggle="modal" data-bs-target="#modalShowInformationPractise" href="">Zobrazit informace</a>
                                 <a class="m-2 practise-btn" href="<?= base_url('/practise-offer')?>">Vybrat praxi</a>
-                                <a class="m-2 practise-btn" href="">Zapsat praxi</a>
+                                <a class="m-2 practise-btn" data-bs-toggle="modal" data-bs-target="#modalWriteMyPractise" href="">Zapsat praxi</a>
                             </div>
                        <?php }else{ ?>
                             <!--- Když není zařazen do termínu praxe -->
@@ -365,9 +385,10 @@ if(in_array('admin', $role)){
     </div>
 </div>
 <div class="btn-container d-flex justify-content-center align-items-center"><?php if(!empty($practise) && $practise['user_offer_accepted'] == 1){ ?><a href="" class="btn-document-export d-flex justify-content-center align-items-center p-2 disabled"><i class="fa-solid fa-file p-2"></i> Smlouva k praxi</a> <?php } ?></div>
-<div class="d-flex justify-content-center mt-2"><h3>Oblíbené/vybrané nabídky</h3></div>
+<?php if(!empty($userOffers)){ ?><div class="d-flex justify-content-center mt-2"><h3>Oblíbené/vybrané nabídky</h3></div><?php } ?>
 <div class="d-flex flex-wrap justify-content-center">
 <?php 
+if(!empty($userOffers)){
         foreach($userOffers as $offer){ ?>
             <div class="card-offer d-flex flex-column <?php if($offer['user_offer_select'] == 1){if($offer['user_offer_accepted'] == 0 && $offer['user_offer_accepted'] !== null){echo 'card-offer-no-accepted';}elseif($offer['user_offer_accepted'] == 1 && $offer['user_offer_accepted'] !== null){echo 'card-offer-accepted';}else{echo 'card-offer-select';}} ?> m-3">
             <?php if($offer['user_offer_select'] == 1){
@@ -421,92 +442,93 @@ if(in_array('admin', $role)){
                 <a class="card-text btn-show-offer" href="<?= base_url('practise-offer-view/'.$offer['offer_id']) ?>">Zobrazit nabídku</a>
             </div>
         </div>
-        <?php } ?>
-</div>
-<div class="d-flex align-items-center container d-none">
-    <!-- Tlačítko pro předchozí kartu -->
-    <a href="#">
-        <div class="next-previously d-flex align-items-center justify-content-center"><i class="fa-solid fa-chevron-left"></i></div>
-    </a>
-    <div class="d-flex flex-row">
-        <!-- Začátek první karty -->
-        <div class="card-offer m-3">
-            <div class="d-flex m-3">
-                <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
-                <p class="card-title fw-bold">Obchodní akademie, Vyšší odborná škola a Jazyková škola s právem státní jazykové zkoušky Uherské Hradiště</p>
-                <a href="#"><i class="fa-solid fa-star card-star p-1"></i></a>
-            </div>
-            <div class="d-flex">
-                <i class="fa-regular fa-calendar h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">20.03 - 21.03.2024 / 20.05 - 21.05.2024</p>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-                <i class="fa-solid fa-location-dot h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">Nádražní 22/22, 686 01 Uherské Hradiště 1</p>
-            </div>
-            <div class="d-flex mt-2">
-                <p class="fw-bold m-3 mb-0 mt-0">Pro obor: </p>
-                <p>IT, OA, VOŠ</p>
-            </div>
-            <h6 class="text-center">popis praxe</h6>
-            <div class="p-2">
-                <p class="text-praxe">Popis dané praxe</p>
-            </div>
-        </div>
-        <!-- Konec prnví karty a začátek druhé karty -->
-        <div class="card-offer m-3">
-            <div class="d-flex m-3">
-                <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
-                <p class="card-title fw-bold">Obchodní akademie, Vyšší odborná škola a Jazyková škola s právem státní jazykové zkoušky Uherské Hradiště</p>
-                <a href="#"><i class="fa-solid fa-star card-star p-1"></i></a>
-            </div>
-            <div class="d-flex">
-                <i class="fa-regular fa-calendar h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">20.03 - 21.03.2024 / 20.05 - 21.05.2024</p>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-                <i class="fa-solid fa-location-dot h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">Nádražní 22/22, 686 01 Uherské Hradiště 1</p>
-            </div>
-            <div class="d-flex mt-2">
-                <p class="fw-bold m-3 mb-0 mt-0">Pro obor: </p>
-                <p>IT, OA, VOŠ</p>
-            </div>
-            <h6 class="text-center">popis praxe</h6>
-            <div class="p-2">
-                <p class="text-praxe">Popis dané praxe</p>
-            </div>
-        </div>
-        <!-- Konec druhé karty a začátek třetí karty -->
-        <div class="card-offer m-3">
-            <div class="d-flex m-3">
-                <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
-                <p class="card-title fw-bold">Obchodní akademie, Vyšší odborná škola a Jazyková škola s právem státní jazykové zkoušky Uherské Hradiště</p>
-                <a href="#"><i class="fa-solid fa-star card-star p-1"></i></a>
-            </div>
-            <div class="d-flex">
-                <i class="fa-regular fa-calendar h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">20.03 - 21.03.2024 / 20.05 - 21.05.2024</p>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-                <i class="fa-solid fa-location-dot h5 m-3 mb-0 mt-0"></i>
-                <p class="card-text d-flex justify-content-center align-items-center">Nádražní 22/22, 686 01 Uherské Hradiště 1</p>
-            </div>
-            <div class="d-flex mt-2">
-                <p class="fw-bold m-3 mb-0 mt-0">Pro obor: </p>
-                <p>IT, OA, VOŠ</p>
-            </div>
-            <h6 class="text-center">popis praxe</h6>
-            <div class="p-2">
-                <p class="text-praxe">Popis dané praxe</p>
-            </div>
-        </div>
-        <!-- Konec třetí karty -->
-    </div>
-    <!-- Tlačítko pro další kartu -->
-    <a href="#">
-        <div class="next-previously d-flex align-items-center justify-content-center"><i class="fa-solid fa-chevron-right"></i></div>
-    </a>
+        <?php } }?>
 </div>
 
+<?php if(!empty($practiseDate)){ ?>
+<div class="modal modal-lg" id="modalShowInformationPractise">
+  <div class="modal-dialog modal-dialog-centered ">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">Informace o praxi</h4>
+        <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
+      </div>
+      <div class="modal-body">
+        <?= $practiseDate['practise_description'] ?>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalWriteMyPractise">
+  <div class="modal-dialog modal-dialog-centered ">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">Zapsat vlastní praxi</h4>
+        <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
+      </div>
+      <div class="modal-body">
+        <form action="<?= base_url('')?>" method="POST" enctype="multipart/form-data">
+            <div class="container d-flex flex-column">
+                <label class="mt-1" for="name">Název pro praxi *</label>
+                <input class="m-1" type="text" name="name_offer">
+                <label class="mt-1" for="name">Místo konání (město) *</label>
+                <input class="m-1" type="text" name="city_offer">
+                <label class="mt-1" for="name">Místo konání (ulice) *</label>
+                <input class="m-1" type="text" name="street_offer">
+                <label class="mt-1" for="name">Místo konání (PSČ) *</label>
+                <input class="m-1" type="text" name="post_code_offer">
+                <div class="d-flex">
+                    <div class="d-flex flex-column" style="width: 30%;">
+                    <label class="mt-1" for="name">titul před.</label>
+                    <input class="m-1" type="text" name="degree_before_manager">
+                    </div>
+                    <div class="d-flex flex-column" style="width: 70%;">
+                    <label class="mt-1" for="name">Jméno vedoucího praxe *</label>
+                    <input class="m-1" type="text" name="name_manager">
+                    </div>
+                </div>
+                <div class="d-flex">
+                <div class="d-flex flex-column" style="width: 70%;">
+                    <label class="mt-1" for="name">Příjmení vedoucího praxe *</label>
+                    <input class="m-1" type="text" name="surname_manager">
+                    </div>
+                    <div class="d-flex flex-column" style="width: 30%;">
+                    <label class="mt-1" for="name">titul za.</label>
+                    <input class="m-1" type="text" name="degree_after_manager">
+                    </div>
+                </div>
+                <label class="mt-1" for="name">E-mail vedoucího praxe *</label>
+                <input class="m-1" type="text" name="mail_manager">
+                <label class="mt-1" for="name">Telefonní č. vedoucího praxe *</label>
+                <input class="m-1" type="text" name="phone_manager">
+                <label class="mt-1" for="name">Pracovní pozice vedoucího praxe *</label>
+                <input class="m-1" type="text" name="position_manager">
+                <label class="mt-1" for="name">Název firmy *</label>
+                <input class="m-1" type="text" name="name_company">
+                <label class="mt-1" for="name">Ičo firmy *</label>
+                <input class="m-1" type="text" name="ico_company">
+                <label class="mt-1" for="name">Sídlo firmy (město) *</label>
+                <input class="m-1" type="text" name="city_company">
+                <label class="mt-1" for="name">Sídlo firmy (ulice) *</label>
+                <input class="m-1" type="text" name="street_company">
+                <label class="mt-1" for="name">Sídlo firmy (PSČ) *</label>
+                <input class="m-1" type="text" name="post_code_company">
+                <label class="mt-1" for="name">Pravní forma *</label>
+                <select name="legar_form_company">
+                    <option value="" disabled selected>Vybrat</option>
+                    <option value="0">Fyzická osoba</option>
+                    <option value="1">Fyzická osoba</option>
+                </select>
+                <p>( * povinná pole)</p>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <input class="btn-create" type="submit" placeholder="Uložit" value="Zapsat">
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php } ?>
 <?= $this->endSection() ?>
