@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 // ROUTY PRO VIEWČKA (PŘIHLAŠOVACÍ & REGISTROVACÍ)
+$routes->get('/', 'Home::index');
 $routes->get('login', 'Home::login'); //Přihlašovácí stránka
 $routes->get('registration', 'Home::registration'); //stránka pro registraci firmy
 $routes->get('next-step-register','Auth::continuationRegister' );
@@ -36,6 +37,10 @@ $routes->get('edit-profile/(:num)','Home::editProfileView/$1', ['filter' => 'rol
 $routes->post('/edit-profile','Home::editProfile', ['filter' => 'role:student,teacher']);
 $routes->get('company-offer-practises', 'Home::companyOfferPractiseView', ['filter' => 'role:company']);
 $routes->get('practise-offer-view/(:num)', 'Home::completeOfferView/$1', ['filter' => 'role:student,company']);
+$routes->get('delete-practise-offer/(:num)', 'Home::deleteOfferPractise/$1', ['filter' => 'role:company']);
+$routes->get('edit-practise-offer-view/(:num)', 'Home::editOfferPractiseView/$1', ['filter' => 'role:company']);
+
+
 
 $routes->post('/edit-like-offer', 'Home::editLikeOffer', ['filter', 'role:student']);
 $routes->post('/edit-select-offer', 'Home::editSelectOffer', ['filter', 'role:student']);

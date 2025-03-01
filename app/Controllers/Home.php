@@ -79,6 +79,9 @@ class Home extends BaseController
         $this->mail = new Email();
         $this->resetPassword = new ResetPassword();
     }
+    public function index(){
+        return redirect()->to('/login');
+    }
     private function backUrl($url){
         $previousUrl = $this->request->getServer('HTTP_REFERER');
             if ($previousUrl) {
@@ -543,8 +546,46 @@ class Home extends BaseController
         return redirect()->to(base_url('/company-add-offer-practise'));
     }
     //!Metody pro dodělání
-    public function editOfferPractiseView(){}
-    public function editOfferPractise(){}
+    public function editOfferPractiseView($idOffer){
+        $offer = $this->offerPractise->where('offer_id', $idOffer)->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
+        ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
+        ->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'left')
+        ->first();
+        $dates = $this->datePractiseModel->where('Practise_practise_id', $offer['practise_id'])->find();
+        $offersSkill = $this->skill_offerPractise->where('Offer_practise_offer_id', $offer['offer_id'])->find();
+        $managers = $this->practiseManagerModel->where('Company_company_id', $offer['company_id'])->find();
+        $skillResults = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id AND Skill.skill_del_time IS NULL', 'inner')->find();
+        $skills = [];
+        foreach($skillResults as $category){
+            $categoryId = $category['category_id'];
+            if(!isset($skills[$categoryId])){
+                $skills[$categoryId] = [
+                    'category_id' => $categoryId,
+                    'category_name' => $category['category_name'],
+                ];
+            }
+            $skillId = $category['skill_id'];
+            if(!isset($skills[$categoryId]['skills'][$skillId])){
+                $skills[$categoryId]['skills'][$skillId] = [
+                    'skill_id' => $skillId,
+                    'skill_name' => $category['skill_name'],
+                ];
+            }
+        }
+        $data = [
+            'title' => 'Editace nabídky praxe',
+            'offer' => $offer,
+            'dates' => $dates,
+            'offerSkill' => $offersSkill,
+            'skills' => $skills,
+            'managers' => $managers,
+        ];
+        log_message('info', 'Data: ' . json_encode($offer));
+        return view('company/edit_offer_practise', $data);
+    }
+    public function editOfferPractise(){
+
+    }
     public function deleteOfferPractise($offerId){
         $this->offerPractise->delete($offerId);
         $userOffers = $this->user_practiseModel->where('Offer_practise_offer_id', $offerId)->find();
@@ -555,7 +596,7 @@ class Home extends BaseController
         foreach($offerSkills as $offerSkill){
             $this->skill_offerPractise->delete($offerSkill['skill_offer_id']);
         }
-        $this->backUrl('/company-offer-practises');
+        return $this->backUrl('/company-offer-practises');
     }
     public function acceptedUserForOfferPractise(){
         $offerId = $this->request->getPost('offer_id');
