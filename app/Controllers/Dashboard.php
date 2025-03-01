@@ -71,6 +71,14 @@ class Dashboard extends Controller
         $this->user_offerPractise = new User_OfferPractise();
         $this->offerPractiseModel = new OfferPractise();
     }
+    private function backUrl($url){
+        $previousUrl = $this->request->getServer('HTTP_REFERER');
+            if ($previousUrl) {
+                return redirect()->to($previousUrl);
+            } else {
+                return redirect()->to($url);
+            }
+    }
     //Metody pro zobrazení viewček
     public function homeView(){
         $data= [
@@ -458,7 +466,7 @@ class Dashboard extends Controller
         $description = $this->request->getPost('description');
         if(empty($name)){
             $this->session->setFlashdata('err_message', 'Nová kategorie pro dovednosti nebyla přidána, protože nebyl vyplněn název.');
-            return false;
+            return $this->backUrl('/dashboard-skill');
         }
         $data = [
             'category_name' => $name,
@@ -473,7 +481,7 @@ class Dashboard extends Controller
         $idCategory = $this->request->getPost('category_id');
         if(empty($name && $idCategory)){
             $this->session->setFlashdata('err_message', 'Nevyplnili jste všechny potřebná políčka. Nemohli jsme přidat novou dovednost.');
-            return false;
+            return $this->backUrl('/dashboard-skill');
         }
         $data = [
             'skill_name' => $name,
