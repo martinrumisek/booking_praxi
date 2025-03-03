@@ -121,4 +121,5 @@ $routes->post('/new-password', 'Auth::newPassword');
 $routes->post('/forgot-password', 'Auth::forgotPassword');
 //ZKUŠEBNÍ ROUTY - PŘI VÝVOJI
 //$routes->get('sentMoreMails', 'Dashboard::sentMoreEmail');
+$routes->get('/export-contract', 'Export::contractFileUser');
 
