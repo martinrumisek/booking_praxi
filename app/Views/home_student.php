@@ -384,7 +384,7 @@ if(in_array('admin', $role)){
             </div>
     </div>
 </div>
-<div class="btn-container d-flex justify-content-center align-items-center"><?php if(!empty($practise) && $practise['user_offer_accepted'] == 1){ ?><a href="" class="btn-document-export d-flex justify-content-center align-items-center p-2 disabled"><i class="fa-solid fa-file p-2"></i> Smlouva k praxi</a> <?php } ?></div>
+<div class="btn-container d-flex justify-content-center align-items-center"><?php if(!empty($practise) && $practise['user_offer_accepted'] == 1){ ?><a href="<?= base_url('export-contract')?>" class="btn-document-export d-flex justify-content-center align-items-center p-2 disabled"><i class="fa-solid fa-file p-2"></i> Smlouva k praxi</a> <?php } ?></div>
 <?php if(!empty($userOffers)){ ?><div class="d-flex justify-content-center mt-2"><h3>Oblíbené/vybrané nabídky</h3></div><?php } ?>
 <div class="d-flex flex-wrap justify-content-center">
 <?php 
