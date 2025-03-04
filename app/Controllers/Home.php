@@ -99,7 +99,7 @@ class Home extends BaseController
         $userOffer = '';
         if(!empty($practiseDate)){
             $dates = $this->datePractiseModel->where('Practise_practise_id', $practiseDate['practise_id'])->find();
-            $userOffer = $this->user_practiseModel->where('User_user_id', $idUser)->where('user_offer_like', 1)->orWhere('user_offer_select', 1)->join('Offer_practise', 'User_has_Offer_Practise.Offer_practise_offer_id = Offer_practise.offer_id AND Offer_practise.offer_del_time IS NULL', 'left')
+            $userOffer = $this->user_practiseModel->where('user_offer_del_time', null)->where('User_user_id', $idUser)->where('user_offer_like', 1)->orWhere('user_offer_select', 1)->join('Offer_practise', 'User_has_Offer_Practise.Offer_practise_offer_id = Offer_practise.offer_id AND Offer_practise.offer_del_time IS NULL', 'left')
             ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
             ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')->find();
         }
