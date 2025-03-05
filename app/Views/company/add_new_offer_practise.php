@@ -185,6 +185,9 @@
         cursor: pointer;
         font-size: 16px;
     }
+    .invalid-input{
+      border: 1px solid red;
+    }
     .btn-right-display-submit:hover{
         color: #006DBC;
         background-color: white;
@@ -199,7 +202,7 @@
                 <div class="p-5 container">
                     <div class="d-md-flex d-block">
                         <div class="d-flex justify-content-center align-items-center"><div class="icon-user d-flex align-items-center justify-content-center"><i class="fa-solid fa-briefcase h1"></i></div></div>
-                        <div class="d-flex justify-content-center flex-column align-items-center p-0 m-4" style="width: 100%;"><span>Název praxe</span><textarea name="name_offer_practise" class="name-practise-offer" id=""></textarea></div>
+                        <div class="d-flex justify-content-center flex-column align-items-center p-0 m-4" style="width: 100%;"><span>Název praxe</span><textarea name="name_offer_practise" class="name-practise-offer empty-input" id=""></textarea></div>
                     </div>
                     <div class="container mt-3 d-flex flex-column">
                         <span>Krátky popis praxe</span>
@@ -219,11 +222,11 @@
                         <div class="container d-flex flex-column">
                             <h5>Lokace praxe</h5>
                             <span>Město/vesnice</span>
-                            <input type="text" name="city_practise" value="<?= $company['company_city'] ?>">
+                            <input type="text" name="city_practise" class="empty-input" value="<?= $company['company_city'] ?>">
                             <span>Ulice</span>
-                            <input type="text" name="street_practise" value="<?= $company['company_street'] ?>">
+                            <input type="text" name="street_practise" class="empty-input" value="<?= $company['company_street'] ?>">
                             <span>PSČ</span>
-                            <input type="text" name="post_code_practise" value="<?= $company['company_post_code'] ?>">
+                            <input type="text" name="post_code_practise" class="empty-input" value="<?= $company['company_post_code'] ?>">
                         </div>
                     </div>
                 </div>
@@ -281,7 +284,7 @@
         <h4 class="text-center">Vedoucí pro praxi</h4>
         <div class="d-flex flex-wrap">
             <div class="d-flex align-items-center p-2"><i class="fa-solid fa-clipboard-user h3 m-0"></i></div>
-            <select name="practise_manager" id="practise_manager">
+            <select name="practise_manager" id="practise_manager" class="empty-input">
                 <option disabled selected value="">Vyberte vedoucího praxe</option>
                 <?php if(empty($managers)){ ?>
                     <div class="container bg-white p-3 text-center shadow">Nemáté žádného vedoucího</div>
@@ -304,6 +307,7 @@
 <input type="submit" class="btn-right-display-submit" value="Vytvořit">
 <?php } ?>
 </form>
+<script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
 <script>
     document.querySelectorAll('.select-practise').forEach((checkbox) => {
     checkbox.addEventListener('change', (e) => {
@@ -314,6 +318,33 @@
         });
     });
 });
-
+document.addEventListener('DOMContentLoaded', () => {
+        const checkboxes = document.querySelectorAll('.select-practise');
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (event) => {
+                let isValid = false;
+                checkboxes.forEach(checkbox => {
+                    const tooltip = bootstrap.Tooltip.getInstance(checkbox) || new bootstrap.Tooltip(checkbox, {
+                        html: true,
+                        title: 'Pro vytvoření nabídky praxe je nutné označit jeden termín!',
+                        trigger: 'manual',
+                    });
+                    if (checkbox.checked) {
+                        isValid = true;
+                    }
+                    if (!isValid) {
+                        checkbox.classList.add('invalid-input');
+                        tooltip.show();
+                    } else {
+                        checkbox.classList.remove('invalid-input');
+                        tooltip.hide();
+                    }
+                });
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    });
 </script>
 <?= $this->endSection() ?>
