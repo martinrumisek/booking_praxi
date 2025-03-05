@@ -338,7 +338,7 @@ th.date{
                 <input class="m-1 empty-input" type="date" name="end-new-offer" id="edit-practise-endOffer" placeholder="Ukončení nových nabídek">
                 <label class="mt-1" for="contract-file" >Smlouva pro praxi *</label>
                 <label for="edit-file-upload" class="custom-file-label" id="edit-practise-fileLabel">Nahrajte smlouvu (PDF)</label>
-                <input type="file" name="contract-file" id="edit-file-upload" class="custom-file-input empty-input" accept=".pdf" value="smlouva.pdf">
+                <input type="file" name="contract-file" id="edit-file-upload" class="custom-file-input" accept=".pdf" value="smlouva.pdf">
                 <label class="mt-1" for="class">Praxe pro třídy: *</label>
                 <div class="d-flex flex-wrap">
                 <?php foreach($schoolClass as $classes){ ?>

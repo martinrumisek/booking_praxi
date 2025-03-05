@@ -798,7 +798,7 @@ class Dashboard extends Controller
         $existingClass = array_column($classPractises, 'Class_class_id');
         $countClass = count($classes);
         foreach($classes as $class){
-            if(in_array($class, $existingClass)){
+            /*if(in_array($class, $existingClass)){
                 if($countClass == 1){
                     $this->session->setFlashdata('err_message', 'Všechny zvolené třídy jsou již v jiných termínech.');
                     return redirect()->to(base_url('dashboard-calendar'));
@@ -807,7 +807,7 @@ class Dashboard extends Controller
                     $countClass--;
                     continue;
                 }
-            }
+            }*/
             if(in_array($class, $existingId)){
                 $currentDelTime = $existingClasses[array_search($class, $existingId)]['class_practise_del_time'];
                 $currentId = $existingClasses[array_search($class, $existingId)]['class_practise_id'];
