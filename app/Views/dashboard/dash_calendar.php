@@ -267,6 +267,9 @@ th.date{
         </div>
     </div>
 </div>
+<?php 
+      $excludedClassIds = array_unique(array_column(array_merge(...array_column($practises, 'class')), 'class_id'));
+?>
 <div class="modal modal-lg" id="modalAddNewPractiseDate">
   <div class="modal-dialog modal-dialog-centered ">
     <div class="modal-content">
@@ -298,13 +301,13 @@ th.date{
                 <div class="d-flex flex-wrap">
                     <?php foreach($schoolClass as $classes){ ?>
                             <div class="d-flex align-items-center p-1">
-                                <input type="checkbox" class="checkbox p-1" name="classes[]" value="<?= $classes['class_id']?>">
+                                <input type="checkbox" class="checkbox p-1" name="classes[]" <?= in_array($classes['class_id'], $excludedClassIds) ? 'disabled' : ''   ?> value="<?= $classes['class_id']?>">
                                 <p class="m-0 p-1"><?= $classes['class_class'].'.'.$classes['class_letter_class']?></p>
                             </div>
                         <?php } ?>
                 </div>
                 <label class="mt-1" for="description">Popis praxe</label>
-                <textarea id="editor" name="description" class="m-1"></textarea>
+                <textarea name="description" class="m-1 editor-mce"></textarea>
                 <p>( * povinná pole)</p>
             </div>
       </div>
@@ -315,7 +318,7 @@ th.date{
     </div>
   </div>
 </div>
-<div class="modal" id="modalEditPractiseDate">
+<div class="modal modal-lg" id="modalEditPractiseDate">
   <div class="modal-dialog modal-dialog-centered ">
     <div class="modal-content">
       <div class="modal-header d-flex justify-content-between">
@@ -337,13 +340,13 @@ th.date{
                 <div class="d-flex flex-wrap">
                 <?php foreach($schoolClass as $classes){ ?>
                             <div class="d-flex align-items-center p-1">
-                                <input type="checkbox" class="checkbox p-1" name="classes[]" value="<?= $classes['class_id']?>" id="class-<?= $classes['class_id']?>">
+                                <input type="checkbox" class="checkbox p-1" name="classes[]" value="<?= $classes['class_id']?>" <?= in_array($classes['class_id'], $excludedClassIds) ? 'disabled' : ''   ?>chrome id="class-<?= $classes['class_id']?>">
                                 <p class="m-0 p-1"><?= $classes['class_class'].'.'.$classes['class_letter_class']?></p>
                             </div>
                         <?php } ?>
                 </div>
                 <label class="mt-1" for="description">Popis praxe</label>
-                <textarea name="description" id="edit-practise-description" class="m-1"></textarea>
+                <textarea name="description" id="edit-practise-description" class="m-1 editor-mce"></textarea>
                 <p>( * povinná pole)</p>
             </div>
       </div>
@@ -481,12 +484,14 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('edit-practise-name').value = editPractiseName;
         document.getElementById('edit-practise-endOffer').value = editPractiseEndOffer;
         document.getElementById('edit-practise-fileLabel').textContent = editPractiseFile;
-        document.getElementById('edit-practise-description').value = editPractiseDescription;
+        //document.getElementById('edit-practise-description').value = editPractiseDescription;
+        tinymce.get('edit-practise-description').setContent(editPractiseDescription);
         const classesData = JSON.parse(button.getAttribute('data-class-datePractise') || '[]');
         classesData.forEach((classId) => {
           const checkbox = document.getElementById(`class-${classId.class_id}`);
           if (checkbox) {
             checkbox.checked = true;
+            checkbox.disabled = false;
           }
         });
       }
