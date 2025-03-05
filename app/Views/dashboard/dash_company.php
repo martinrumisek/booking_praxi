@@ -443,7 +443,6 @@
 <script src="<?= base_url('assets/js/validate-phone-input.js') ?>"></script>
 <script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
 <script src="<?= base_url('assets/js/validate-mail-input.js') ?>"></script>
-<script src="<?= base_url('assets/js/validate-ico-input.js') ?>"></script>
 <script>
 const checkboxPasswdHidden = document.getElementById('checkbox-passwd-hidden');
 const passwd1 = document.getElementById('passwd1');
