@@ -190,6 +190,9 @@
         background-color: white;
         border: 1px solid #006DBC;
     }
+    .invalid-input{
+      border: 1px solid red;
+    }
 </style>
 <form action="<?= base_url('a') ?>" method="POST">
 <div class="container-fluid">
@@ -199,7 +202,7 @@
                 <div class="p-5 container">
                     <div class="d-md-flex d-block">
                         <div class="d-flex justify-content-center align-items-center"><div class="icon-user d-flex align-items-center justify-content-center"><i class="fa-solid fa-briefcase h1"></i></div></div>
-                        <div class="d-flex justify-content-center flex-column align-items-center p-0 m-4" style="width: 100%;"><span>Název praxe</span><textarea name="name_offer_practise" class="name-practise-offer" id=""><?= $offer['offer_name'] ?></textarea></div>
+                        <div class="d-flex justify-content-center flex-column align-items-center p-0 m-4" style="width: 100%;"><span>Název praxe</span><textarea name="name_offer_practise" class="name-practise-offer empty-input" id=""><?= $offer['offer_name'] ?></textarea></div>
                     </div>
                     <div class="container mt-3 d-flex flex-column">
                         <span>Krátky popis praxe</span>
@@ -219,11 +222,11 @@
                         <div class="container d-flex flex-column">
                             <h5>Lokace praxe</h5>
                             <span>Město/vesnice</span>
-                            <input type="text" name="city_practise" value="<?= $offer['offer_city'] ?>">
+                            <input type="text" name="city_practise" class="empty-input" value="<?= $offer['offer_city'] ?>">
                             <span>Ulice</span>
-                            <input type="text" name="street_practise" value="<?= $offer['offer_street'] ?>">
+                            <input type="text" name="street_practise" class="empty-input" value="<?= $offer['offer_street'] ?>">
                             <span>PSČ</span>
-                            <input type="text" name="post_code_practise" value="<?= $offer['offer_post_code'] ?>">
+                            <input type="text" name="post_code_practise" class="empty-input" value="<?= $offer['offer_post_code'] ?>">
                         </div>
                     </div>
                 </div>
@@ -287,4 +290,5 @@
 </div>
 <input type="submit" class="btn-right-display-submit" value="Upravit">
 </form>
+<script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
 <?= $this->endSection() ?>

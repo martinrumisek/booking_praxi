@@ -176,6 +176,9 @@ th.date{
     background-color: #006DBC;
     color: white;
 }
+.invalid-input{
+      border: 1px solid red;
+    }
 </style>
 <div class="container-fluid">
     <h2>Přehled termínů pro praxe</h2>
@@ -281,18 +284,18 @@ th.date{
         <form action="<?= base_url('/sent-date-practise')?>" method="POST" enctype="multipart/form-data" id="editPractiseForm">
             <div class="container d-flex flex-column">
                 <label class="mt-1" for="name">Název pro praxi *</label>
-                <input class="m-1" type="text" name="name">
+                <input class="m-1 empty-input" type="text" name="name">
                 <label class="mt-1" for="end-new-offer">Ukončení nových nabídek *</label>
-                <input class="m-1" type="date" name="end-new-offer" min="<?= date('Y-m-d') ?>" placeholder="Ukončení nových nabídek">
+                <input class="m-1 empty-input" type="date" name="end-new-offer" min="<?= date('Y-m-d') ?>" placeholder="Ukončení nových nabídek">
                 <label class="mt-1" for="contract-file">Smlouva pro praxi *</label>
                 <label for="file-upload" class="custom-file-label" id="file-label">Nahrajte smlouvu (PDF)</label>
-                <input type="file" name="contract-file" id="file-upload" class="custom-file-input" accept=".pdf" value="smlouva.pdf">
+                <input type="file" name="contract-file" id="file-upload" class="custom-file-input empty-input" accept=".pdf" value="smlouva.pdf">
                 <label class="mt-1" for="date">Datum praxe od - do *</label>
                 <div class="d-flex flex-column">
                     <div class="date-container" id="date-container">
                         <div class="date d-flex" id="date-row-1">
-                            <input class="m-1" type="date" min="<?= date('Y-m-d') ?>" name="dates[1][date-from]" id="date-from-1" style="width: 50%">
-                            <input class="m-1" type="date" min="<?= date('Y-m-d') ?>" name="dates[1][date-to]" id="date-to-1" style="width: 50%">
+                            <input class="m-1 empty-input" type="date" min="<?= date('Y-m-d') ?>" name="dates[1][date-from]" id="date-from-1" style="width: 50%">
+                            <input class="m-1 empty-input" type="date" min="<?= date('Y-m-d') ?>" name="dates[1][date-to]" id="date-to-1" style="width: 50%">
                         </div>
                     </div>
                 </div>
@@ -301,7 +304,7 @@ th.date{
                 <div class="d-flex flex-wrap">
                     <?php foreach($schoolClass as $classes){ ?>
                             <div class="d-flex align-items-center p-1">
-                                <input type="checkbox" class="checkbox p-1" name="classes[]" <?= in_array($classes['class_id'], $excludedClassIds) ? 'disabled' : ''   ?> value="<?= $classes['class_id']?>">
+                                <input type="checkbox" class="checkbox p-1 select-class" name="classes[]" <?= in_array($classes['class_id'], $excludedClassIds) ? 'disabled' : ''   ?> value="<?= $classes['class_id']?>">
                                 <p class="m-0 p-1"><?= $classes['class_class'].'.'.$classes['class_letter_class']?></p>
                             </div>
                         <?php } ?>
@@ -330,17 +333,17 @@ th.date{
             <div class="container d-flex flex-column">
                 <input type="hidden" name="id" id="edit-practise-id">
                 <label class="mt-1" for="name">Název pro praxi *</label>
-                <input class="m-1" type="text" id="edit-practise-name" name="name">
+                <input class="m-1 empty-input" type="text" id="edit-practise-name" name="name">
                 <label class="mt-1" for="end-new-offer">Ukončení nových nabídek *</label>
-                <input class="m-1" type="date" name="end-new-offer" id="edit-practise-endOffer" placeholder="Ukončení nových nabídek">
+                <input class="m-1 empty-input" type="date" name="end-new-offer" id="edit-practise-endOffer" placeholder="Ukončení nových nabídek">
                 <label class="mt-1" for="contract-file" >Smlouva pro praxi *</label>
                 <label for="edit-file-upload" class="custom-file-label" id="edit-practise-fileLabel">Nahrajte smlouvu (PDF)</label>
-                <input type="file" name="contract-file" id="edit-file-upload" class="custom-file-input" accept=".pdf" value="smlouva.pdf">
+                <input type="file" name="contract-file" id="edit-file-upload" class="custom-file-input empty-input" accept=".pdf" value="smlouva.pdf">
                 <label class="mt-1" for="class">Praxe pro třídy: *</label>
                 <div class="d-flex flex-wrap">
                 <?php foreach($schoolClass as $classes){ ?>
                             <div class="d-flex align-items-center p-1">
-                                <input type="checkbox" class="checkbox p-1" name="classes[]" value="<?= $classes['class_id']?>" <?= in_array($classes['class_id'], $excludedClassIds) ? 'disabled' : ''   ?> id="class-<?= $classes['class_id']?>">
+                                <input type="checkbox" class="checkbox p-1 select-class" name="classes[]" value="<?= $classes['class_id']?>" <?= in_array($classes['class_id'], $excludedClassIds) ? 'disabled' : ''   ?> id="class-<?= $classes['class_id']?>">
                                 <p class="m-0 p-1"><?= $classes['class_class'].'.'.$classes['class_letter_class']?></p>
                             </div>
                         <?php } ?>
@@ -372,8 +375,8 @@ th.date{
                 <div class="d-flex flex-column">
                     <div class="container">
                         <div class="d-flex">
-                            <input class="m-1" type="date" min="<?= date('Y-m-d') ?>" name="dateFrom" id="edit-date-dateFrom" style="width: 50%">
-                            <input class="m-1" type="date" min="<?= date('Y-m-d') ?>" name="dateTo" id="edit-date-dateTo" style="width: 50%">
+                            <input class="m-1 empty-input" type="date" min="<?= date('Y-m-d') ?>" name="dateFrom" id="edit-date-dateFrom" style="width: 50%">
+                            <input class="m-1 empty-input" type="date" min="<?= date('Y-m-d') ?>" name="dateTo" id="edit-date-dateTo" style="width: 50%">
                         </div>
                     </div>
                 </div>
@@ -402,8 +405,8 @@ th.date{
                 <div class="d-flex flex-column">
                     <div class="container">
                         <div class="d-flex">
-                            <input class="m-1" type="date" min="<?= date('Y-m-d') ?>" name="dateFrom" id="edit-date-dateFrom" style="width: 50%">
-                            <input class="m-1" type="date" min="<?= date('Y-m-d') ?>" name="dateTo" id="edit-date-dateTo" style="width: 50%">
+                            <input class="m-1 empty-input" type="date" min="<?= date('Y-m-d') ?>" name="dateFrom" id="edit-date-dateFrom" style="width: 50%">
+                            <input class="m-1 empty-input" type="date" min="<?= date('Y-m-d') ?>" name="dateTo" id="edit-date-dateTo" style="width: 50%">
                         </div>
                     </div>
                 </div>
@@ -417,6 +420,7 @@ th.date{
     </div>
   </div>
 </div>
+<script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     let dateCounter = 1; // Počáteční index pro datumy

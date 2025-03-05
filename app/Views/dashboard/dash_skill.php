@@ -132,6 +132,9 @@
         border:1px solid #006DBC;
         outline: none;
     }
+    .invalid-input{
+      border: 1px solid red;
+    }
     select{
       border: none;
       height: 40px;
@@ -226,7 +229,7 @@
         <form action="<?= base_url('/add-new-category')?>" method="POST">
             <div class="container d-flex flex-column">
               <label class="mt-1" for="name">Název kategorie *</label>
-              <input class="m-1" type="text" name="name">
+              <input class="m-1 empty-input" type="text" name="name">
               <label class="mt-1" for="description">Poznámka</label>
               <textarea name="description" class="m-1" id="description"></textarea>
               <p>( * povinná pole)</p>
@@ -251,12 +254,12 @@
         <form action="<?= base_url('/add-new-skill')?>" method="POST">
             <div class="container d-flex flex-column">
               <label class="mt-1" for="name">Název dovednosti *</label>
-              <input type="text" name="name" class="m-1">
+              <input type="text" name="name" class="m-1 empty-input">
               <label class="mt-1" for="description-skill">Popis dovednosti</label>
               <textarea name="description" class="m-1" id="description-skill"></textarea>
               <label class="mt-1" for="select-category">Kategorie dovedností *</label>
-              <select class="m-1" name="category_id" id="select-category">
-                  <option select disabled>Vyberte možnost</option>
+              <select class="m-1 empty-input" name="category_id" id="select-category">
+                  <option select disabled value="">Vyberte možnost</option>
                   <?php foreach($categoryes as $category){ ?>
                       <option value="<?= $category['category_id']?>"><?=$category['category_name']?></option>
                   <?php } ?>
@@ -283,7 +286,7 @@
             <div class="container d-flex flex-column">
               <input type="hidden" name="id" id="edit-category-id">
               <label class="mt-1" for="edit-category-name">Název kategorie *</label>
-              <input class="m-1" type="text" id="edit-category-name" name="name">
+              <input class="m-1 empty-input" type="text" id="edit-category-name" name="name">
               <label class="mt-1" for="edit-category-description">Popis kategorie</label>
               <textarea class="m-1" name="description" id="edit-category-description"></textarea>
             </div>
@@ -308,11 +311,11 @@
             <div class="container d-flex flex-column">
               <input type="hidden" name="id" id="edit-skill-id">
               <label class="mt-1" for="edit-skill-name">Název dovednosti *</label>
-              <input class="m-1" type="text" id="edit-skill-name" name="name">
+              <input class="m-1 empty-input" type="text" id="edit-skill-name" name="name">
               <label class="mt-1" for="edit-skill-description">Popis dovednosti</label>
               <textarea name="description" id="edit-skill-description"></textarea>
               <label class="mt-1" for="edit-skill-categoryId">Kategorie dovedností *</label>
-              <select class="form-select" id="edit-skill-categoryId" name="category_id">
+              <select class="form-select empty-input" id="edit-skill-categoryId" name="category_id">
                   <option disabled>Vyberte možnost</option>
                   <?php foreach($categoryes as $category){ ?>
                       <option value="<?= $category['category_id']?>"><?=$category['category_name']?></option>
@@ -327,6 +330,7 @@
     </div>
   </div>
 </div>
+<script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
 <script>
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {

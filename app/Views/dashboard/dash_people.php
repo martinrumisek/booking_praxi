@@ -105,6 +105,9 @@
         color: #006DBC;
         text-decoration: underline ;
     }
+    .invalid-input{
+      border: 1px solid red;
+    }
 </style>
 <div class="container-fluid">
     <h2>Přehled termínů pro praxe</h2>
@@ -240,7 +243,7 @@
                 <label class="mt-1" for="name">Název sociální sítě</label>
                 <input <?php if($countLinks == 8){ ?> disabled <?php } ?> class="m-1" type="text" id="edit-SocialLink-name" name="name" placeholder="Např.: Instagram">
                 <label class="mt-1" for="name">Ikonka * (nutné vyplnit)</label>
-                <input <?php if($countLinks == 8){ ?> disabled <?php } ?> class="m-1" type="text" id="edit-SocialLink-name" name="icon_name" placeholder="Např.: <i class=''fa-brands fa-instagram''></i>">
+                <input <?php if($countLinks == 8){ ?> disabled <?php } ?> class="m-1 empty-input" type="text" id="edit-SocialLink-name" name="icon_name" placeholder="Např.: <i class=''fa-brands fa-instagram''></i>">
                 <div><p>Ikonku, kterou je potřeba použít naleznete <a class="icon-link" target="_blank" href="https://fontawesome.com/v6/search?o=r&m=free">zde</a></p></div>
                 <div class="d-flex justify-content-end mt-2"><input class="btn-create" type="submit" placeholder="Uložit" value="Vytvořit"></div>
             </div>
@@ -257,7 +260,7 @@
   </div>
 </div>
 </div>
-
+<script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     let userId, role, isChecked, checkboxToChange, otherCheckbox;

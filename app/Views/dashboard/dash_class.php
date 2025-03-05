@@ -99,6 +99,9 @@
     input.checkbox:hover{
         border: 1px solid #006DBC;
     }
+    .invalid-input{
+      border: 1px solid red;
+    }
     textarea{
       height: 200px;
       resize: none;
@@ -177,9 +180,9 @@
       <div class="modal-body">
             <div class="container d-flex flex-column">
                <label for="name_type">Název typu školy *</label>
-               <input type="text" name="name" id="name_type">
+               <input type="text" class="empty-input" name="name" id="name_type">
                <label for="shortcut_type">Zkratka typu školy *</label>
-               <input type="text" name="shortcut" id="shortcut_type">
+               <input type="text" class="empty-input" name="shortcut" id="shortcut_type">
                <label for="description_type">Popis</label>
                <textarea name="description" id="description_type"></textarea>
                <p>( * povinná pole)</p>
@@ -204,11 +207,11 @@
       <div class="modal-body">
             <div class="container d-flex flex-column">
                 <label for="name_field">Název oboru *</label>
-               <input type="text" name="name" id="name_field">
+               <input type="text" name="name" class="empty-input" id="name_field">
                <label for="shortcut_type">Zkratka oboru *</label>
-               <input type="text" name="shortcut" id="shortcut_field">
+               <input type="text" name="shortcut" class="empty-input" id="shortcut_field">
                <label for="select_type">Pro typ školy *</label>
-               <select name="type_school" id="select_type">
+               <select name="type_school" class="empty-input" id="select_type">
                 <option disabled selected value="">Vyberte možnost</option>
                     <?php foreach($typeSchools as $type){?>
                         <option value="<?= $type['type_id'] ?>"><?= $type['type_name'] . '  (' . $type['type_shortcut'] . ')' ?></option>
@@ -238,16 +241,16 @@
                 <div class="d-flex justify-content-between">
                     <div class="d-flex flex-column">
                         <label for="number_class">Číslo třídy *</label>
-                        <input type="number" name="class" id="number_class">
+                        <input type="number" name="class" class="empty-input" id="number_class">
                     </div>
                     <div class="d-flex jusify-content-center align-items-end">.</div>
                     <div class="d-flex flex-column">
                         <label for="letter_class">Písmeno třídy *</label>
-                        <input type="text" name="letter" id="letter_class">
+                        <input type="text" name="letter" class="empty-input" id="letter_class">
                     </div>
                 </div>
                 <label for="year_graduation">Rok maturity *</label>
-               <input type="number" name="year_graduation" id="year_graduation">
+               <input type="number" name="year_graduation" class="empty-input" id="year_graduation">
                <input type="hidden" name="fieldId" id="data-field-id">
                <p>( * povinná pole)</p>
                <p>POZOR! (Je potřeba všechno dodržet. Podle písmena a roku maturity se žáci přiřazují do tříd)</p>
@@ -272,9 +275,9 @@
       <div class="modal-body">
             <div class="container d-flex flex-column">
                <label for="data-typeSchool-name">Název typu školy *</label>
-               <input type="text" name="name" id="data-typeSchool-name">
+               <input type="text" name="name" class="empty-input" id="data-typeSchool-name">
                <label for="data-typeSchool-shortcut">Zkratka typu školy *</label>
-               <input type="text" name="shortcut" id="data-typeSchool-shortcut">
+               <input type="text" name="shortcut" class="empty-input" id="data-typeSchool-shortcut">
                <label for="data-typeSchool-description">Popis</label>
                <textarea name="description" id="data-typeSchool-description"></textarea>
                <input type="hidden" id="data-typeSchool-id" name="id">
@@ -300,9 +303,9 @@
       <div class="modal-body">
             <div class="container d-flex flex-column">
                 <label for="data-fieldStudy-name">Název oboru *</label>
-               <input type="text" name="name" id="data-fieldStudy-name">
+               <input type="text" name="name" id="data-fieldStudy-name" class="empty-input">
                <label for="data-fieldStudy-shortcut">Zkratka oboru *</label>
-               <input type="text" name="shortcut" id="data-fieldStudy-shortcut">
+               <input type="text" name="shortcut" class="empty-input" id="data-fieldStudy-shortcut">
                <input type="hidden" id="data-fieldStudy-id" name="id">
                <p>( * povinná pole)</p>
             </div>
@@ -328,16 +331,16 @@
                 <div class="d-flex justify-content-between">
                     <div class="d-flex flex-column">
                         <label for="data-class-number">Číslo třídy *</label>
-                        <input type="number" name="class" id="data-class-number">
+                        <input type="number" name="class" class="empty-input" id="data-class-number">
                     </div>
                     <div class="d-flex jusify-content-center align-items-end">.</div>
                     <div class="d-flex flex-column">
                         <label for="data-class-letter">Písmeno třídy *</label>
-                        <input type="text" name="letter" id="data-class-letter">
+                        <input type="text" name="letter" class="empty-input" id="data-class-letter">
                     </div>
                 </div>
                 <label for="data-class-graduation">Rok maturity *</label>
-               <input type="number" name="year_graduation" id="data-class-graduation">
+               <input type="number" class="empty-input" name="year_graduation" id="data-class-graduation">
                <input type="hidden" name="id" id="data-class-id">
                <p>( * povinná pole)</p>
                <p>POZOR! (Je potřeba všechno dodržet. Podle písmena a roku maturity se žáci přiřazují do tříd)</p>
@@ -370,7 +373,7 @@
   </div>
 </div>
 </div>
-
+<script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
   const modalEditCategory = document.getElementById('modalAddClass');
