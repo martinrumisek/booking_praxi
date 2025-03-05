@@ -41,6 +41,11 @@
         height: 55px;
         border-radius: 20px;
     }
+    .btn-document-export:hover{
+        background-color: #006DBC;
+        border: 1px solid white;
+        color: white;
+    }
     .next-previously{
         width: 70px;
         height: 70px;
@@ -401,7 +406,7 @@ if(!empty($userOffers)){
                 <div class="d-flex m-2">
                     <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-building"></i></div>
                     <p class="card-title fw-bold"><?= $offer['company_name'] ?></p>
-                    <?php if($offer['user_offer_accepted'] !== 1){ ?>
+                    <?php if(empty($practise)){ ?>
                     <div class="d-flex flex-column justify-content-center">
                         <form id="form-like-<?= $offer['offer_id'] ?>" action="<?= base_url('/edit-like-offer') ?>" method="POST">
                         <input type="hidden" name="id-offer" value="<?= $offer['offer_id'] ?>">
