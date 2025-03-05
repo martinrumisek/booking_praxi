@@ -360,9 +360,9 @@ if(in_array('admin', $role)){
                             <div class="col-12 col-md-6"><div class="h6 mt-2">Místo praxe</div><div class=""><?= $practise['offer_post_code'] . '  ' . $practise['offer_city'] . ', ' .  $practise['offer_street'] ?></div></div>
                             <div class="col-12 col-md-6"><div class="h6 mt-2">Vedoucí praxe</div><div class=""><?php if(!empty($practise['manager_degree_before'])){echo $practise['manager_degree_before'];} echo ' ' . $practise['manager_name'] . ' ' . $practise['manager_surname'] . ' '; if(!empty($practise['manager_degree_after'])){echo $practise['manager_degree_after'];} ?></div></div>
                             <div class="col-12 col-md-6"><div class="h6 mt-2">E-mail na vedoucí</div><div class=""><?= $practise['manager_mail'] ?></div></div>
-                            <?php $count = 1; foreach($dates as $date){ ?>
+                            <?php $count = 1; if(!empty($dates)){ foreach($dates as $date){ ?>
                                 <div class="col-12 col-md-6"><div class="h6 mt-2">Termín <?= $count ?></div><div class=""><?= date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])) ?></div></div>
-                            <?php $count++; } ?>
+                            <?php $count++; } }?>
                         </div>
                         <?php }else{if(!empty($practiseDate)){ ?>
                             <div class="d-flex justify-content-center"><i class="fa-regular fa-calendar h1 calendar-icon"></i></div>
