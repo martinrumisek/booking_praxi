@@ -880,10 +880,13 @@ class Home extends BaseController
             $this->session->setFlashdata('err_message', 'Nejsou vyplněna všechna potřebná políčka.');
             return $this->backUrl('/company-profil');
         }
-        $existUserMail = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
-        if(!empty($existUserMail)){
-            $this->session->setFlashdata('err_message', 'Daný uživatel již existuje.');
-            return $this->backUrl('/company-profil');
+        $user = $this->representativeCompanyModel->find($id);
+        if($mail !== $user['representative_mail']){
+            $existUserMail = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
+            if(!empty($existUserMail)){
+                $this->session->setFlashdata('err_message', 'Daný uživatel již existuje.');
+                return $this->backUrl('/company-profil');
+            }
         }
         $existUser = $this->representativeCompanyModel->where('representative_id', $id)->where('Company_company_id', $idCompany)->first();
         if(empty($existUser)){
