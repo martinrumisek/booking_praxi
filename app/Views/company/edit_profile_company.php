@@ -193,6 +193,9 @@
       box-shadow: none;
       height: auto;
     }
+    .invalid-input{
+      border: 1px solid red;
+    }
     .icon-edit-people{
         padding-left: 10px;
         padding-right: 10px;
