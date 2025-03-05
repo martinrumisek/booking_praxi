@@ -340,7 +340,7 @@ th.date{
                 <div class="d-flex flex-wrap">
                 <?php foreach($schoolClass as $classes){ ?>
                             <div class="d-flex align-items-center p-1">
-                                <input type="checkbox" class="checkbox p-1" name="classes[]" value="<?= $classes['class_id']?>" <?= in_array($classes['class_id'], $excludedClassIds) ? 'disabled' : ''   ?>chrome id="class-<?= $classes['class_id']?>">
+                                <input type="checkbox" class="checkbox p-1" name="classes[]" value="<?= $classes['class_id']?>" <?= in_array($classes['class_id'], $excludedClassIds) ? 'disabled' : ''   ?> id="class-<?= $classes['class_id']?>">
                                 <p class="m-0 p-1"><?= $classes['class_class'].'.'.$classes['class_letter_class']?></p>
                             </div>
                         <?php } ?>
