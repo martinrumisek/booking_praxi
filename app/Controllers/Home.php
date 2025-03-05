@@ -378,6 +378,18 @@ class Home extends BaseController
             $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
             return $this->backUrl('/practise-offer');
         }
+        $offer = $this->offerPractise->where('offer_id', $offerId)->first();
+        $infoOffer = [
+            'offer_name' => $offer['offer_name'],
+            'offer_requirements' => $offer['offer_requirements'],
+            'offer_description' => $offer['offer_description'],
+            'offer_city' => $offer['offer_city'],
+            'offer_street' => $offer['offer_street'],
+            'offer_post_code' => $offer['offer_post_code'],
+            'Practise_manager_manager_id' => $offer['Practise_manager_manager_id'],
+            'Practise_practise_id' => $offer['Practise_practise_id'],
+        ];
+        $duplicetaOffers = $this->offerPractise->where($infoOffer)->find();
         if($like == 0 || empty($like)){
             $like = 1;
         }else{
@@ -395,15 +407,35 @@ class Home extends BaseController
                 'user_offer_accepted' => null,
             ];
             $this->user_practiseModel->insert($data);
-            return $this->backUrl('/practise-offer');
         }else{
             $userOfferId = $userOffer['user_offer_id'];
             $data = [
                 'user_offer_like' => $like,
             ];
             $this->user_practiseModel->update($userOfferId, $data);
-            return $this->backUrl('/practise-offer');
         }
+        if(!empty($duplicetaOffers)){
+            foreach($duplicetaOffers as $offer){
+                $userOffer = $this->user_practiseModel->where('User_user_id', $userId)->where('Offer_practise_offer_id', $offer['offer_id'])->first();
+                if(empty($userOffer)){
+                    $data = [
+                        'User_user_id' => $userId,
+                        'Offer_practise_offer_id' => $offer['offer_id'],
+                        'user_offer_like' => $like,
+                        'user_offer_select' => 0,
+                        'user_offer_accepted' => null,
+                    ];
+                    $this->user_practiseModel->insert($data);
+                }else{
+                    $userOfferId = $userOffer['user_offer_id'];
+                    $data = [
+                        'user_offer_like' => $like,
+                    ];
+                    $this->user_practiseModel->update($userOfferId, $data);
+                }
+            }
+        }
+        return $this->backUrl('/practise-offer');
     }
     public function editSelectOffer(){
         $userId = $this->userSession['id'];
