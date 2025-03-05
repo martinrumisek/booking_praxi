@@ -856,6 +856,11 @@ class Dashboard extends Controller
         $this->datePractiseModel->where('Practise_practise_id', $id)->delete();
         $this->class_practiseModel->where('Practise_practise_id', $id)->delete();
         $this->practiseModel->delete($id);
+        $offers = $this->offerPractiseModel->where('Practise_practise_id', $id)->find();
+        foreach($offers as $offer){
+            $this->user_offerPractise->where('Offer_practise_offer_id', $offer['offer_id'])->delete();
+            $this->offerPractiseModel->where('offer_id', $offer['offer_id'])->where('offer_copy_next_year !=', 1)->delete();
+        }
         return redirect()->to(base_url('dashboard-calendar'));
     }
     public function editDatePractise(){
