@@ -160,6 +160,9 @@
        border:1px solid #006DBC;
         outline: none;
     }
+    .invalid-input{
+      border: 1px solid red;
+    }
     .del-icon:hover{
       color:red;
     }
@@ -259,19 +262,19 @@
         <form action="<?= base_url('add-new-company')?>" method="POST">
             <div class="container d-flex flex-column">
               <textarea name="nameCompany" class="m-1" placeholder="Název firmy (není povinné)"></textarea>
-              <input class="m-1" placeholder="IČO" name="ico" type="number">
-              <select class=" m-1" id="edit-skill-categoryId" name="category_id" placeholder="Vyberte možnost" value="Vyberte možnost">
-                <option>Vyberte možnost</option>
+              <input class="m-1 empty-input ico" placeholder="IČO" name="ico" type="number">
+              <select class="m-1 empty-input" id="edit-skill-categoryId" name="category_id" placeholder="Vyberte možnost" value="Vyberte možnost">
+                <option disabled selected value="">Vyberte možnost</option>
                 <option value="1">Fyzická osoba</option>
                 <option value="2">Pravnická osoba</option>
               </select>
-              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno zást."></div>
-              <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení zást."><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
-              <input type="mail" class="m-1" name="mail" placeholder="E-mail zást.">
-              <input class="m-1" placeholder="Tel. č. zást." name="phone" type="tel">
-              <input class="m-1" placeholder="Pracovní pozice zást." name="position_work" type="text">
-              <input class="m-1" placeholder="Heslo" name="passwd1" type="password" id="passwd1">
-              <input class="m-1" placeholder="Potvrzení hesla" name="passwd2" type="password" id="passwd2">
+              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1 empty-input" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno zást."></div>
+              <div class="d-flex"><input type="text" class="m-1 empty-input" name="surname" style="width: 80%;" placeholder="Příjmení zást."><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
+              <input type="mail" class="m-1 empty-input mail" name="mail" placeholder="E-mail zást.">
+              <input class="m-1 phone-input empty-input" placeholder="Tel. č. zást." name="phone" type="tel">
+              <input class="m-1 empty-input" placeholder="Pracovní pozice zást." name="position_work" type="text">
+              <input class="m-1 empty-input" placeholder="Heslo" name="passwd1" type="password" id="passwd1">
+              <input class="m-1 empty-input" placeholder="Potvrzení hesla" name="passwd2" type="password" id="passwd2">
               <div class="d-flex aling-items-center"><input class="checkbox" type="checkbox" value="1" name="checkbox" id="checkbox-passwd-hidden"><p class="m-0 text-checkbox">Heslo si vytvoří uživatel</p></div>
             </div>
       </div>
@@ -293,7 +296,7 @@
       <div class="modal-body">
         <form action="<?= base_url('/edit-company')?>" method="POST">
             <div class="container d-flex flex-column">
-              <textarea name="name" class="m-1" placeholder="Název firmy" id="edit-company-name"></textarea>
+              <textarea name="name" class="m-1 empty-input" placeholder="Název firmy" id="edit-company-name"></textarea>
               <input class="m-1" placeholder="id - firma" name="id" type="hidden" id="edit-company-id">
             </div>
       </div>
@@ -315,11 +318,11 @@
       <div class="modal-body">
         <form action="<?= base_url('/add-practiseManager')?>" method="POST">
             <div class="container d-flex flex-column">
-            <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
-            <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
-            <input type="mail" class="m-1" name="mail" placeholder="E-mail">
-            <input class="m-1" placeholder="Tel. č" name="phone" type="tel">
-            <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text">
+            <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1 empty-input" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
+            <div class="d-flex"><input type="text" class="m-1 empty-input" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
+            <input type="mail" class="m-1 empty-input" name="mail" placeholder="E-mail">
+            <input class="m-1 phone-input empty-input" placeholder="Tel. č" name="phone" type="tel">
+            <input class="m-1 empty-input" placeholder="Pracovní pozice" name="position_work" type="text">
             <input class="m-1" id="add-practiseManager-companyId" name="companyId" type="hidden">
             </div>
       </div>
@@ -341,11 +344,11 @@
       <div class="modal-body">
         <form action="<?= base_url('edit-practiseManager')?>" method="POST">
             <div class="container d-flex flex-column">
-                <div class="d-flex"><input id="edit-practiseManager-degreeBefore" class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="edit-practiseManager-name" placeholder="Jméno"></div>
-                <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení" id="edit-practiseManager-surname"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za" id="edit-practiseManager-degreeAfter"></div>
-                <input type="mail" class="m-1" name="mail" placeholder="E-mail" id="edit-practiseManager-mail">
-                <input class="m-1" placeholder="Tel. č" name="phone" type="tel" id="edit-practiseManager-phone">
-                <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text" id="edit-practiseManager-positionWorks">
+                <div class="d-flex"><input id="edit-practiseManager-degreeBefore" class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1 empty-input" type="text" name="name" style="width: 80%;" id="edit-practiseManager-name" placeholder="Jméno"></div>
+                <div class="d-flex"><input type="text" class="m-1 empty-input" name="surname" style="width: 80%;" placeholder="Příjmení" id="edit-practiseManager-surname"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za" id="edit-practiseManager-degreeAfter"></div>
+                <input type="mail" class="m-1 empty-input" name="mail" placeholder="E-mail" id="edit-practiseManager-mail">
+                <input class="m-1 phone-input empty-input" placeholder="Tel. č" name="phone" type="tel" id="edit-practiseManager-phone">
+                <input class="m-1 empty-input" placeholder="Pracovní pozice" name="position_work" type="text" id="edit-practiseManager-positionWorks">
                 <input class="m-1" id="edit-practiseManager-companyId" name="companyId" type="hidden">
                 <input class="m-1" id="edit-practiseManager-id" name="id" type="hidden">
             </div>
@@ -368,13 +371,13 @@
       <div class="modal-body">
         <form action="<?= base_url('/add-representativeCompany')?>" method="POST">
             <div class="container d-flex flex-column">
-              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
-              <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
-              <input type="mail" class="m-1" name="mail" placeholder="E-mail">
-              <input class="m-1" placeholder="Tel. č" name="phone" type="tel">
-              <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text">
-              <input class="m-1" placeholder="Heslo" name="passwd1" type="password" id="passwd1AddPass">
-              <input class="m-1" placeholder="Potvrzení hesla" name="passwd2" type="password" id="passwd2AddPass">
+              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1 empty-input" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
+              <div class="d-flex"><input type="text" class="m-1 empty-input" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
+              <input type="mail" class="m-1 empty-input" name="mail" placeholder="E-mail">
+              <input class="m-1 phone-input empty-input" placeholder="Tel. č" name="phone" type="tel">
+              <input class="m-1 empty-input" placeholder="Pracovní pozice" name="position_work" type="text">
+              <input class="m-1 empty-input" placeholder="Heslo" name="passwd1" type="password" id="passwd1AddPass">
+              <input class="m-1 empty-input" placeholder="Potvrzení hesla" name="passwd2" type="password" id="passwd2AddPass">
               <div class="d-flex aling-items-center"><input class="checkbox" type="checkbox" value="1" name="checkbox" id="checkboxAddPass"><p class="m-0 text-checkbox">Heslo si vytvoří uživatel</p></div>
               <input class="m-1" id="add-representativeCompany-companyId" name="companyId" type="hidden">
             </div>
@@ -397,8 +400,8 @@
       <div class="modal-body">
         <form action="<?= base_url('/edit-user-password')?>" method="POST">
             <div class="container d-flex flex-column">
-              <input class="m-1" placeholder="Nové heslo" name="passwd1" type="password" id="passwd1EditPass">
-              <input class="m-1" placeholder="Potvrzení hesla" name="passwd2" type="password" id="passwd2EditPass">
+              <input class="m-1 empty-input" placeholder="Nové heslo" name="passwd1" type="password" id="passwd1EditPass">
+              <input class="m-1 empty-input" placeholder="Potvrzení hesla" name="passwd2" type="password" id="passwd2EditPass">
               <div class="d-flex aling-items-center"><input class="checkbox" type="checkbox" value="1" name="checkbox" id="checkboxEditPass"><p class="m-0 text-checkbox">Heslo si vytvoří uživatel</p></div>
               <input class="m-1" name="id" id="edit-passwordUser-id" type="hidden">
             </div>
@@ -421,11 +424,11 @@
       <div class="modal-body">
         <form action="<?= base_url('/edit-representativeCompany')?>" method="POST">
             <div class="container d-flex flex-column">
-                <div class="d-flex"><input id="edit-representativeCompany-degreeBefore" class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="edit-representativeCompany-name" placeholder="Jméno"></div>
-                <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení" id="edit-representativeCompany-surname"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za" id="edit-representativeCompany-degreeAfter"></div>
-                <input type="mail" class="m-1" name="mail" placeholder="E-mail" id="edit-representativeCompany-mail">
-                <input class="m-1" placeholder="Tel. č" name="phone" type="tel" id="edit-representativeCompany-phone">
-                <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text" id="edit-representativeCompany-positionWorks">
+                <div class="d-flex"><input id="edit-representativeCompany-degreeBefore" class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1 empty-input" type="text" name="name" style="width: 80%;" id="edit-representativeCompany-name" placeholder="Jméno"></div>
+                <div class="d-flex"><input type="text" class="m-1 empty-input" name="surname" style="width: 80%;" placeholder="Příjmení" id="edit-representativeCompany-surname"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za" id="edit-representativeCompany-degreeAfter"></div>
+                <input type="mail" class="m-1 empty-input" name="mail" placeholder="E-mail" id="edit-representativeCompany-mail">
+                <input class="m-1 phone-input empty-input" placeholder="Tel. č" name="phone" type="tel" id="edit-representativeCompany-phone">
+                <input class="m-1 empty-input" placeholder="Pracovní pozice" name="position_work" type="text" id="edit-representativeCompany-positionWorks">
                 <input class="m-1" id="edit-representativeCompany-id" name="id" type="hidden">
             </div>
       </div>
@@ -437,6 +440,10 @@
   </div>
 </div>
 </div>
+<script src="<?= base_url('assets/js/validate-phone-input.js') ?>"></script>
+<script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
+<script src="<?= base_url('assets/js/validate-mail-input.js') ?>"></script>
+<script src="<?= base_url('assets/js/validate-ico-input.js') ?>"></script>
 <script>
 const checkboxPasswdHidden = document.getElementById('checkbox-passwd-hidden');
 const passwd1 = document.getElementById('passwd1');
