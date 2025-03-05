@@ -358,11 +358,11 @@
       <div class="modal-body">
         <form action="<?= base_url('/profilAdd-practiseManager')?>" method="POST">
             <div class="container d-flex flex-column">
-            <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
-            <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
-            <input type="mail" class="m-1" name="mail" placeholder="E-mail">
-            <input class="m-1" placeholder="Tel. č" name="phone" type="tel">
-            <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text">
+            <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1 empty-input" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
+            <div class="d-flex"><input type="text" class="m-1 empty-input" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
+            <input type="mail" class="m-1 empty-input mail" name="mail" placeholder="E-mail">
+            <input class="m-1 phone-input empty-input" placeholder="Tel. č" name="phone" type="tel">
+            <input class="m-1 empty-input" placeholder="Pracovní pozice" name="position_work" type="text">
             <input class="m-1" id="add-practiseManager-companyId" name="companyId" type="hidden">
             </div>
       </div>
@@ -384,11 +384,11 @@
       <div class="modal-body">
         <form action="<?= base_url('/profilEdit-practiseManager')?>" method="POST">
             <div class="container d-flex flex-column">
-            <div class="d-flex"><input class="m-1" type="text" name="degree_before" id="edit-practiseManager-degreeBefore" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" id="edit-practiseManager-name" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
-            <div class="d-flex"><input type="text" class="m-1" id="edit-practiseManager-surname" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" id="edit-practiseManager-degreeAfter" style="width: 20%;" placeholder="Titul za"></div>
-            <input type="mail" class="m-1" name="mail" id="edit-practiseManager-mail" placeholder="E-mail">
-            <input class="m-1" placeholder="Tel. č" id="edit-practiseManager-phone" name="phone" type="tel">
-            <input class="m-1" placeholder="Pracovní pozice" id="edit-practiseManager-positionWorks" name="position_work" type="text">
+            <div class="d-flex"><input class="m-1" type="text" name="degree_before" id="edit-practiseManager-degreeBefore" style="width: 20%;" placeholder="Titul před."><input class="m-1 empty-input" type="text" id="edit-practiseManager-name" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
+            <div class="d-flex"><input type="text" class="m-1 empty-input" id="edit-practiseManager-surname" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" id="edit-practiseManager-degreeAfter" style="width: 20%;" placeholder="Titul za"></div>
+            <input type="mail" class="m-1 empty-input mail" name="mail" id="edit-practiseManager-mail" placeholder="E-mail">
+            <input class="m-1 phone-input empty-input" placeholder="Tel. č" id="edit-practiseManager-phone" name="phone" type="tel">
+            <input class="m-1 empty-input" placeholder="Pracovní pozice" id="edit-practiseManager-positionWorks" name="position_work" type="text">
             <input class="m-1" id="edit-practiseManager-id" name="id" type="hidden">
             </div>
       </div>
@@ -410,11 +410,11 @@
       <div class="modal-body">
         <form action="<?= base_url('/add-representative-company-profil')?>" method="POST">
             <div class="container d-flex flex-column">
-              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
-              <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
-              <input type="mail" class="m-1" name="mail" placeholder="E-mail">
-              <input class="m-1" placeholder="Tel. č" name="phone" type="tel">
-              <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text">
+              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před."><input class="m-1 empty-input" type="text" name="name" style="width: 80%;" id="" placeholder="Jméno"></div>
+              <div class="d-flex"><input type="text" class="m-1 empty-input" name="surname" style="width: 80%;" placeholder="Příjmení"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za"></div>
+              <input type="mail" class="m-1 empty-input mail" name="mail" placeholder="E-mail">
+              <input class="m-1 phone-input empty-input" placeholder="Tel. č" name="phone" type="tel">
+              <input class="m-1 empty-input" placeholder="Pracovní pozice" name="position_work" type="text">
               <input class="m-1" placeholder="Heslo" name="passwd1" type="password" id="passwd1AddPass">
               <input class="m-1" placeholder="Potvrzení hesla" name="passwd2" type="password" id="passwd2AddPass">
               <div class="d-flex aling-items-center"><input class="checkbox" type="checkbox" value="1" name="checkbox" id="checkboxAddPass"><p class="m-0 text-checkbox">Heslo si vytvoří uživatel</p></div>
@@ -438,12 +438,12 @@
       <div class="modal-body">
         <form action="<?= base_url('/edit-representative-company-profil')?>" method="POST">
             <div class="container d-flex flex-column">
-              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před." id="representative-edit-degreeBefore"><input class="m-1" type="text" name="name" style="width: 80%;" placeholder="Jméno" id="representative-edit-name"></div>
-              <div class="d-flex"><input type="text" class="m-1" name="surname" style="width: 80%;" placeholder="Příjmení" id="representative-edit-surname"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za" id="representative-edit-degreeAfter"></div>
-              <input type="mail" class="m-1" name="mail" placeholder="E-mail" id="representative-edit-mail">
-              <input class="m-1" placeholder="Tel. č" name="phone" type="tel" id="representative-edit-phone">
-              <input class="m-1" placeholder="Pracovní pozice" name="position_work" type="text" id="representative-edit-position">
-              <input class="m-1" id="representative-edit-companyId" name="companyId" type="hidden">
+              <div class="d-flex"><input class="m-1" type="text" name="degree_before" style="width: 20%;" placeholder="Titul před." id="representative-edit-degreeBefore"><input class="m-1 empty-input" type="text" name="name" style="width: 80%;" placeholder="Jméno" id="representative-edit-name"></div>
+              <div class="d-flex"><input type="text" class="m-1 empty-input" name="surname" style="width: 80%;" placeholder="Příjmení" id="representative-edit-surname"><input class="m-1" type="text" name="degree_after" style="width: 20%;" placeholder="Titul za" id="representative-edit-degreeAfter"></div>
+              <input type="mail" class="m-1 empty-input mail" name="mail" placeholder="E-mail" id="representative-edit-mail">
+              <input class="m-1 phone-input empty-input" placeholder="Tel. č" name="phone" type="tel" id="representative-edit-phone">
+              <input class="m-1 empty-input" placeholder="Pracovní pozice" name="position_work" type="text" id="representative-edit-position">
+              <input class="m-1 empty-input" id="representative-edit-companyId" name="companyId" type="hidden">
               <input type="hidden" id="representative-edit-representativeId" name="id">
             </div>
       </div>
@@ -454,6 +454,9 @@
     </div>
   </div>
 </div>
+<script src="<?= base_url('assets/js/validate-phone-input.js') ?>"></script>
+<script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
+<script src="<?= base_url('assets/js/validate-mail-input.js') ?>"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
   const modalEditCategory = document.getElementById('modalAddPractiseManager');
