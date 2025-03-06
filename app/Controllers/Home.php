@@ -133,7 +133,7 @@ class Home extends BaseController
             }
         }
         $count['companyCount'] = 0;
-        $allCompanyes = $this->companyModel->findAll();
+        $allCompanyes = $this->companyModel->where('company_register_company', 1)->findAll();
         foreach($allCompanyes as $allCompany){
             if($allCompany['company_register_company'] == 1){
                 $count['companyCount'] = $count['companyCount'] + 1;

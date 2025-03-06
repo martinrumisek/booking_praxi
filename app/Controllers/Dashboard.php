@@ -135,7 +135,7 @@ class Dashboard extends Controller
     public function companyView(){
         $search = $this->request->getGet('search');
         $search = urldecode($search);
-        $this->companyModel->join('Representative_company', 'Company.company_id = Representative_company.Company_company_id AND Representative_company.representative_del_time IS NULL', 'left')->join('Practise_manager', 'Company.company_id = Practise_manager.Company_company_id AND Practise_manager.manager_del_time IS NULL', 'left');
+        $this->companyModel->where('company_register_company', 1)->join('Representative_company', 'Company.company_id = Representative_company.Company_company_id AND Representative_company.representative_del_time IS NULL', 'left')->join('Practise_manager', 'Company.company_id = Practise_manager.Company_company_id AND Practise_manager.manager_del_time IS NULL', 'left');
         if(!empty($search)){
             $this->companyModel->groupStart()->like('company_name', $search)->orLike("CONCAT(representative_name, ' ', representative_surname)", $search)->orLike('company_ico', $search)->orLike("CONCAT(manager_name, ' ', manager_surname)", $search)->groupEnd();
         }
@@ -1093,7 +1093,7 @@ class Dashboard extends Controller
             $this->session->setFlashdata('err_message', 'Firma nebyla vytvořena, protože se hesla neshodují.');
             return redirect()->to(base_url('dashboard-company'));
         }
-        $existCompany = $this->companyModel->where('company_ico', $ico)->find();
+        $existCompany = $this->companyModel->where('company_register_company', 1)->where('company_ico', $ico)->find();
         if(!empty($existCompany)){
             $this->session->setFlashdata('err_message', 'Vámi vytvářená firma již existuje.');
             return redirect()->to(base_url('dashboard-company'));

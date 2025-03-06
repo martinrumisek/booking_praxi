@@ -98,7 +98,7 @@ class Auth extends Controller
             return redirect()->to(base_url('/registration'));
         }
         $representativeUser = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
-        $companyExist = $this->companyModel->where('company_ico', $ico)->first();
+        $companyExist = $this->companyModel->where('company_register_company', 1)->where('company_ico', $ico)->first();
         if($representativeUser || $companyExist){
             $this->session->setFlashdata('err_message', 'Firma/e-mail je v systému již existuje.');
             return redirect()->to(base_url('/registration'));
