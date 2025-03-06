@@ -40,7 +40,7 @@ $routes->get('practise-offer-view/(:num)', 'Home::completeOfferView/$1', ['filte
 $routes->get('delete-practise-offer/(:num)', 'Home::deleteOfferPractise/$1', ['filter' => 'role:company']);
 $routes->get('edit-practise-offer-view/(:num)', 'Home::editOfferPractiseView/$1', ['filter' => 'role:company']);
 $routes->post('/edit-practise-offer', 'Home::editOfferPractise', ['filter' => 'role:company,admin,spravce']);
-
+$routes->post('/write-student-offer-practise', 'Home::writeStudentOfferPractise', ['filter' => 'role:student']);
 
 $routes->post('/edit-like-offer', 'Home::editLikeOffer', ['filter', 'role:student']);
 $routes->post('/edit-select-offer', 'Home::editSelectOffer', ['filter', 'role:student']);

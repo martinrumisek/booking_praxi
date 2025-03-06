@@ -17,7 +17,34 @@
         background-color: #FFFFFFD6;
         box-shadow: 0px 3px 6px #00000029;
     }
-
+    input{
+      border: none;
+      height: 40px;
+      padding: 8px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0px 3px 6px #00000029;
+    }
+    input:focus{
+        border:1px solid #006DBC;
+        outline: none;
+    }
+    select{
+      border: none;
+      height: 40px;
+      padding: 8px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0px 3px 6px #00000029;
+    }
+    select:focus{
+       border:1px solid #006DBC;
+        outline: none;
+    }
+    .btn-create:hover{
+        background-color: #006DBC;
+        color: white;
+    }
     .btn-container{
         width: 100%;
         height: 70px;
@@ -320,6 +347,9 @@
     .btn-close-modal:hover{
       color: red;
     }
+    .invalid-input{
+      border: 1px solid red;
+    }
 </style>
 <?php 
 $role = session()->get('role');
@@ -376,7 +406,7 @@ if(in_array('admin', $role)){
                             <div class="d-flex flex-wrap mt-auto align-items-end mt-auto justify-content-center">
                                 <a class="m-2 practise-btn" data-bs-toggle="modal" data-bs-target="#modalShowInformationPractise" href="">Zobrazit informace</a>
                                 <a class="m-2 practise-btn" href="<?= base_url('/practise-offer')?>">Vybrat praxi</a>
-                                <a class="m-2 practise-btn" data-bs-toggle="modal" data-bs-target="#modalWriteMyPractise" href="">Zapsat praxi</a>
+                                <a class="m-2 practise-btn" data-bs-toggle="modal" data-bs-target="#modalWriteMyPractise" id-practise-data="<?= $practiseDate['practise_id'] ?>" href="">Zapsat praxi</a>
                             </div>
                        <?php }else{ ?>
                             <!--- Když není zařazen do termínu praxe -->
@@ -473,16 +503,16 @@ if(!empty($userOffers)){
         <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('')?>" method="POST" enctype="multipart/form-data">
+        <form action="<?= base_url('/write-student-offer-practise')?>" method="POST" enctype="multipart/form-data">
             <div class="container d-flex flex-column">
                 <label class="mt-1" for="name">Název pro praxi *</label>
-                <input class="m-1" type="text" name="name_offer">
+                <input class="m-1 empty-input" type="text" name="name_offer">
                 <label class="mt-1" for="name">Místo konání (město) *</label>
-                <input class="m-1" type="text" name="city_offer">
+                <input class="m-1 empty-input" type="text" name="city_offer">
                 <label class="mt-1" for="name">Místo konání (ulice) *</label>
-                <input class="m-1" type="text" name="street_offer">
+                <input class="m-1 empty-input" type="text" name="street_offer">
                 <label class="mt-1" for="name">Místo konání (PSČ) *</label>
-                <input class="m-1" type="text" name="post_code_offer">
+                <input class="m-1 empty-input" type="text" name="post_code_offer">
                 <div class="d-flex">
                     <div class="d-flex flex-column" style="width: 30%;">
                     <label class="mt-1" for="name">titul před.</label>
@@ -490,13 +520,13 @@ if(!empty($userOffers)){
                     </div>
                     <div class="d-flex flex-column" style="width: 70%;">
                     <label class="mt-1" for="name">Jméno vedoucího praxe *</label>
-                    <input class="m-1" type="text" name="name_manager">
+                    <input class="m-1 empty-input" type="text" name="name_manager">
                     </div>
                 </div>
                 <div class="d-flex">
                 <div class="d-flex flex-column" style="width: 70%;">
                     <label class="mt-1" for="name">Příjmení vedoucího praxe *</label>
-                    <input class="m-1" type="text" name="surname_manager">
+                    <input class="m-1 empty-input" type="text" name="surname_manager">
                     </div>
                     <div class="d-flex flex-column" style="width: 30%;">
                     <label class="mt-1" for="name">titul za.</label>
@@ -504,27 +534,20 @@ if(!empty($userOffers)){
                     </div>
                 </div>
                 <label class="mt-1" for="name">E-mail vedoucího praxe *</label>
-                <input class="m-1" type="text" name="mail_manager">
+                <input class="m-1 empty-input mail" type="text" name="mail_manager">
                 <label class="mt-1" for="name">Telefonní č. vedoucího praxe *</label>
-                <input class="m-1" type="text" name="phone_manager">
+                <input class="m-1 empty-input phone-input" type="text" name="phone_manager">
                 <label class="mt-1" for="name">Pracovní pozice vedoucího praxe *</label>
-                <input class="m-1" type="text" name="position_manager">
-                <label class="mt-1" for="name">Název firmy *</label>
-                <input class="m-1" type="text" name="name_company">
+                <input class="m-1 empty-input" type="text" name="position_manager">
                 <label class="mt-1" for="name">Ičo firmy *</label>
-                <input class="m-1" type="text" name="ico_company">
-                <label class="mt-1" for="name">Sídlo firmy (město) *</label>
-                <input class="m-1" type="text" name="city_company">
-                <label class="mt-1" for="name">Sídlo firmy (ulice) *</label>
-                <input class="m-1" type="text" name="street_company">
-                <label class="mt-1" for="name">Sídlo firmy (PSČ) *</label>
-                <input class="m-1" type="text" name="post_code_company">
+                <input class="m-1 empty-input" type="text" name="ico_company">
                 <label class="mt-1" for="name">Pravní forma *</label>
-                <select name="legar_form_company">
+                <select name="legal_form_company" class="empty-input">
                     <option value="" disabled selected>Vybrat</option>
-                    <option value="0">Fyzická osoba</option>
                     <option value="1">Fyzická osoba</option>
+                    <option value="2">Právnická osoba</option>
                 </select>
+                <input type="hidden" name="id_practise" id="data-id-practise">
                 <p>( * povinná pole)</p>
             </div>
       </div>
@@ -536,4 +559,21 @@ if(!empty($userOffers)){
   </div>
 </div>
 <?php } ?>
+<script src="<?= base_url('assets/js/validate-phone-input.js') ?>"></script>
+<script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
+<script src="<?= base_url('assets/js/validate-mail-input.js') ?>"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+  const modalEditCategory = document.getElementById('modalWriteMyPractise');
+  if (modalEditCategory) {
+    modalEditCategory.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      if (button) {
+        const id = button.getAttribute('id-practise-data') || '';
+        document.getElementById('data-id-practise').value = id;
+      }
+    });
+  }
+});
+</script>
 <?= $this->endSection() ?>

@@ -114,6 +114,100 @@ class Home extends BaseController
         ];
         return view('home_student', $data);
     }
+    public function writeStudentOfferPractise(){
+        $idUser = $this->userSession['id'];
+        $offerName = $this->request->getPost('name_offer');
+        $offerCity = $this->request->getPost('city_offer');
+        $offerStreet = $this->request->getPost('street_offer');
+        $offerPostCode = $this->request->getPost('post_code_offer');
+        $managerDegreeBefore = $this->request->getPost('degree_before_manager');
+        $managerName = $this->request->getPost('name_manager');
+        $managerSurname = $this->request->getPost('surname_manager');
+        $managerDegreeAfter = $this->request->getPost('degree_after_manager');
+        $managerMail = $this->request->getPost('mail_manager');
+        $managerPhone = $this->request->getPost('phone_manager');
+        $managerPosition = $this->request->getPost('position_manager');
+        $companyIco = $this->request->getPost('ico_company');
+        $companyLegalForm = $this->request->getPost('legal_form_company');
+        $idPractise = $this->request->getPost('id_practise');
+        if(empty($idUser && $offerName && $offerCity && $offerStreet && $offerPostCode && $managerName && $managerSurname && $managerMail && $managerPhone && $managerPosition && $companyLegalForm && $idPractise)){
+            $this->session->setFlashdata('err_message', 'Akce se nemohla provést, protože nebyly vyplněny všechna políčka!');
+            return redirect()->to(base_url('home-student'));
+        }
+        $isValid = $this->verifyCompany($companyIco);
+        if(empty($isValid)){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci provést ještě jednou.');
+            return redirect()->to(base_url('home-student'));
+        }
+        $companyName = $isValid['obchodniJmeno'];
+        $companyTown = $isValid['sidlo']['nazevObce'];
+        if(empty($isValid['sidlo']['nazevUlice'])){
+            $companyStreet = $isValid['sidlo']['nazevObce'] . ' ' . $isValid['sidlo']['cisloDomovni'];
+        }else{
+            $companyStreet = $isValid['sidlo']['nazevUlice'].' '.$isValid['sidlo']['cisloDomovni'];
+        }
+        $companyPostCode = $isValid['sidlo']['psc'];
+        $companyLegalNumberForm = $isValid['pravniForma'];
+        $companyData = [
+            'company_name' => $companyName,
+            'company_ico' => $companyIco,
+            'company_subject' => $companyLegalForm,
+            'company_legal_form' => $companyLegalNumberForm,
+            'company_city' => $companyTown,
+            'company_street' => $companyStreet,
+            'company_post_code' => $companyPostCode,
+            'company_agree_document' => 0,
+            'company_register_company' => 0,
+        ];
+        $idInsertCompany = $this->companyModel->insert($companyData);
+        $managerData = [
+            'manager_degree_before' => $managerDegreeBefore,
+            'manager_name' => $managerName,
+            'manager_surname' => $managerSurname,
+            'manager_degree_after' => $managerDegreeAfter,
+            'manager_mail' => $managerMail,
+            'manager_phone' => $managerPhone,
+            'manager_position_works' => $managerPosition,
+            'Company_company_id' => $idInsertCompany,
+        ];
+        $idInsertManager = $this->practiseManagerModel->insert($managerData);
+        $offerData = [
+            'offer_name' => $offerName,
+            'offer_city' => $offerCity,
+            'offer_street' => $offerStreet,
+            'offer_post_code' => $offerPostCode,
+            'Practise_practise_id' => $idPractise,
+            'Practise_manager_manager_id' => $idInsertManager,
+        ];
+        $idInsertOffer = $this->offerPractise->insert($offerData);
+        $acceptedOfferData = [
+            'User_user_id' => $idUser,
+            'Offer_practise_offer_id' => $idInsertOffer,
+            'user_offer_accepted' => 1,
+            'user_offer_select' => 1,
+        ];
+        $idAcceptedOffer = $this->user_practiseModel->insert($acceptedOfferData);
+        $user_offers = $this->user_practiseModel->where('User_user_id', $idUser)->where('user_offer_id !=', $idAcceptedOffer)->find();
+        foreach($user_offers as $offer){
+            $this->user_practiseModel->delete($offer['user_offer_id']);
+        }
+        return $this->backUrl('home-student');
+    }
+    private function verifyCompany($ico){
+        $url = "http://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/$ico";
+        $header = get_headers($url, 1);
+        if(strpos($header[0],"404") !== false){
+            return null;
+        }
+        $response = @file_get_contents($url);
+        if($response === false){
+            return null;
+        }
+        $data = json_decode($response, true);
+        if(isset($data["ico"]) && $data["ico"] === $ico){
+            return $data;
+        }else{return null;}
+    }
     public function homeCompany(){
         $nowDate = date('Y-m-d');
         $representativeCompany = $this->representativeCompanyModel->find($this->companyUser['idUser']);
