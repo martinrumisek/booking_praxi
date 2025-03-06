@@ -615,6 +615,11 @@ class Home extends BaseController
         ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
         ->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'left')
         ->first();
+        $companyId = $this->companyUser['idCompany'];
+        if($companyId !== $offer['Company_company_id']){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
+            return $this->backUrl('/company-offer-practise');
+        }
         $dates = $this->datePractiseModel->where('Practise_practise_id', $offer['practise_id'])->find();
         $offersSkill = $this->skill_offerPractise->where('Offer_practise_offer_id', $offer['offer_id'])->find();
         $managers = $this->practiseManagerModel->where('Company_company_id', $offer['company_id'])->find();
@@ -648,7 +653,66 @@ class Home extends BaseController
         return view('company/edit_offer_practise', $data);
     }
     public function editOfferPractise(){
-
+        $idOffer = $this->request->getPost('offer_id');
+        $nameOffer = $this->request->getPost('name_offer_practise');
+        $shortDescription = $this->request->getPost('short_description_offer_practise');
+        $cityOffer = $this->request->getPost('city_practise');
+        $streetOffer = $this->request->getPost('street_practise');
+        $postCodeOffer = $this->request->getPost('post_code_practise');
+        $copyOffer = $this->request->getPost('copy_next_year');
+        $skills = $this->request->getPost('skills');
+        $managerIdOffer = $this->request->getPost('practise_manager');
+        $description = $this->request->getPost('full_description');
+        $idCompany = $this->companyUser['idCompany'];
+        if(empty($idOffer && $nameOffer && $cityOffer && $streetOffer && $postCodeOffer && $managerIdOffer && $idCompany)){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
+            return $this->backUrl('/company-offer-practise');
+        }
+        $managerCompany = $this->practiseManagerModel->find($managerIdOffer);
+        if($idCompany !== $managerCompany['Company_company_id']){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
+            return $this->backUrl('/company-offer-practise');
+        }
+        $dataOffer = [
+            'offer_name' => $nameOffer,
+            'offer_requirements' => $shortDescription,
+            'offer_description' => $description,
+            'offer_city' => $cityOffer,
+            'offer_street' => $streetOffer,
+            'offer_post_code' => $postCodeOffer,
+            'offer_copy_next_year' => $copyOffer,
+            'Practise_manager_manager_id' => $managerIdOffer,
+        ];
+        $this->offerPractise->update($idOffer, $dataOffer);
+        $existingSkills = $this->skill_offerPractise->where('Offer_practise_offer_id', $idOffer)->withDeleted()->find();
+        $existingIdSkill = array_column($existingSkills, 'Skill_skill_id');
+        if(!empty($skills)){
+            foreach($skills as $skill){
+                if(in_array($skill, $existingIdSkill)){
+                    $currentDelTime = $existingSkills[array_search($skill, $existingIdSkill)]['skill_offer_del_time'];
+                    $currentId = $existingSkills[array_search($skill, $existingIdSkill)]['skill_offer_id'];
+                    if(!empty($currentDelTime)){
+                        $this->skill_offerPractise->update($currentId, ['skill_offer_del_time' => null]);
+                    }
+                }else{
+                    $newDataSkill = [
+                        'Offer_practise_offer_id' => $idOffer,
+                        'Skill_skill_id' => $skill,
+                    ];
+                    $this->skill_offerPractise->insert($newDataSkill);
+                }
+            }
+        }
+        foreach ($existingSkills as $existingSkill) {
+            if(!empty($skills)){
+                if (!in_array($existingSkill['Skill_skill_id'], $skills)) {
+                    $this->skill_offerPractise->delete($existingSkill['skill_offer_id']);
+                }
+            }else{
+                $this->skill_offerPractise->delete($existingSkill['skill_offer_id']);
+            }
+        }
+        return $this->backUrl('company-offer-practises');
     }
     public function deleteOfferPractise($offerId){
         $this->offerPractise->delete($offerId);

@@ -194,7 +194,7 @@
       border: 1px solid red;
     }
 </style>
-<form action="<?= base_url('a') ?>" method="POST">
+<form action="<?= base_url('/edit-practise-offer') ?>" method="POST">
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-lg-6 p-0">
@@ -288,6 +288,7 @@
     </div>
 </div>
 </div>
+<input type="hidden" value="<?= $offer['offer_id'] ?>" name="offer_id">
 <input type="submit" class="btn-right-display-submit" value="Upravit">
 </form>
 <script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
