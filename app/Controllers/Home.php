@@ -1201,7 +1201,6 @@ class Home extends BaseController
                 ];
             }
         }
-        log_message('info', 'data: ' . json_encode($resultOfferPractise));
         $data = [
             'title' => 'Nabídky praxí',
             'offerPractises' => $resultOfferPractise,
