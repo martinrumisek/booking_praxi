@@ -124,9 +124,12 @@
     </div>
 </div>
 <div class="btn-container d-flex flex-wrap justify-content-center align-items-center"><div class="btn-document-export d-flex flex-column justify-content-center align-items-center p-2 m-1"><div class="fw-bold">Počet žáků</div><div><?= $count['userStudent'] ?></div></div><div class="btn-document-export d-flex flex-column justify-content-center align-items-center p-2 m-1"><div class="fw-bold">Počet termínů praxí</div><div><?= $count['practise'] ?></div></div><div class="btn-document-export d-flex flex-column justify-content-center align-items-center p-2 m-1"><div class="fw-bold">Registrované firmy</div><div><?= $count['companyCount'] ?></div></div></div>
-<div class="d-flex justify-content-center mt-2"><h3>Žádosti žáků</h3></div>
+<!---<div class="d-flex justify-content-center mt-2"><h3>Žádosti žáků</h3></div>
 
 <div class="d-flex justify-content-center mt-2"><h3>Probíhající praxe</h3></div>
 
-<div class="d-flex justify-content-center mt-2"><h3>Nové termíny praxí</h3></div>
+<div class="d-flex justify-content-center mt-2"><h3>Nové termíny praxí</h3></div> 
+
+Pozastavení, dodělání nějakých drobností a zobrazení na domovské obrazovky.
+--->
 <?= $this->endSection() ?>
