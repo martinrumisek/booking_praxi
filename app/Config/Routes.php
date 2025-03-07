@@ -37,8 +37,8 @@ $routes->get('edit-profile/(:num)','Home::editProfileView/$1', ['filter' => 'rol
 $routes->post('/edit-profile','Home::editProfile', ['filter' => 'role:student,teacher']);
 $routes->get('company-offer-practises', 'Home::companyOfferPractiseView', ['filter' => 'role:company']);
 $routes->get('practise-offer-view/(:num)', 'Home::completeOfferView/$1', ['filter' => 'role:student,company']);
-$routes->get('delete-practise-offer/(:num)', 'Home::deleteOfferPractise/$1', ['filter' => 'role:company']);
-$routes->get('edit-practise-offer-view/(:num)', 'Home::editOfferPractiseView/$1', ['filter' => 'role:company']);
+$routes->get('delete-practise-offer/(:num)', 'Home::deleteOfferPractise/$1', ['filter' => 'role:company,admin,spravce']);
+$routes->get('edit-practise-offer-view/(:num)', 'Home::editOfferPractiseView/$1', ['filter' => 'role:company,admin,spravce']);
 $routes->post('/edit-practise-offer', 'Home::editOfferPractise', ['filter' => 'role:company,admin,spravce']);
 $routes->post('/write-student-offer-practise', 'Home::writeStudentOfferPractise', ['filter' => 'role:student']);
 
