@@ -414,7 +414,7 @@ class Home extends BaseController
         $offer = $this->offerPractise
         ->where('offer_id', $idOffer)
         ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
-        ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_register_company = 1 AND Company.company_del_time IS NULL', 'left')
+        ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
         ->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'left')->first();
         $dates = $this->offerPractise->where('offer_id', $idOffer)
         ->join('Date_practise', 'Offer_practise.Practise_practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL', 'left')->find();
