@@ -709,10 +709,15 @@ class Home extends BaseController
         ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
         ->join('Practise', 'Offer_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL', 'left')
         ->first();
-        $companyId = $this->companyUser['idCompany'];
-        if($companyId !== $offer['Company_company_id']){
-            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
-            return $this->backUrl('/company-offer-practise');
+        $role = $this->session->get('role');
+        if(!empty($this->companyUser['idCompany'])){
+            $userSession = $this->companyUser['idCompany'];
+        }
+        $isAdmin = in_array('admin', $role);
+        $isSpravce = in_array('spravce', $role);
+        if(!$isAdmin && !$isSpravce && $userSession !== $offer['Company_company_id']){
+            $this->session->setFlashdata('err_message', 'Na danou akci nemáte oprávnění.');
+            return $this->backUrl('company-offer-practises');
         }
         $dates = $this->datePractiseModel->where('Practise_practise_id', $offer['practise_id'])->find();
         $offersSkill = $this->skill_offerPractise->where('Offer_practise_offer_id', $offer['offer_id'])->find();
@@ -757,7 +762,7 @@ class Home extends BaseController
         $skills = $this->request->getPost('skills');
         $managerIdOffer = $this->request->getPost('practise_manager');
         $description = $this->request->getPost('full_description');
-        $idCompany = $this->companyUser['idCompany'];
+        $idCompany = $this->request->getPost('company_id');
         if(empty($idOffer && $nameOffer && $cityOffer && $streetOffer && $postCodeOffer && $managerIdOffer && $idCompany)){
             $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znova.');
             return $this->backUrl('/company-offer-practise');
