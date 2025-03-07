@@ -45,9 +45,32 @@
         color: white;
         background-color: green;
     }
+    .container-no-our-practise{
+        margin: 10px;
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0px 1px 3px #00000029;
+    }
+    .btn-add-our-practise{
+        margin: 10px;
+        border: 1px solid #006DBC;
+        padding: 15px;
+        border-radius: 15px;
+    }
+    .btn-add-our-practise:hover{
+        background-color: #006DBC;
+        color: white;
+        box-shadow: 0px 1px 3px #00000029;
+    }
 </style>
 <div class="container-fluid">
     <h2>Přehled naších nabídek praxí</h2>
+    <?php if(empty($offerPractises)){ ?>
+        <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 95vh;">
+            <div class="container-no-our-practise"><p class="m-0 p-0 fw-bold">Nemáte vytvořenou žádnou nabídku</p></div>
+            <a class="btn-add-our-practise" href="<?= base_url('/company-add-offer-practise') ?>">Vytvořit novou nabídku</a>
+        </div>
+    <?php } ?>
     <div class="row">
     <?php foreach($offerPractises as $offer){ ?>
         <div class="col-12 col-lg-4 d-flex align-items-center mt-2 container-practise <?php $acceptedStatuses = array_column($offer['users'], 'user_offer_accepted'); if (in_array(1, $acceptedStatuses)){echo 'user-card-accepted'; } ?>">
