@@ -289,6 +289,7 @@
 </div>
 </div>
 <input type="hidden" value="<?= $offer['offer_id'] ?>" name="offer_id">
+<input type="hidden" value="<?= $offer['company_id'] ?>" name="company_id">
 <input type="submit" class="btn-right-display-submit" value="Upravit">
 </form>
 <script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>
