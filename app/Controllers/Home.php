@@ -717,7 +717,16 @@ class Home extends BaseController
                 }
             }
         }
-        return redirect()->to(base_url('/company-add-offer-practise'));
+        $role = session()->get('role');
+        $isCompany = in_array('company', $role);
+        $isAdmin = in_array('admin', $role);
+        $isSpravce = in_array('spravce', $role);
+        if($isCompany){
+            return redirect()->to(base_url('/company-offer-practises'));
+        }
+        if($isAdmin || $isSpravce){
+            return redirect()->to(base_url('/dashboard-date-practise-offer'));
+        }
     }
     //!Metody pro dodělání
     public function editOfferPractiseView($idOffer){
