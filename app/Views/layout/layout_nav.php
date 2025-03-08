@@ -333,7 +333,7 @@
     </div>
 <script>
 tinymce.init({
-  selector: 'textarea#editor',
+  selector: 'textarea.editor-mce',
   license_key: 'gpl'
 });
 </script>

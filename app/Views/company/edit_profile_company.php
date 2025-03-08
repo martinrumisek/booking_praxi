@@ -268,7 +268,7 @@
 </div>
 <div class="m-4 d-flex justify-content-center"><h2>O nás</h2></div>
 <div class="container profile-text">
-    <textarea name="description_company" class="description-company" id="editor"><?= $company['company_description'] ?></textarea>
+    <textarea name="description_company" class="description-company editor-mce"><?= $company['company_description'] ?></textarea>
 </div>
 <input type="hidden" name="idCompany" value="<?= $company['company_id'] ?>">
 <input type="submit" class="btn-right-display-submit" value="Upravit">

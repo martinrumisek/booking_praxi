@@ -224,7 +224,7 @@
 </div>
 <div class="m-4 d-flex justify-content-center"><h2>O mně</h2></div>
 <div class="container profile-text">
-    <textarea name="description" id="editor"><?= $user['user_description'] ?></textarea>
+    <textarea name="description" class="editor-mce"><?= $user['user_description'] ?></textarea>
 </div>
 <input type="hidden" name="idUser" value="<?= $user['user_id'] ?>">
 <input type="submit" class="btn-right-display-submit" value="Upravit">
