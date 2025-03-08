@@ -608,8 +608,16 @@ class Home extends BaseController
         return $this->backUrl('/practise-offer');
     }
 
-    public function addNewOfferPractiseView(){
-        $id = $this->companyUser['idCompany'];
+    public function addNewOfferPractiseView($idCompany = null, $idPractise = null){
+        $practiseIdAdmin = '';
+        if($idCompany == null){
+            $id = $this->companyUser['idCompany'];
+        }else{
+            $id = $idCompany;
+        }
+        if($idPractise !== null){
+            $practiseIdAdmin = $idPractise;
+        }
         $company = $this->companyModel->find($id);
         $today = date('Y-m-d');
         $resultPractise = $this->practiseModel->where('practise_end_new_offer >=', $today)->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id', 'left')->join('Class_has_Practise', 'Practise.practise_id = Class_has_Practise.Practise_practise_id', 'left')->join('Class', 'Class_has_Practise.Class_class_id = Class.class_id', 'left')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id', 'left')->find();
@@ -650,12 +658,14 @@ class Home extends BaseController
             ];
         }
         $managers = $this->practiseManagerModel->where('Company_company_id', $company['company_id'])->find();
+        log_message('info', 'data: ' . $idCompany . ' ' . $idPractise . ' ' . $practiseId);
         $data = [
             'title' => 'Nová nabídka praxe',
             'company' => $company,
             'practises' => $practises,
             'categoryes' => $categoryes,
             'managers' => $managers,
+            'practiseId' => $practiseIdAdmin,
         ];
         return view ('company/add_new_offer_practise', $data);
     }
