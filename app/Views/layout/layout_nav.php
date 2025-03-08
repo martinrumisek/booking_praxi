@@ -238,7 +238,7 @@
         $listPractise = base_url('/practise-offer');
         $people = base_url('/people');
         $company = base_url('/company');
-        $info = '#student'; //base_url('#');
+        $info = base_url('/info');
         $dashboard =  base_url('/dashboard-home');
         $profile = base_url('/profile');
 
@@ -249,7 +249,7 @@
         $listPractise = base_url('class-on-practise');
         $people = base_url('/people');
         $company = base_url('/company');
-        $info = '#teacher'; //base_url('#');
+        $info = base_url('/info');
         $dashboard = base_url('/dashboard-home');
         //$profile = '#teacher'; //base_url('#'); //! Učitel nebude mít žádný profil, není potřeba mít profil.
 
@@ -260,7 +260,7 @@
         $listPractise = base_url('company-offer-practises');
         $people = base_url('/people');
         $company = '#company'; //base_url('#');
-        $info = '#company'; //base_url('#');
+        $info = base_url('/info');
         $profile = base_url('company-profil');
         $addPractise = base_url('/company-add-offer-practise');
         $logOut = base_url('/logOutCompany'); // #company

@@ -12,6 +12,9 @@ $routes->get('registration', 'Home::registration'); //stránka pro registraci fi
 $routes->get('next-step-register','Auth::continuationRegister' );
 $routes->get('reset-password', 'Auth::resetPassword');
 // ROUTY PRO VIEWČKA
+
+$routes->get('/info', 'Home::informationApp', ['filter' => 'role:student,company,teacher']);
+
 $routes->get('/home-student', 'Home::homeStudent', ['filter' => 'role:student']); //routa na hlavní stránku pro studenty
 $routes->get('/home-company', 'Home::homeCompany', ['filter' => 'role:company']); //routa na hlavní stránku pro firmy
 $routes->get('practise-offer', 'Home::offerView', ['filter' => 'role:student']); //stránka pro nabídky praxe

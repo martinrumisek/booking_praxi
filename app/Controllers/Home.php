@@ -114,6 +114,12 @@ class Home extends BaseController
         ];
         return view('home_student', $data);
     }
+    public function informationApp(){
+        $data = [
+            'title' => 'Informace o aplikaci',
+        ];
+        return view('info', $data);
+    }
     public function writeStudentOfferPractise(){
         $idUser = $this->userSession['id'];
         $offerName = $this->request->getPost('name_offer');
