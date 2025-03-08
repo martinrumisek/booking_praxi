@@ -105,7 +105,9 @@ $routes->get('/delete-type-school/(:num)', 'Dashboard::deleteTypeSchool/$1', ['f
 $routes->post('/edit-class-school', 'Dashboard::editClassSchool', ['filter' => 'role:admin,spravce']);
 $routes->post('/edit-type-school', 'Dashboard::editTypeSchool', ['filter' => 'role:admin,spravce']);
 $routes->post('/edit-field-school', 'Dashboard::editFieldSchool', ['filter' => 'role:admin,spravce']);
-
+$routes->post('/remove-student-on-practise', 'Dashboard::removeStudentOnPractise', ['filter' => 'role:admin,spravce']);
+$routes->post('/add-offer-practise-admin', 'Dashboard::addOfferPractise', ['filter' => 'role:admin,spravce']);
+$routes->post('/add-user-accepted-offer-admin', 'Dashboard::addUserAcceptedOffer', ['filter' => 'role:admin,spravce']);
 
 //$routes->get('/postEmail', 'Dashboard::sentEmail');
 

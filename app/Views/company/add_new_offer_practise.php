@@ -1,4 +1,15 @@
-<?= $this->extend('layout/layout_nav') ?>
+<?php
+$role = session()->get('role');
+$isCompany = in_array('company', $role);
+$isAdmin = in_array('admin', $role);
+$isSpravce = in_array('spravce', $role);
+if($isCompany){
+    echo $this->extend('layout/layout_nav');
+}
+if($isAdmin || $isSpravce){
+    echo $this->extend('layout/layout_dashboard_nav');
+}
+?>
 
 <?= $this->section('content') ?>
 <style>
@@ -256,7 +267,7 @@
         <?php foreach($practises as $practise){ ?>
         <div class="m-2">
         <div class="d-flex">
-            <input type="checkbox" class="checkbox select-practise" name="select_practise" value="<?= $practise['practise_id'] ?>">
+            <input type="checkbox" <?php if($practise['practise_id'] == $practiseId){echo 'checked';} ?> class="checkbox select-practise" name="select_practise" value="<?= $practise['practise_id'] ?>">
             <div class="d-flex align-items-center p-2 fw-bold"><?= $practise['practise_name'] ?></div>
         </div>
         <div>
@@ -298,7 +309,7 @@
     <div class="col-12 col-md-8">
         <h4>Popis praxe</h4>
         <div class="container" style="height: 100%;">
-            <textarea name="full_description" class="full-description" id="editor"></textarea>
+            <textarea name="full_description" class="full-description editor-mce"></textarea>
         </div>
     </div>
 </div>

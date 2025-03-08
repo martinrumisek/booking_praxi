@@ -22,6 +22,7 @@ use App\Models\CategorySkill;
 use App\Models\Skill;
 use App\Models\ResetPassword;
 use App\Controllers\Email;
+use App\Controllers\Home;
 use App\Models\SocialLink;
 use App\Models\SocialLink_User;
 
@@ -48,6 +49,7 @@ class Dashboard extends Controller
     var $session;
     var $user_offerPractise;
     var $offerPractiseModel;
+    var $home;
     public function __construct(){
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
@@ -70,6 +72,7 @@ class Dashboard extends Controller
         $this->session = session();
         $this->user_offerPractise = new User_OfferPractise();
         $this->offerPractiseModel = new OfferPractise();
+        $this->home = new Home();
     }
     private function backUrl($url){
         $previousUrl = $this->request->getServer('HTTP_REFERER');
@@ -123,14 +126,65 @@ class Dashboard extends Controller
         ->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')->find();
         $dates = $this->datePractiseModel->where('Practise_practise_id', $idPractise)->find();
         $practise = $this->practiseModel->where('practise_id', $idPractise)->first();
-        
+        $users = $this->class_practiseModel->where('Practise_practise_id', $idPractise)->join('User', 'Class_has_Practise.Class_class_id = User.Class_class_id AND User.user_del_time IS NULL')->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL')->join('User_has_Offer_practise', 'User.user_id = User_has_Offer_practise.User_user_id AND User_has_Offer_practise.user_offer_accepted = 1 AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')->find();
+        $companyes = $this->companyModel->where('company_register_company', 1)->find();
         $data = [
             'title' => 'Administrace',
             'offers' => $offers,
             'dates' => $dates,
             'practise' => $practise,
+            'users' => $users,
+            'companyes' => $companyes,
         ];
         return view ('dashboard/dash_practise_offer', $data);
+    }
+    public function removeStudentOnPractise(){
+        $studentId = $this->request->getPost('student_id');
+        $offerId = $this->request->getPost('offer_id');
+        $user_offer = $this->user_offerPractise->where('Offer_practise_offer_id', $offerId)->where('User_user_id', $studentId)->where('user_offer_accepted', 1)->first();
+        $changeAccepted = [
+            'user_offer_accepted' => null,
+        ];
+        $this->user_offerPractise->update($user_offer['user_offer_id'], $changeAccepted);
+        $offer = $this->offerPractiseModel->where('offer_id', $offerId)->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL')->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL AND Company.company_register_company = 0')->first();
+        if(!empty($offer)){
+            $this->user_offerPractise->delete($user_offer['user_offer_id']);
+            $this->offerPractiseModel->delete($offer['offer_id']);
+            $this->practiseManager->delete($offer['manager_id']);
+            $this->companyModel->delete($offer['company_id']);
+            return $this->backUrl('/dashboard-date-practise-offer');
+        }
+        return $this->backUrl('/dashboard-date-practise-offer');
+    }
+    public function addOfferPractise(){
+        $idPractise = $this->request->getPost('practise_id');
+        $idCompany = $this->request->getPost('company_id');
+        if(empty($idPractise && $idCompany)){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat.');
+            return $this->backUrl('dashboard-date-practise-offer');
+        }
+        return $this->home->addNewOfferPractiseView($idCompany, $idPractise);
+    }
+    public function addUserAcceptedOffer(){
+        $idOffer = $this->request->getPost('offer_id');
+        $idUser = $this->request->getPost('user_id');
+        if(empty($idOffer && $idUser)){
+            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat.');
+            return $this->backUrl('dashboard-date-practise-offer');
+        }
+        $data = [
+            'User_user_id' => $idUser,
+            'Offer_practise_offer_id' => $idOffer,
+            'user_offer_accepted' => 1,
+            'user_offer_like' => 0,
+            'user_offer_select' => 1,
+        ];
+        $idInsert = $this->user_offerPractise->insert($data);
+        $user_offers = $this->user_offerPractise->where('User_user_id', $idUser)->where('user_offer_id !=', $idInsert)->find();
+        foreach($user_offers as $user){
+            $this->user_offerPractise->delete($user['user_offer_id']);
+        }
+        return $this->backUrl('dashboard-date-practise-offer');
     }
     public function companyView(){
         $search = $this->request->getGet('search');
