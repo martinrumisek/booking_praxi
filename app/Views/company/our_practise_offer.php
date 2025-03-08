@@ -94,7 +94,7 @@
             <?php if($user['user_offer_id'] == null){ ?>
                 <div class="d-flex justify-content-center align-items-center" style="width: 100%">Praxi si nikdo nevybral</div>
             <?php }else{ ?>
-                <div class="card-people-offer-practise d-flex flex-column m-1 <?php if($user['user_offer_accepted'] = 1){echo 'user-card-accepted';} ?>">
+                <div class="card-people-offer-practise d-flex flex-column m-1 <?php if($user['user_offer_accepted'] == 1){echo 'user-card-accepted';} ?>">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                         <i class="fa-solid fa-user p-2 h5 m-0"></i>
@@ -106,8 +106,10 @@
                         <p class="m-0 text-user-practise p-1">Třida: <?= $user['class_class'] . '.' . $user['class_letter_class'] ?></p>
                         <p class="m-0 text-user-practise p-1">Obor: <?= $user['field_name'] ?></p>
                     </div>
-                    <?php if($user['user_offer_accepted'] != 1){ ?>
-                    <div class="d-flex justify-content-end">
+                    <?php if($user['user_offer_accepted'] == 1){ ?>
+                        <div class="d-flex justify-content-center accepted-user-text">Přijat</div>
+                    <?php }else { ?>
+                        <div class="d-flex justify-content-end">
                         <form id="not-accepted-user-<?= $user['user_id'] ?>" action="<?= base_url('/not-accepted-user-practise') ?>" method="POST">
                             <input type="hidden" name="offer_id" value="<?= $offer['offer_id'] ?>">
                             <input type="hidden" name="user_offer_id" value="<?= $user['user_offer_id'] ?>">
@@ -123,8 +125,6 @@
                         </form>
                         <a class="m-2 icon-confirm" href="#" onclick="document.getElementById('accepted-user-<?= $user['user_id']?>').submit(); return false;"><i class="fa-solid fa-check"></i></a>
                     </div>
-                    <?php }else { ?>
-                        <div class="d-flex justify-content-center accepted-user-text">Přijat</div>
                     <?php } ?>
                 </div>
            <?php }}  ?>
