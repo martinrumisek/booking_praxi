@@ -40,7 +40,7 @@
                         <td class="fw-bold">
                             <?= ($user['user_name'] ?? '') . ' ' . ($user['user_surname'] ?? '') ?>
                         </td>
-                        <?php if(empty($user['user_offer_accepted']) || $user['user_offer_accepted'] !== 1){ ?>
+                        <?php if(empty($user['user_offer_accepted']) || $user['user_offer_accepted'] == null){ ?>
                         <td class="text-center no-user-practise fw-bold" colspan="6">Žák nemá ještě potvrzenou praxi</td>
                         <?php }else{ ?>
                         <td class="user-has-practise"><?= $user['offer_name'] ?></td>
