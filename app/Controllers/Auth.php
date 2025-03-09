@@ -434,6 +434,10 @@ class Auth extends Controller
     public function forgotPassword(){
         $mail = $this->request->getPost('mail');
         $user = $this->representativeCompanyModel->where('representative_mail', $mail)->first();
+        if(empty($user)){
+            $this->session->setFlashdata('err_message', 'Bohužel jsme akci nemohli dokončit.');
+            return redirect()->back();
+        }
         $resetPasswd = $this->resetPassword->where('Representative_company_representative_id', $user['representative_id'])->find();
         $nowTime = Time::now();
         $expire = $nowTime->addHours(1);
