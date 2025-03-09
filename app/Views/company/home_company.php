@@ -50,10 +50,20 @@
     }
     .card-offer{
         width: 320px;
-        height: 340px;
+        height: 300px;
         border-radius: 30px;
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
+    }
+    .small-text {
+        font-size: 10px;
+        background-color: #006DBC;
+        color: white;
+        padding: 3px;
+        border-radius: 10px;
+        width: 27%;
+        margin-left: 10px;
+        margin-bottom: 0px;
     }
     .card-icon-company{
         width: 50px;
@@ -86,6 +96,37 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         -webkit-line-clamp: 5;
+    }
+    .practise-card{
+        width: 18rem;
+        height: 140px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0px 3px 6px #00000029;
+    }
+    .btn-add-offer{
+        padding: 10px;
+        border-radius: 15px;
+        box-shadow: 0px 3px 6px #00000029;
+        border: 1px solid #006DBC;
+        background-color: #006DBC;
+        color: white;
+    }
+    .btn-add-offer:hover{
+        background-color: white;
+        color: black;
+    }
+    .card-people-offer-practise{
+        width: 20rem;
+        height: 100px;
+        box-shadow: 0px 1px 3px #00000029;
+        border-radius: 10px;
+    }
+    .text-user-practise{
+        font-size: 12px;
+    }
+    .icon-show:hover{
+        color: gray;
     }
 </style>
 
@@ -124,12 +165,90 @@
     </div>
 </div>
 <div class="btn-container d-flex flex-wrap justify-content-center align-items-center"><div class="btn-document-export d-flex flex-column justify-content-center align-items-center p-2 m-1"><div class="fw-bold">Počet žáků</div><div><?= $count['userStudent'] ?></div></div><div class="btn-document-export d-flex flex-column justify-content-center align-items-center p-2 m-1"><div class="fw-bold">Počet termínů praxí</div><div><?= $count['practise'] ?></div></div><div class="btn-document-export d-flex flex-column justify-content-center align-items-center p-2 m-1"><div class="fw-bold">Registrované firmy</div><div><?= $count['companyCount'] ?></div></div></div>
-<!---<div class="d-flex justify-content-center mt-2"><h3>Žádosti žáků</h3></div>
+<div class="d-flex flex-column align-items-center justify-content-center mt-2">
+    <?php if(!empty($selectStudents)){ ?><h3>Přehled žádostí žáků</h3><?php }?>
+    <div class="d-flex flex-wrap">
+    <?php if(!empty($selectStudents)){ foreach($selectStudents as $user){ ?>
+        <div class="card-people-offer-practise d-flex flex-column m-1">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-user p-2 h5 m-0"></i>
+                        <p class=" m-0 h6"><?= $user['user_name'] . ' ' . $user['user_surname'] ?></p>
+                        </div>
+                        <a class="icon-show" href="<?= base_url('profile/'.$user['user_id']) ?>"><i class="fa-solid fa-eye p-1"></i></a>
+                    </div>
+                    <div class="d-flex">
+                        <p class="m-0 text-user-practise p-1">Třida: <?= $user['class_class'] . '.' . $user['class_letter_class'] ?></p>
+                        <p class="m-0 text-user-practise p-1">Obor: <?= $user['field_name'] ?></p>
+                    </div>
+                    <div class="d-flex">
+                        <p class="m-0 text-user-practise p-1 fw-bold">Název praxe: <?= $user['offer_name'] ?></p>
+                    </div>
+                </div>
+    <?php }}?>
+    </div>
+    <?php if(!empty($selectStudents)){ ?> <div class="d-flex justify-content-center mt-2"><a class="btn-add-offer" href="">Zobrazit žádosti</a></div><?php }?>
+</div>
 
-<div class="d-flex justify-content-center mt-2"><h3>Probíhající praxe</h3></div>
+<div class="d-flex justify-content-center flex-column align-items-center mt-2">
+<?php if(!empty($actualPractises)){ ?><h3>Probíhající praxe</h3><?php }?>
+<div class="d-flex flex-wrap">
+<?php if(!empty($actualPractises)){ foreach($actualPractises as $actual){ ?>
+    <div class="card-offer d-flex flex-column m-3">
+            <div class="d-flex flex-column">
+                <div class="d-flex justify-content-center align-items-center m-2">
+                    <div class="card-icon-company d-flex justify-content-center align-items-center"><i class="fa-solid fa-user"></i></div>
+                    <div class="d-flex flex-column" style="width: 80%;">
+                    <p class="small-text text-center">Přijatý žák</p>
+                    <p class="card-title fw-bold"><?= $actual['user_name'] . ' ' . $actual['user_surname'] ?></p>
+                    </div>
+                </div>
+                <p class="card-text d-flex justify-content-center align-items-center m-1 fw-bold"><?= $actual['offer_name'] ?></p>
+                <div class="d-flex">
+                    <i class="fa-regular fa-calendar h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?= date('d.m.Y', strtotime($actual['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($actual['date_date_to']));?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-location-dot h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?= $actual['offer_street'] . ', ' . $actual['offer_post_code'] . '  ' . $actual['offer_city'] ?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-user h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?php if(!empty($actual['manager_degree_before'])){echo $actual['manager_degree_before'];} echo ' ' . $actual['manager_name'] . ' ' . $actual['manager_surname'] . ' '; if(!empty($actual['manager_degree_after'])){echo $actual['manager_degree_after'];} ?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-envelope h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?= $actual['manager_mail'] ?></p>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fa-solid fa-phone h5 m-3 mb-0 mt-0"></i>
+                    <p class="card-text d-flex justify-content-center align-items-center"><?= $actual['manager_phone'] ?></p>
+                </div>
+            </div>
+        </div>
+<?php }}?>
+</div>
+</div>
+<div class="d-flex flex-column align-items-center justify-content-center mt-2">
+<?php if(!empty($newPractises)){ ?><h3>Nové termíny praxí</h3><?php }?>
+<div class="d-flex flex-wrap">
+<?php if(!empty($newPractises)){ foreach($newPractises as $practise){ ?>
+    <div class="m-2 practise-card d-flex flex-column align-items-center justify-content-center" >
+        <div class="text-center fw-bold"><?= $practise['practise_name'] ?></div>
+        <div class="d-flex">
+        <i class="fa-solid fa-calendar-days p-1 d-flex align-items-center"></i>
+        <div class="p-1 d-flex align-items-center"><?php $count = count($practise['dates']); foreach($practise['dates'] as $date){echo date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])); if($count > 1){echo ' / '; $count--;}} ?></div>
+        </div>
+    </div>
+<?php }}?>
+</div>
+<?php if(!empty($newPractises)){ ?><div class="d-flex justify-content-center mt-2"><a class=" btn-add-offer" href="<?= base_url('/company-add-offer-practise') ?>">Přidat novou nabídku</a></div><?php }?>
+</div>
+<br>
 
-<div class="d-flex justify-content-center mt-2"><h3>Nové termíny praxí</h3></div> 
-
-Pozastavení, dodělání nějakých drobností a zobrazení na domovské obrazovky.
+<!---
+ 'selectStudents' => $selectStudent,
+            'newPractises' => $newPractises,
+            'actualPractises' => $actualPractises,
 --->
 <?= $this->endSection() ?>

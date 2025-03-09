@@ -239,12 +239,44 @@ class Home extends BaseController
                 $count['companyCount'] = $count['companyCount'] + 1;
             }
         }
+        $selectStudent = $this->practiseManagerModel->where('Company_company_id', $this->companyUser['idCompany'])->join('Offer_practise', 'Practise_manager.manager_id = Offer_practise.Practise_manager_manager_id AND Offer_practise.offer_del_time IS NULL')
+        ->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.user_offer_select = 1 AND User_has_Offer_practise.user_offer_accepted IS NULL AND User_has_Offer_practise.user_offer_del_time IS NULL')
+        ->join('User', 'User_has_Offer_practise.User_user_id = User.user_id AND User.user_del_time IS NULL')
+        ->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL')
+        ->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL')->OrderBy('User_has_Offer_practise.user_offer_edit_time', 'DESC')->findAll(5);
+        $resultNewPractises = $this->practiseModel->where('practise_end_new_offer >=', $nowDate)->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL')->findAll();
+        $newPractises = [];
+        foreach($resultNewPractises as $practise){
+            $idPractise = $practise['practise_id'];
+            if(!isset($newPractises[$idPractise])){
+                $newPractises[$idPractise] = [
+                    'practise_name' => $practise['practise_name'],
+                    'practise_end_new_offer' => $practise['practise_end_new_offer'],
+                    'dates' => [],
+                ];
+            }
+            $idDate = $practise['date_id'];
+            if(!isset($newPractises[$idPractise]['dates'][$idDate])){
+                $newPractises[$idPractise]['dates'][$idDate] = [
+                    'date_date_from' => $practise['date_date_from'],
+                    'date_date_to' => $practise['date_date_to'],
+                ];
+            }
+        }
+        $actualPractises = $this->datePractiseModel->where('date_date_from <=', $nowDate)->where('date_date_to >=', $nowDate)->join('Practise', 'Date_practise.Practise_practise_id = Practise.practise_id AND Practise.practise_del_time IS NULL')
+        ->join('Offer_practise', 'Practise.practise_id = Offer_practise.Practise_practise_id AND Offer_practise.offer_del_time IS NULL')->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL')
+        ->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.user_offer_accepted = 1 AND User_has_Offer_practise.user_offer_del_time IS NULL')
+        ->join('User', 'User_has_Offer_practise.User_user_id = User.user_id AND User.user_del_time IS NULL')->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL')->find();
+        log_message('info', 'Data: ' . json_encode($actualPractises));
         $data = [
             'title' => 'Hlavní stránka',
             'company' => $company,
             'user' => $representativeCompany,
             'count' => $count,
             'practises' => $practises,
+            'selectStudents' => $selectStudent,
+            'newPractises' => $newPractises,
+            'actualPractises' => $actualPractises,
         ];
         return view('company/home_company', $data);
     }
