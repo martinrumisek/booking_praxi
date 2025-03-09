@@ -319,6 +319,8 @@ class Dashboard extends Controller
         $pager = $this->userModel->pager;
         $socialLinks = $this->socialLink->findAll();
         $countLinks = count($socialLinks);
+        $userAdmin = $this->userModel->where('user_admin', 1)->find();
+        $countAdmin = count($userAdmin);
         $data= [
             'title' => 'Administrace',
             'users' => $users,
@@ -327,6 +329,7 @@ class Dashboard extends Controller
             'search' => $search,
             'links' => $socialLinks,
             'countLinks' => $countLinks,
+            'countAdmin' => $countAdmin,
         ];
         return view('dashboard/dash_people', $data);
     }
@@ -598,13 +601,22 @@ class Dashboard extends Controller
     }
     public function editUserRole(){
         if (!$this->request->isAJAX()) {
-            $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znovu.');
+            //$this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci znovu.');
             return $this->response->setJSON(['success' => false, 'error' => 'Neplatný požadavek'])->setStatusCode(400);
         }
         $data = $this->request->getJSON();
         $userId = $data->user_id;
         $role = $data->role;
         $value = $data->value;
+        $adminUser = $this->userModel->where('user_admin',1)->find();
+        $countAdmin = count($adminUser);
+        if($countAdmin <= 1){
+            if ($role === 'admin' && $value === 0) {
+                //$this->session->setFlashdata('err_message', 'Omlouváme se, ale tuhle akci nelze dokončit, aplikace potřebuje mít min. 1 admin uživatele.');
+                return $this->response->setJSON(['success' => false, 'error' => 'Omlouváme se, ale tuhle akci nelze dokončit, aplikace potřebuje mít min. 1 admin uživatele.'])->setStatusCode(400);
+                //return redirect()->to('dashboard-people');
+            }
+        }
         $user = $this->userModel->find($userId);
         $admin = $user['user_admin'];
         $spravce = $user['user_spravce'];

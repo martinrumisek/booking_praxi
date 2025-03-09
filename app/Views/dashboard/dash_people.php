@@ -173,7 +173,7 @@
                         <td><?= $user['field_shortcut'] ?? ''?></td>
                         <?php $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)){ ?>
                         <td>
-                            <input type="checkbox" class="role-checkbox checkbox" data-role="admin" data-user-id="<?= $user['user_id']?>" <?= $user['user_admin'] ? 'checked' : '' ?> />
+                            <input type="checkbox" class="role-checkbox checkbox" data-role="admin" data-user-id="<?= $user['user_id']?>" <?php if($user['user_admin'] == 1){echo 'checked';}?> <?php if($user['user_admin'] == 1){if($countAdmin <= 1){echo 'disabled';}}?> />
                         </td>
                         <td>
                             <input type="checkbox" class="role-checkbox checkbox" data-role="spravce" data-user-id="<?= $user['user_id']?>" <?= $user['user_spravce'] ? 'checked' : '' ?> />
