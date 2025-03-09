@@ -330,32 +330,33 @@ if($isAdmin || $isSpravce){
     });
 });
 document.addEventListener('DOMContentLoaded', () => {
-        const checkboxes = document.querySelectorAll('.select-practise');
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', (event) => {
-                let isValid = false;
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', (event) => {
+            const checkboxes = form.querySelectorAll('.select-practise');
+            let isValid = Array.from(checkboxes).some(checkbox => checkbox.checked);
+            if (!isValid) {
+                event.preventDefault();
                 checkboxes.forEach(checkbox => {
-                    const tooltip = bootstrap.Tooltip.getInstance(checkbox) || new bootstrap.Tooltip(checkbox, {
-                        html: true,
-                        title: 'Pro vytvoření nabídky praxe je nutné označit jeden termín!',
-                        trigger: 'manual',
-                    });
-                    if (checkbox.checked) {
-                        isValid = true;
+                    checkbox.classList.add('invalid-input');
+                    let tooltip = bootstrap.Tooltip.getInstance(checkbox);
+                    if (!tooltip) {
+                        tooltip = new bootstrap.Tooltip(checkbox, {
+                            html: true,
+                            title: 'Pro vytvoření nabídky praxe je nutné označit jeden termín!',
+                            trigger: 'manual',
+                        });
                     }
-                    if (!isValid) {
-                        checkbox.classList.add('invalid-input');
-                        tooltip.show();
-                    } else {
-                        checkbox.classList.remove('invalid-input');
-                        tooltip.hide();
-                    }
+                    tooltip.show();
                 });
-                if (!isValid) {
-                    event.preventDefault();
-                }
-            });
+            } else {
+                checkboxes.forEach(checkbox => {
+                    checkbox.classList.remove('invalid-input');
+                    const tooltip = bootstrap.Tooltip.getInstance(checkbox);
+                    if (tooltip) tooltip.hide();
+                });
+            }
         });
     });
+});
 </script>
 <?= $this->endSection() ?>
