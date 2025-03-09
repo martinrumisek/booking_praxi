@@ -184,6 +184,10 @@ class Dashboard extends Controller
         foreach($user_offers as $user){
             $this->user_offerPractise->delete($user['user_offer_id']);
         }
+        $offer_users = $this->user_offerPractise->where('Offer_practise_offer_id', $idOffer)->where('User_user_id !=', $idUser)->find();
+        foreach($offer_users as $offer){
+            $this->user_offerPractise->delete($offer['user_offer_id']);
+        }
         return $this->backUrl('dashboard-date-practise-offer');
     }
     public function companyView(){
