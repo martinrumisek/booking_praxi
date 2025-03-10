@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 
 class LogCompany extends Model{
-    protected $table = 'log_company';
+    protected $table = 'Log_company';
     protected $primaryKey = 'log_company_id';
     protected $allowedFields = ['log_company_name','log_company_ip_adrese','log_company_create_time','log_company_edit_time', 'log_company_del_time','Representative_company_representative_id'];
     protected $useTimestamps = true;

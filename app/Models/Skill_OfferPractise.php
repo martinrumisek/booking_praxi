@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 use Config\Autoload;
 
 class Skill_OfferPractise extends Model{
-    protected $table = 'skill_has_offer_practise';
+    protected $table = 'Skill_has_Offer_practise';
     protected $primaryKey = 'skill_offer_id';
     protected $allowedFields = ['Skill_skill_id','Offer_practise_offer_id','skill_offer_create_time','skill_offer_edit_time', 'skill_offer_del_time'];
     protected $useTimestamps = true;

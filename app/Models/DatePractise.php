@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 
 class DatePractise extends Model{
-    protected $table = 'date_practise';
+    protected $table = 'Date_practise';
     protected $primaryKey = 'date_id';
     protected $allowedFields = ['date_date_from','date_date_to','date_create_time','date_edit_time', 'date_del_time','Practise_practise_id'];
     protected $useTimestamps = true;

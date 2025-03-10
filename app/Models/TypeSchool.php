@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 
 class TypeSchool extends Model{
-    protected $table = 'type_school';
+    protected $table = 'Type_school';
     protected $primaryKey = 'type_id';
     protected $allowedFields = ['type_name','type_shortcut','type_description','type_create_time','type_edit_time', 'type_del_time'];
     protected $useTimestamps = true;

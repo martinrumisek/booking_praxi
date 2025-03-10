@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 
 class Skill extends Model{
-    protected $table = 'skill';
+    protected $table = 'Skill';
     protected $primaryKey = 'skill_id';
     protected $allowedFields = ['skill_name','skill_description','skill_create_time','skill_edit_time', 'skill_del_time','Category_skill_category_id'];
     protected $useTimestamps = true;

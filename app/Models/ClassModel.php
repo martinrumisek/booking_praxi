@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class ClassModel extends Model
 {
-    protected $table = 'class';
+    protected $table = 'Class';
     protected $primaryKey = 'class_id';
     protected $allowedFields = ['class_year_graduation', 'class_class', 'class_letter_class','class_create_time','class_edit_time', 'class_del_time','Field_study_field_id'];
     protected $useTimestamps = true;

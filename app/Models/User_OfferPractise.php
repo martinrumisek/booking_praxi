@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 
 class User_OfferPractise extends Model{
-    protected $table = 'user_has_offer_practise';
+    protected $table = 'User_has_offer_Practise';
     protected $primaryKey = 'user_offer_id';
     protected $allowedFields = ['User_user_id','Offer_practise_offer_id','user_offer_accepted','user_offer_like','user_offer_select','user_offer_create_time','user_offer_edit_time', 'user_offer_del_time'];
     protected $useTimestamps = true;
