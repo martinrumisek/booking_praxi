@@ -675,7 +675,6 @@ class Dashboard extends Controller
                 ];
             }
         }
-        log_message('info', 'problém s načítaní prázdných položek, které neexistují:  ' . json_encode($categoryes));
         $data= [
             'title' => 'Administrace',
             'categoryes' => $categoryes,

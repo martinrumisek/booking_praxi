@@ -103,7 +103,6 @@ class Home extends BaseController
             ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
             ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')->find();
         }
-        log_message('info', 'data: ' . json_encode($userOffer));
         $data = [
             'title' => 'Hlavní stránka',
             'user' => $user,
@@ -267,7 +266,6 @@ class Home extends BaseController
         ->join('Offer_practise', 'Practise.practise_id = Offer_practise.Practise_practise_id AND Offer_practise.offer_del_time IS NULL')->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL')
         ->join('User_has_Offer_practise', 'Offer_practise.offer_id = User_has_Offer_practise.Offer_practise_offer_id AND User_has_Offer_practise.user_offer_accepted = 1 AND User_has_Offer_practise.user_offer_del_time IS NULL')
         ->join('User', 'User_has_Offer_practise.User_user_id = User.user_id AND User.user_del_time IS NULL')->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL')->find();
-        log_message('info', 'Data: ' . json_encode($actualPractises));
         $data = [
             'title' => 'Hlavní stránka',
             'company' => $company,
@@ -696,7 +694,6 @@ class Home extends BaseController
             ];
         }
         $managers = $this->practiseManagerModel->where('Company_company_id', $company['company_id'])->find();
-        log_message('info', 'data: ' . $idCompany . ' ' . $idPractise . ' ' . $practiseId);
         $data = [
             'title' => 'Nová nabídka praxe',
             'company' => $company,
@@ -805,7 +802,6 @@ class Home extends BaseController
             'skills' => $skills,
             'managers' => $managers,
         ];
-        log_message('info', 'Data: ' . json_encode($offer));
         return view('company/edit_offer_practise', $data);
     }
     public function editOfferPractise(){
