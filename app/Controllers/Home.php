@@ -1042,7 +1042,7 @@ class Home extends BaseController
             'company_description' => $descriptionCompany,
         ];
         $this->companyModel->update($idCompany, $data);
-        return $this->backUrl('/home-student'); //! Potřeba projít a upravit podle potřeby na zbětnou url
+        return redirect()->to('company-profil/'.$idCompany);
     }
     public function profilAddRepresentativeCompany(){
         $companyId = $this->request->getPost('companyId');
@@ -1544,8 +1544,6 @@ class Home extends BaseController
                 $this->user_skill->delete($existingSkill['user_skill_id']);
             }
         }
-
-
-        return $this->backUrl('/home-student');
+        return redirect()->to('/profile/'. $id);
     }
 }
