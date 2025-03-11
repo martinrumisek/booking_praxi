@@ -21,10 +21,19 @@
     background-color: #006DBC;
     color: white;
 }
+.container-no-practise{
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px #00000029;
+    background-color: white;
+}
 </style>
 <div class="d-flex flex-column container justify-content-center align-items-center" style="height: 100%;">
     <h2>Správa praxí</h2>
 <div class="d-flex flex-wrap container justify-content-center align-items-center">
+<?php if(empty($practises)){ ?>
+<div class="d-flex align-items-center justify-content-center container-no-practise mt-2">Nejsou žádné termíny</div>        
+<?php }?>
 <?php foreach($practises as $practise){ ?>
     <div class="m-2 practise-card d-flex flex-column align-items-center justify-content-center" >
         <div class="text-center fw-bold"><?= $practise['practise_name'] ?></div>
