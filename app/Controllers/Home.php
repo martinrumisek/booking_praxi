@@ -669,15 +669,21 @@ class Home extends BaseController
                     'classes' => [],
                 ];
             }
-            $practises[$practiseId]['dates'][] = [
-                'date_date_from' => $practise['date_date_from'],
-                'date_date_to' => $practise['date_date_to'],
-            ];
-            $practises[$practiseId]['classes'][] = [
-                'class_class' => $practise['class_class'],
-                'class_letter_class' => $practise['class_letter_class'],
-                'field_shortcut' => $practise['field_shortcut'],
-            ];
+            $dateId = $practise['date_id'];
+            if(!isset($practises[$practiseId]['dates'][$dateId])){
+                $practises[$practiseId]['dates'][$dateId] = [
+                    'date_date_from' => $practise['date_date_from'],
+                    'date_date_to' => $practise['date_date_to'],
+                ];
+            }
+            $classId = $practise['class_id'];
+            if(!isset($practises[$practiseId]['classes'][$classId])){
+                $practises[$practiseId]['classes'][$classId] = [
+                    'class_class' => $practise['class_class'],
+                    'class_letter_class' => $practise['class_letter_class'],
+                    'field_shortcut' => $practise['field_shortcut'],
+                ];
+            }
         }
         $resultCategoryes = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id')->find();
         $categoryes = [];
