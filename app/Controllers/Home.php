@@ -546,22 +546,25 @@ class Home extends BaseController
         }
         if(!empty($duplicetaOffers)){
             foreach($duplicetaOffers as $offer){
-                $userOffer = $this->user_practiseModel->where('User_user_id', $userId)->where('Offer_practise_offer_id', $offer['offer_id'])->first();
-                if(empty($userOffer)){
-                    $data = [
-                        'User_user_id' => $userId,
-                        'Offer_practise_offer_id' => $offer['offer_id'],
-                        'user_offer_like' => $like,
-                        'user_offer_select' => 0,
-                        'user_offer_accepted' => null,
-                    ];
-                    $this->user_practiseModel->insert($data);
-                }else{
-                    $userOfferId = $userOffer['user_offer_id'];
-                    $data = [
-                        'user_offer_like' => $like,
-                    ];
-                    $this->user_practiseModel->update($userOfferId, $data);
+                $someUserAccepted = $this->user_practiseModel->where('Offer_practise_offer_id', $offer['offer_id'])->where('user_offer_accepted', 1)->first();
+                if(empty($someUserAccepted)){
+                    $userOffer = $this->user_practiseModel->where('User_user_id', $userId)->where('Offer_practise_offer_id', $offer['offer_id'])->first();
+                    if(empty($userOffer)){
+                        $data = [
+                            'User_user_id' => $userId,
+                            'Offer_practise_offer_id' => $offer['offer_id'],
+                            'user_offer_like' => $like,
+                            'user_offer_select' => 0,
+                            'user_offer_accepted' => null,
+                        ];
+                        $this->user_practiseModel->insert($data);
+                    }else{
+                        $userOfferId = $userOffer['user_offer_id'];
+                        $data = [
+                            'user_offer_like' => $like,
+                        ];
+                        $this->user_practiseModel->update($userOfferId, $data);
+                    }
                 }
             }
         }
@@ -622,22 +625,25 @@ class Home extends BaseController
         }
         if(!empty($duplicetaOffers)){
             foreach($duplicetaOffers as $offer){
-                $userOffer = $this->user_practiseModel->where('User_user_id', $userId)->where('Offer_practise_offer_id', $offer['offer_id'])->first();
-                if(empty($userOffer)){
-                    $data = [
-                        'User_user_id' => $userId,
-                        'Offer_practise_offer_id' => $offer['offer_id'],
-                        'user_offer_like' => 0,
-                        'user_offer_select' => $select,
-                        'user_offer_accepted' => null,
-                    ];
-                    $this->user_practiseModel->insert($data);
-                }else{
-                    $userOfferId = $userOffer['user_offer_id'];
-                    $data = [
-                        'user_offer_select' => $select,
-                    ];
-                    $this->user_practiseModel->update($userOfferId, $data);
+                $someUserAccepted = $this->user_practiseModel->where('Offer_practise_offer_id', $offer['offer_id'])->where('user_offer_accepted', 1)->first();
+                if(empty($someUserAccepted)){
+                    $userOffer = $this->user_practiseModel->where('User_user_id', $userId)->where('Offer_practise_offer_id', $offer['offer_id'])->first();
+                    if(empty($userOffer)){
+                        $data = [
+                            'User_user_id' => $userId,
+                            'Offer_practise_offer_id' => $offer['offer_id'],
+                            'user_offer_like' => 0,
+                            'user_offer_select' => $select,
+                            'user_offer_accepted' => null,
+                        ];
+                        $this->user_practiseModel->insert($data);
+                    }else{
+                        $userOfferId = $userOffer['user_offer_id'];
+                        $data = [
+                            'user_offer_select' => $select,
+                        ];
+                        $this->user_practiseModel->update($userOfferId, $data);
+                    }
                 }
             }
         }
@@ -915,7 +921,7 @@ class Home extends BaseController
         $this->user_practiseModel->update($userOfferId, $data);
         return $this->backUrl('/company-offer-practises');
     }
-    public function noAcceptedForOfferPractise(){
+    public function noAcceptedUserForOfferPractise(){
         $offerId = $this->request->getPost('offer_id');
         $managerId = $this->request->getPost('manager_id');
         $studentId = $this->request->getPost('user_id');

@@ -164,7 +164,7 @@
             width: 50px;
             height: 50px;
         }
-        @media (min-height: 800px){
+        @media (min-height: 700px){
             .button-for-nav{
                display: none; 
             }
@@ -172,7 +172,7 @@
                 display:none
             }
         }
-        @media (max-height: 800px){
+        @media (max-height: 700px){
             .block-nav{
                 visibility: hidden;
             }
