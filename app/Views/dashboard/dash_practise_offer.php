@@ -83,10 +83,28 @@
        border:1px solid #006DBC;
         outline: none;
     }
+    .btn-export{
+        height: 40px;
+        margin-left: 5px;
+        margin-right: 5px;
+        padding: 10px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+        border-radius: 30px;
+    }
+    .btn-export:hover{
+        color:white;
+        background-color: #006DBC;
+    }
+    .icon-export{
+        padding-right: 5px;
+    }
 </style>
 <div class="d-flex flex-wrap justify-content-between align-items-center">
-<div class="m-4 d-flex flex-wrap align-items-center"><h5 class="m-1"><?php echo $practise['practise_name'];?></h5><p class="m-1"><?php echo '(';  $count = count($dates); foreach($dates as $date){echo date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])); if($count > 1){echo ' / '; $count--;}} echo ')';?></p></div>
-<div class="m-4"><a class="btn-add-practise" data-bs-toggle="modal" data-bs-target="#modalAddCompanyNewOffer" data-id-practise-for-company=<?=$practise['practise_id']?> href="">Přidat praxi</a></div>
+  <div class="m-4 d-flex flex-wrap align-items-center"><h5 class="m-1"><?php echo $practise['practise_name'];?></h5><p class="m-1"><?php echo '(';  $count = count($dates); foreach($dates as $date){echo date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])); if($count > 1){echo ' / '; $count--;}} echo ')';?></p></div>
+  <div class="m-4 d-flex align-items-center justify-content-center flex-wrap">
+  <a class="btn-add-practise m-1" href="<?= base_url('/export-practise/'. $practise['practise_id']) ?>"><div class="d-flex justify-content-center align-items-center"><i class="fa-solid fa-file-excel icon-export"></i>Export</div></a>
+  <a class="btn-add-practise m-1" data-bs-toggle="modal" data-bs-target="#modalAddCompanyNewOffer" data-id-practise-for-company=<?=$practise['practise_id']?> href="">Přidat praxi</a></div>
 </div>
 <div class="d-flex justify-content-between flex-wrap">
     <!--- Zde bude hledání -->

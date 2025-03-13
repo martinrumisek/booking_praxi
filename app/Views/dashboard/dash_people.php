@@ -108,6 +108,22 @@
     .invalid-input{
       border: 1px solid red;
     }
+    .btn-export{
+        height: 40px;
+        margin-left: 5px;
+        margin-right: 5px;
+        padding: 10px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+        border-radius: 30px;
+    }
+    .btn-export:hover{
+        color:white;
+        background-color: #006DBC;
+    }
+    .icon-export{
+        padding-right: 5px;
+    }
 </style>
 <div class="container-fluid">
     <h2>Přehled termínů pro praxe</h2>
@@ -117,7 +133,7 @@
                 <input class="search-input p-2 mt-2" name="search" id="search-input" type="text" placeholder="Vyhledat uživatele" <?php if(!empty($search)){?> value="<?= $search ?>" <?php } ?>>
                 <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-            <div class="d-flex flex-wrap">
+            <div class="d-flex flex-wrap align-items-center justify-content-center">
                 <select class="search-input mt-2" id="orderSelect" name="oder">
                     <option <?php if(empty($oder)){?> selected <?php } ?> disabled value="">Seřadit podle</option>
                     <option <?php if(!empty($oder) && $oder == 1){?> selected <?php } ?> value="1">Seřadit podle A-Z</option>
@@ -127,6 +143,7 @@
                     <option <?php if(!empty($oder) && $oder == 5){?> selected <?php } ?> value="5">Zobrazit první admin a správce</option>
                 </select>
                 </form>
+                <a class="mt-2 btn-export" href="<?= base_url('/export-user') ?>"><div class="d-flex justify-content-center align-items-center"><i class="fa-solid fa-file-excel icon-export"></i>Export</div></a>
                 <?php $role = session()->get('role'); if (!empty($role) && in_array('admin', $role)){ ?>
                 <a class="all-user mt-2" href="#modalLoadAllUser" data-bs-toggle="modal" data-bs-target="#modalLoadAllUser"><i class="fa-solid fa-spinner"></i> Načíst uživatele</a>
                 <?php } ?>

@@ -114,17 +114,17 @@
         right: 20px;
         z-index: 1;
         padding: 10px 20px;
-        background-color: white; 
+        background-color: #006DBC; 
         box-shadow: 0px 3px 6px #00000029;
-        color: black;
-        border: none;
+        color: white;
+        border: 1px solid #006DBC;
         border-radius: 10px;
         cursor: pointer;
         font-size: 16px;
     }
     .btn-right-display-submit:hover{
-        background-color: #006DBC;
-        color: white;
+        background-color: white;
+        color: black;
     }
     .reset-btn-date{
         cursor: pointer;

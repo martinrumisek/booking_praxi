@@ -278,7 +278,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header d-flex justify-content-between">
-        <h4 class="modal-title">Přidat novou kategorii</h4>
+        <h4 class="modal-title">Upravit kategorii</h4>
         <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
       </div>
       <div class="modal-body">
@@ -303,7 +303,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header d-flex justify-content-between">
-        <h4 class="modal-title">Přidat novou dovednost</h4>
+        <h4 class="modal-title">Upravit dovednost</h4>
         <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
       </div>
       <div class="modal-body">

@@ -37,6 +37,22 @@
         white-space: nowrap;
         text-overflow: ellipsis;
     }
+    .btn-export{
+        height: 40px;
+        margin-left: 5px;
+        margin-right: 5px;
+        padding: 10px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+        border-radius: 30px;
+    }
+    .btn-export:hover{
+        color:white;
+        background-color: #006DBC;
+    }
+    .icon-export{
+        padding-right: 5px;
+    }
 </style>
 <div class="container-fluid">
     <h2>Historie aktivity uživatelů</h2>
@@ -46,7 +62,8 @@
                 <input class="search-input p-2 mt-2" id="search-input" type="text" name="search" placeholder="Vyhledat uživatele" <?php if(!empty($search)){?> value="<?= $search ?>" <?php } ?>>
                 <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-            <div>
+            <div class="d-flex align-items-center justify-content-center flex-wrap">
+            <a class="mt-2 btn-export" href="<?= base_url('/export-log-company') ?>"><div class="d-flex justify-content-center align-items-center"><i class="fa-solid fa-file-excel icon-export"></i>Export</div></a>
                 <select class="search-input mt-2" id="orderSelect" name="order">
                     <option <?php if(empty($order)){?> selected <?php } ?> disabled>Seřadit podle</option>
                     <option <?php if(!empty($order) && $order == 1){?> selected <?php } ?> value="1">Datum sestupně</option>

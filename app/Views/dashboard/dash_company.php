@@ -169,6 +169,22 @@
     .edite-icon:hover{
       color:gray;
     }
+    .btn-export{
+        height: 40px;
+        margin-left: 5px;
+        margin-right: 5px;
+        padding: 10px;
+        background-color: white;
+        box-shadow: 0px 3px 6px #00000029;
+        border-radius: 30px;
+    }
+    .btn-export:hover{
+        color:white;
+        background-color: #006DBC;
+    }
+    .icon-export{
+        padding-right: 5px;
+    }
 </style>
 <div class="container-fluid">
     <h2 class="mt-2">Přehled firem</h2>
@@ -179,7 +195,8 @@
                 <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </form>
-            <div class="d-flex">
+            <div class="d-flex align-items-center justify-content-center flex-wrap">
+              <a class="mt-2 btn-export" href="<?= base_url('/export-company') ?>"><div class="d-flex justify-content-center align-items-center"><i class="fa-solid fa-file-excel icon-export"></i>Export</div></a>
                 <button class="btn btn-add-company mt-2"  data-bs-toggle="modal" data-bs-target="#modalAddCompany"><i class="fa-solid fa-circle-plus"></i> Přidat firmu</button>
             </div>
     </div>

@@ -250,7 +250,7 @@ if($countSkillText <= 1){
 }
 ?>
     <div class="col-12 col-md-4">
-        <h4 class="text-center"><?= $dateText ?></h4>
+        <h4 class="text-center mt-2"><?= $dateText ?></h4>
         <div class="m-2">
         <div class="d-flex">
             <div class="d-flex align-items-center"><p class="fw-bold">Název termínu: </p><p class="p-2"><?= $offer['practise_name'] ?></p></div>
@@ -264,7 +264,7 @@ if($countSkillText <= 1){
         <div class="m-2"><a target="_blank" class="view-contract-file" href="<?= base_url('assets/document/'.$offer['practise_contract_file']) ?>"><i class="fa-solid fa-file-pdf"></i> Smlouva pro praxi</a></div>
         </div>
         <div class="blue-line"></div>
-        <h4 class="text-center mt-2"><?= $skillText ?></h4>
+        <h4 class="text-center mt-4"><?= $skillText ?></h4>
         <?php if(!empty($category['skills']) && $category['skills'] == ''){ foreach($skills as $category){ ?>
         <div class="h5 fw-bold"><?= $category['category_name'] ?></div>
         <div class="m-1">
@@ -275,7 +275,7 @@ if($countSkillText <= 1){
             </ul>
         </div>
         <?php }}else{ echo 'Není uvedena žádná dovednost';} ?>
-        <h4 class="text-center">Vedoucí pro praxi</h4>
+        <h4 class="text-center mt-4">Vedoucí pro praxi</h4>
         <div class="container bg-white shadow">
             <div class="d-flex flex-wrap">
                 <div class="d-flex align-items-center p-2"><i class="fa-solid fa-clipboard-user h2 m-0"></i></div>
@@ -292,7 +292,7 @@ if($countSkillText <= 1){
         </div>
     </div>
     <div class="col-12 col-md-8">
-        <h4>Popis praxe</h4>
+        <h4 class="mt-2">Popis praxe</h4>
         <div class="container" style="height: 100%;">
             <?php if(empty($offer['offer_description'])){echo 'Není uveden žádný popis praxe';} ?><?= $offer['offer_description'] ?>
         </div>

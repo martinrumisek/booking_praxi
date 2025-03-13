@@ -3,7 +3,10 @@
 namespace App\Controllers;
 require 'vendor/autoload.php';
 
+use CodeIgniter\I18n\Time;
 use mikehaertl\pdftk\Pdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Models\OfferPractise;
 use App\Models\PractiseManager;
 use App\Models\UserModel;
@@ -14,6 +17,8 @@ use App\Models\ClassModel;
 use App\Models\FieldStudy;
 use App\Models\User_OfferPractise;
 use App\Models\Practise;
+use App\Models\LogCompany;
+use App\Models\LogUser;
 
 class Export extends BaseController
 {
@@ -29,6 +34,9 @@ class Export extends BaseController
     var $userSession;
     var $practiseManagerModel;
     var $practiseModel;
+    var $logCompany;
+    var $logUser;
+    var $offerPractiseModel;
     public function __construct(){
         $this->session = session();
         $this->userSession = $this->session->get('user');
@@ -42,6 +50,9 @@ class Export extends BaseController
         $this->practiseManagerModel = new PractiseManager();
         $this->offerPractise = new OfferPractise();
         $this->practiseModel = new Practise();
+        $this->logCompany = new LogCompany();
+        $this->logUser = new LogUser();
+        $this->offerPractiseModel = new OfferPractise();
     }
     private function backUrl($url){
         $previousUrl = $this->request->getServer('HTTP_REFERER');
@@ -140,17 +151,181 @@ class Export extends BaseController
         ->setHeader('Content-Disposition', 'attachment; filename=' . $userName . ' - ' . $userClass.'.pdf'.'')
         ->setBody($file);
     }
-    public function userInPractisePdf(){
-
+    public function userInPractiseExcel($idPractise){
+        $offers = $this->offerPractiseModel->where('Practise_practise_id', $idPractise)
+        ->join('Practise', 'Practise.practise_id = ' . $idPractise . ' AND Practise.practise_del_time IS NULL')
+        ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
+        ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')
+        ->join('User_has_Offer_practise', 'User_has_Offer_practise.Offer_practise_offer_id = Offer_practise.offer_id AND User_has_Offer_practise.user_offer_accepted = 1 AND User_has_Offer_practise.user_offer_del_time IS NULL', 'left')
+        ->join('User', 'User_has_Offer_practise.User_user_id = User.user_id AND User.user_del_time IS NULL', 'left')
+        ->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')
+        ->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')->find();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Název praxe');
+        $sheet->setCellValue('B1', 'Vedoucí praxe');
+        $sheet->setCellValue('C1', 'Tel. číslo na vedoucího');
+        $sheet->setCellValue('D1', 'E-mail na vedoucího');
+        $sheet->setCellValue('E1', 'Název firmy');
+        $sheet->setCellValue('F1', 'Přijatý žák');
+        $sheet->setCellValue('G1', 'Poslední úprava');
+        $row = 2;
+        foreach($offers as $offer){
+            $degreeBefore = '';
+            $degreeAfter = '';
+            if(!empty($offer['manager_degree_before'])){
+                $degreeBefore = $offer['manager_degree_before'] . ' ';
+            }
+            if(!empty($offer['manager_degree_after'])){
+                $degreeAfter = ' ' . $offer['manager_degree_after'];
+            }
+            $name = $degreeBefore . $offer['manager_name'] . ' ' . $offer['manager_surname'] . $degreeAfter;
+            $practiseName = $offer['practise_name'];
+            $sheet->setCellValue('A' . $row, $offer['offer_name']);
+            $sheet->setCellValue('B' . $row, $name);
+            $sheet->setCellValue('C' . $row, $offer['manager_phone']);
+            $sheet->setCellValue('D' . $row, $offer['manager_mail']);
+            $sheet->setCellValue('E' . $row, $offer['company_name'] . ' (' . $offer['company_ico'] . ')');
+            $sheet->setCellValue('F' . $row, $offer['user_name'] . ' ' . $offer['user_surname'] . ' (' . $offer['class_class'] . '.' . $offer['class_letter_class'] . ', ' . $offer['field_shortcut'] );
+            $sheet->setCellValue('G' . $row, date('d.m.Y H:i:s', strtotime($offer['offer_edit_time'])));
+            $row++;
+        }
+        $nowTime = Time::now();
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$practiseName . '-' . $nowTime .'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
     }
-    public function userInPractiseExcel(){
-
+    public function allUserExcel(){
+        $users = $this->userModel->join('Class', 'User.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')->join('Type_school', 'Field_study.Type_school_type_id = Type_school.type_id AND Type_school.type_del_time IS NULL', 'left')->find();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Jméno a příjmení');
+        $sheet->setCellValue('B1', 'E-mail');
+        $sheet->setCellValue('C1', 'Třída');
+        $sheet->setCellValue('D1', 'Obor');
+        $sheet->setCellValue('E1', 'Škola');
+        $sheet->setCellValue('F1', 'Oddělení');
+        $sheet->setCellValue('G1', 'Vytvořeno');
+        $row = 2;
+        foreach($users as $user){
+            $sheet->setCellValue('A' . $row, $user['user_name'] . ' ' . $user['user_surname']);
+            $sheet->setCellValue('B' . $row, $user['user_mail']);
+            $sheet->setCellValue('C' . $row, $user['class_class'] . '.' . $user['class_letter_class']);
+            $sheet->setCellValue('D' . $row, $user['field_name']);
+            $sheet->setCellValue('E' . $row, $user['type_name']);
+            $sheet->setCellValue('F' . $row, $user['user_department']);
+            $sheet->setCellValue('G' . $row, date('d.m.Y H:i:s', strtotime($user['user_create_time'])));
+            $row++;
+        }
+        $nowTime = Time::now();
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="uzivatele'. $nowTime .'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
+    }
+    public function allCompanyExcel(){
+        $companyes = $this->companyModel->where('company_register_company', 1)->find();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Název firmy');
+        $sheet->setCellValue('B1', 'IČO');
+        $sheet->setCellValue('C1', 'Adresa');
+        $sheet->setCellValue('D1', 'Vytvořena');
+        $sheet->setCellValue('E1', 'Zástupce firmy');
+        $sheet->setCellValue('F1', 'E-mail na zástupce');
+        $sheet->setCellValue('G1', 'Tel. číslo na zástupce');
+        $sheet->setCellValue('H1', 'Funkce zástupce');
+        $row = 2;
+        foreach($companyes as $company){
+            $repreCompany = $this->representativeCompanyModel->where('Company_company_id', $company['company_id'])->first();
+            $degreeBefore = '';
+            $degreeAfter = '';
+            if(!empty($repreCompany['representative_degree_before'])){
+                $degreeBefore = $repreCompany['representative_degree_before'] . ' ';
+            }
+            if(!empty($repreCompany['representative_degree_after'])){
+                $degreeAfter = ' ' . $repreCompany['representative_degree_after'];
+            }
+            $name = $degreeBefore . $repreCompany['representative_name'] . ' ' . $repreCompany['representative_surname'] . $degreeAfter;
+            $sheet->setCellValue('A' . $row, $company['company_name']);
+            $sheet->setCellValue('B' . $row, $company['company_ico']);
+            $sheet->setCellValue('C' . $row, $company['company_post_code'] . '  ' . $company['company_city']. ', ' . $company['company_street']);
+            $sheet->setCellValue('D' . $row, date('d.m.Y H:i:s', strtotime($company['company_create_time'])));
+            $sheet->setCellValue('E' . $row, $name);
+            $sheet->setCellValue('F' . $row, $repreCompany['representative_mail']);
+            $sheet->setCellValue('G' . $row, $repreCompany['representative_phone']);
+            $sheet->setCellValue('H' . $row, $repreCompany['representative_function']);
+            $row++;
+        }
+        $nowTime = Time::now();
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="firmy'. $nowTime .'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
     }
     public function logCompanyUserExcel(){
-
+        $logs = $this->logCompany->join('Representative_company', 'Log_company.Representative_company_representative_id = Representative_company.representative_id AND Representative_company.representative_del_time IS NULL')->find();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Akce');
+        $sheet->setCellValue('B1', 'IP adresa');
+        $sheet->setCellValue('C1', 'Čas/provedeno');
+        $sheet->setCellValue('D1', 'Uživatel');
+        $row = 2;
+        foreach($logs as $log){
+            $degreeBefore = '';
+            $degreeAfter = '';
+            if(!empty($log['representative_degree_before'])){
+                $degreeBefore = $log['representative_degree_before'] . ' ';
+            }
+            if(!empty($log['representative_degree_after'])){
+                $degreeAfter = ' ' . $log['representative_degree_after'];
+            }
+            $name = $degreeBefore . $log['representative_name'] . ' ' . $log['representative_surname'] . $degreeAfter;
+            $sheet->setCellValue('A' . $row, $log['log_company_name']);
+            $sheet->setCellValue('B' . $row, $log['log_company_ip_adrese']);
+            $sheet->setCellValue('C' . $row, date('d.m.Y H:i:s', strtotime($log['log_company_create_time'])));
+            $sheet->setCellValue('D' . $row, $name);
+            $row++;
+        }
+        $nowTime = Time::now();
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="log_firmy'. $nowTime .'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
     }
     public function logUserExcel(){
-
+        $logs = $this->logUser->join('User', 'Log_user.User_user_id = User.user_id AND User.user_del_time IS NULL')->find();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Akce');
+        $sheet->setCellValue('B1', 'IP adresa');
+        $sheet->setCellValue('C1', 'Čas/provedeno');
+        $sheet->setCellValue('D1', 'Uživatel');
+        $row = 2;
+        foreach($logs as $log){
+            $sheet->setCellValue('A' . $row, $log['log_user_name']);
+            $sheet->setCellValue('B' . $row, $log['log_user_ip_adrese']);
+            $sheet->setCellValue('C' . $row, date('d.m.Y H:i:s', strtotime($log['log_user_create_time'])));
+            $sheet->setCellValue('D' . $row, $log['user_name'] . ' ' . $log['user_surname']);
+            $row++;
+        }
+        $nowTime = Time::now();
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="log_uzivatel'. $nowTime .'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
     }
     
 }

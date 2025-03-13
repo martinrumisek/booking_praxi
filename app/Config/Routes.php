@@ -112,6 +112,13 @@ $routes->post('/remove-student-on-practise', 'Dashboard::removeStudentOnPractise
 $routes->post('/add-offer-practise-admin', 'Dashboard::addOfferPractise', ['filter' => 'role:admin,spravce']);
 $routes->post('/add-user-accepted-offer-admin', 'Dashboard::addUserAcceptedOffer', ['filter' => 'role:admin,spravce']);
 
+
+//export
+$routes->get('/export-log-user', 'Export::logUserExcel', ['filter' => 'role:admin']);
+$routes->get('/export-log-company', 'Export::logCompanyUserExcel', ['filter' => 'role:admin']);
+$routes->get('/export-company', 'Export::allCompanyExcel', ['filter' => 'role:admin,spravce']);
+$routes->get('/export-user', 'Export::allUserExcel', ['filter' => 'role:admin,spravce']);
+$routes->get('/export-practise/(:num)', 'Export::userInPractiseExcel/$1', ['filter' => 'role:admin,spravce']);
 //$routes->get('/postEmail', 'Dashboard::sentEmail');
 
 //ROUTY PRO AUTH
