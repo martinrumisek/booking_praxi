@@ -6,6 +6,12 @@
     <meta name="keywords" content="správa praxí, správa praxí pro studenty OAUH, webová aplikace pro správu praxí, OAUH, booking praxí, Booking praxí na OAUH, OAUH Booking praxí, oauh booking praxí">
     <title><?=$title?> | Booking praxí</title>
     <link rel="shortcut icon" href="<?= base_url('assets/img/logo/logo_oauh_modra.svg')?>" type="image/x-icon">
+    <link rel="icon" type="image/png" href="<?= base_url('assets/img/logo/favicon-96x96.png')?>" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="<?= base_url('assets/img/logo/favicon.svg')?>" />
+    <link rel="shortcut icon" href="<?= base_url('assets/img/logo/favicon.ico')?>" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('assets/img/logo/apple-touch-icon.png')?>" />
+    <meta name="apple-mobile-web-app-title" content="Booking praxí" />
+    <link rel="manifest" href="<?= base_url('assets/img/logo/site.webmanifest')?>" />
     <!---Vlastní css soubory---->
     <link rel="stylesheet" href="<?= base_url('assets/style/layout/nav.css')?>">
     <!---Bootstrap 5 - stažený composerem---->
