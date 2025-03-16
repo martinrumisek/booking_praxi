@@ -826,7 +826,7 @@ class Dashboard extends Controller
         $id = $this->request->getPost('id');
         $name = $this->request->getPost('name');
         $endOffer = $this->request->getPost('end-new-offer');
-        $file = $this->request->getPost('contract-file');
+        $file = $this->request->getFile('contract-file');
         $classes = $this->request->getPost('classes');
         $description = $this->request->getPost('description');
         $practise = $this->practiseModel->find($id);
@@ -834,11 +834,13 @@ class Dashboard extends Controller
             $this->session->setFlashdata('err_message', 'Nebyli vyplněny všechny potřebné políčka, proto jsme nemohli provést úpravu.');
             return redirect()->to(base_url('dashboard-calendar'));
         }
+        log_message('info', 'data. ' . json_encode($file));
         if(!empty($file)){
             $fileName = $file->getName();
+            log_message('info', 'data. ' . json_encode($fileName));
             if($fileName !== $practise['practise_contract_file']){
                 $fileName = bin2hex(random_bytes(10)) . '.pdf';
-                $path = FCPATH . 'assets/document';
+                $path = FCPATH . 'assets/document/';
                 if(unlink($path . $practise['practise_contract_file'])){
                     $file->move($path, $fileName);
                 }else{
@@ -861,56 +863,26 @@ class Dashboard extends Controller
             ];
             $this->practiseModel->update($id, $data);
         }
-        $existingClasses = $this->class_practiseModel->where('Practise_practise_id')->withDeleted()->find();
-        $existingId = array_column($existingClasses, 'Class_class_id');
-        $classPractises = $this->class_practiseModel->findAll();
-        $existingClass = array_column($classPractises, 'Class_class_id');
-        $countClass = count($classes);
-        foreach($classes as $class){
-            /*if(in_array($class, $existingClass)){
-                if($countClass == 1){
-                    $this->session->setFlashdata('err_message', 'Všechny zvolené třídy jsou již v jiných termínech.');
-                    return redirect()->to(base_url('dashboard-calendar'));
-                }else{
-                    $this->session->setFlashdata('err_message', 'Některé zvolené třídy nemohli být použity, protože jsou již v jiných termínech.');
-                    $countClass--;
-                    continue;
-                }
-            }*/
-            if(in_array($class, $existingId)){
-                $currentDelTime = $existingClasses[array_search($class, $existingId)]['class_practise_del_time'];
-                $currentId = $existingClasses[array_search($class, $existingId)]['class_practise_id'];
-                if(!empty($currentDelTime)){
+        $existingClasses = $this->class_practiseModel->where('Practise_practise_id', $id)->withDeleted()->find();
+        $existingClassIds = array_column($existingClasses, 'Class_class_id');
+        foreach ($classes as $class) {
+            $classKey = array_search($class, $existingClassIds);
+            if($classKey !== false){
+                $currentDelTime = $existingClasses[$classKey]['class_practise_del_time'];
+                $currentId = $existingClasses[$classKey]['class_practise_id'];
+                if(!empty($currentDelTime)) {
                     $this->class_practiseModel->update($currentId, ['class_practise_del_time' => null]);
-                    $countClass--;
                 }
             }else{
-                $newDataClass = [
+                $this->class_practiseModel->insert([
                     'Class_class_id' => $class,
-                    'Practise_practise_id' => $id,
-                ];
-                $countClass--;
-                $this->class_practiseModel->insert($newDataClass);
+                    'Practise_practise_id' => $id
+                ]);
             }
         }
-        $countClass = count($classes);
-        foreach($existingClasses as $existingClass){
-            if(in_array($class, $existingClass)){
-                if($countClass == 1){
-                    return redirect()->to(base_url('dashboard-calendar'));
-                }else{
-                    $countClass--;
-                    continue;
-                }
-            }
-            if(!empty($classes)){
-                if(!in_array($existingClass['Class_class_id'], $classes)){
-                    $this->class_practiseModel->delete($existingClass['class_practise_id']);
-                    $countClass--;
-                }
-            }else{
+        foreach ($existingClasses as $existingClass) {
+            if (!in_array($existingClass['Class_class_id'], $classes)) {
                 $this->class_practiseModel->delete($existingClass['class_practise_id']);
-                $countClass--;
             }
         }
         return redirect()->to(base_url('dashboard-calendar'));
