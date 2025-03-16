@@ -831,29 +831,43 @@ class Dashboard extends Controller
         $description = $this->request->getPost('description');
         $practise = $this->practiseModel->find($id);
         if(empty($id && $name && $endOffer && $classes)){
-            $this->session->setFlashdata('err_message', 'Nebyli vyplněny všechny potřebné políčka, proto jsme nemohli provést úpravu.');
+            $this->session->setFlashdata('err_message', 'Nebyli vyplnÄ›ny vĹˇechny potĹ™ebnĂ© polĂ­ÄŤka, proto jsme nemohli provĂ©st Ăşpravu.');
             return redirect()->to(base_url('dashboard-calendar'));
         }
-        log_message('info', 'data. ' . json_encode($file));
         if(!empty($file)){
             $fileName = $file->getName();
-            log_message('info', 'data. ' . json_encode($fileName));
-            if($fileName !== $practise['practise_contract_file']){
-                $fileName = bin2hex(random_bytes(10)) . '.pdf';
-                $path = FCPATH . 'assets/document/';
-                if(unlink($path . $practise['practise_contract_file'])){
-                    $file->move($path, $fileName);
-                }else{
-                    $this->session->setFlashdata('err_message', 'Nastala nečekaná chyba, zkuste akci opakovat.');
-                    return redirect()->to(base_url('dashboard-calendar'));
-                }
+		    if(!empty($fileName)){	
+                if($fileName !== $practise['practise_contract_file']){
+                    $fileName = bin2hex(random_bytes(10)) . '.pdf';
+                    $path = FCPATH . 'assets/document/';
+                    if(unlink($path . $practise['practise_contract_file'])){
+                        $file->move($path, $fileName);
+                    }else{
+                        $this->session->setFlashdata('err_message', 'Nastala neÄŤekanĂˇ chyba, zkuste akci opakovat.');
+                        return redirect()->to(base_url('dashboard-calendar'));
+                    }
+		        $data = [
+                    'practise_name' => $name,
+                    'practise_description' => $description,
+                    'practise_contract_file' => $fileName,
+                    'practise_end_new_offer' => $endOffer,
+            	    ];
+
+		    }else{
+                $data = [
+                        'practise_name' => $name,
+                        'practise_description' => $description,
+                        'practise_end_new_offer' => $endOffer,
+                    ];
+
+		        }
+            }else{
+                $data = [
+                    'practise_name' => $name,
+                    'practise_description' => $description,
+                    'practise_end_new_offer' => $endOffer,
+                ];
             }
-            $data = [
-                'practise_name' => $name,
-                'practise_description' => $description,
-                'practise_contract_file' => $fileName,
-                'practise_end_new_offer' => $endOffer,
-            ];
             $this->practiseModel->update($id, $data);
         }else{
             $data = [
@@ -863,7 +877,7 @@ class Dashboard extends Controller
             ];
             $this->practiseModel->update($id, $data);
         }
-        $existingClasses = $this->class_practiseModel->where('Practise_practise_id', $id)->withDeleted()->find();
+         $existingClasses = $this->class_practiseModel->where('Practise_practise_id', $id)->withDeleted()->find();
         $existingClassIds = array_column($existingClasses, 'Class_class_id');
         foreach ($classes as $class) {
             $classKey = array_search($class, $existingClassIds);
@@ -884,9 +898,10 @@ class Dashboard extends Controller
             if (!in_array($existingClass['Class_class_id'], $classes)) {
                 $this->class_practiseModel->delete($existingClass['class_practise_id']);
             }
-        }
-        return redirect()->to(base_url('dashboard-calendar'));
+        }        
+	return redirect()->to(base_url('dashboard-calendar'));
     }
+
     public function deletePractise($id){
         $practise = $this->practiseModel->find($id);
         $fileName = $practise['practise_contract_file'];
