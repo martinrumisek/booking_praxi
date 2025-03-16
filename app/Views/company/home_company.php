@@ -187,7 +187,7 @@
                 </div>
     <?php }}?>
     </div>
-    <?php if(!empty($selectStudents)){ ?> <div class="d-flex justify-content-center mt-2"><a class="btn-add-offer" href="">Zobrazit žádosti</a></div><?php }?>
+    <?php if(!empty($selectStudents)){ ?> <div class="d-flex justify-content-center mt-2"><a class="btn-add-offer" href="<?= base_url('/company-offer-practises')?>">Zobrazit žádosti</a></div><?php }?>
 </div>
 
 <div class="d-flex justify-content-center flex-column align-items-center mt-2">
