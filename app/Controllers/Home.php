@@ -103,13 +103,26 @@ class Home extends BaseController
             ->join('Practise_manager', 'Offer_practise.Practise_manager_manager_id = Practise_manager.manager_id AND Practise_manager.manager_del_time IS NULL', 'left')
             ->join('Company', 'Practise_manager.Company_company_id = Company.company_id AND Company.company_del_time IS NULL', 'left')->find();
         }
+        $offers = [];
+        $offerName = [];
+        $companyId = [];
+        $managerId = [];
+        foreach($userOffer as $offer){
+            if(in_array($offer['offer_name'], $offerName) && in_array($offer['company_id'], $companyId) && in_array($offer['manager_id'], $managerId)){
+                continue;
+            }
+            $offerName[] = $offer['offer_name'];
+            $companyId[] = $offer['company_id'];
+            $managerId[] = $offer['manager_id'];
+            $offers[] = $offer;
+        }
         $data = [
             'title' => 'Hlavní stránka',
             'user' => $user,
             'practise' => $userPractiseOffer,
             'dates' => $dates,
             'practiseDate' => $practiseDate,
-            'userOffers' => $userOffer,
+            'userOffers' => $offers,
         ];
         return view('home_student', $data);
     }
@@ -379,8 +392,17 @@ class Home extends BaseController
         $resultPractises = $this->offerPractise->find();
         $offerPractises = [];
         $userHavePractise = 0;
+        $offerName = [];
+        $offerManagerId = [];
+        $companyId = [];
         foreach($resultPractises as $offer){
             $offerId = $offer['offer_id'];
+            if(in_array($offer['offer_name'], $offerName)  && in_array($offer['manager_id'], $offerManagerId) && in_array($offer['company_id'], $companyId)){
+                continue;
+            }
+            $offerName[] = $offer['offer_name'];
+            $offerManagerId[] = $offer['manager_id'];
+            $companyId[] = $offer['company_id'];
             if(!isset($offerPractises[$offerId])){
                 $offerPractises[$offerId] = [
                     'offer_id' => $offerId,

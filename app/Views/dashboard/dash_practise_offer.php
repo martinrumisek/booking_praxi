@@ -67,6 +67,9 @@
       background-color: white;
       box-shadow: 0px 3px 6px #00000029;
     }
+    .btn-create{
+      color: black;
+    }
     .btn-create:hover{
         background-color: #006DBC;
         color: white;
@@ -78,6 +81,7 @@
       border-radius: 10px;
       background-color: white;
       box-shadow: 0px 3px 6px #00000029;
+      color: black;
     }
     select:focus{
        border:1px solid #006DBC;

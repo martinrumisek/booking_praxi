@@ -26,12 +26,14 @@
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
         border: none;
+        color: black;
         padding: 10px;
     }
     .btn-add-categorySkill{
         margin-left: 10px;
         border-radius: 30px;
         background-color: white;
+        color:black;
         box-shadow: 0px 3px 6px #00000029;
         border: none;
         padding: 10px;

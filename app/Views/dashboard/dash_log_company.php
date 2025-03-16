@@ -7,6 +7,7 @@
         height: 40px;
         border: none;
         border-radius: 30px;
+        color: black;
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
     }
