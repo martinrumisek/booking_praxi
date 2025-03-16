@@ -143,6 +143,7 @@
       padding: 8px;
       border-radius: 10px;
       background-color: white;
+      color: black;
       box-shadow: 0px 3px 6px #00000029;
     }
     select:focus{
@@ -261,7 +262,7 @@
               <textarea name="description" class="m-1" id="description-skill"></textarea>
               <label class="mt-1" for="select-category">Kategorie dovedností *</label>
               <select class="m-1 empty-input" name="category_id" id="select-category">
-                  <option select disabled value="">Vyberte možnost</option>
+                  <option selected disabled value="">Vyberte možnost</option>
                   <?php foreach($categoryes as $category){  $countSkill = isset($category['skill']) ? count($category['skill']) : 0;  ?>
                       <option <?php if($countSkill >= 6){echo 'disabled';} ?> value="<?= $category['category_id']?>"><?=$category['category_name']  . ' (' . $countSkill . '/6)'?></option>
                   <?php } ?>
