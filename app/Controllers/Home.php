@@ -425,13 +425,16 @@ class Home extends BaseController
         return view ('practise_offer', $data);
     }
     public function completeOfferView($idOffer){
+        $role = session()->get('role');
+        $isAdmin = in_array('admin', $role);
+        $isSpravce = in_array('spravce', $role);
         if(!empty($this->userSession['class'])){$userClassId = $this->userSession['class'];}
         //$userId = $this->userSession['id'];
         if(!empty($this->companyUser['idCompany'])){$companyId = $this->companyUser['idCompany'];}
         if(!empty($userClassId)){
             $offers = $this->offerPractise->where('offer_id', $idOffer)->join('Class_has_Practise', 'Offer_practise.Practise_practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')->find();
             $classIds = array_column($offers, 'Class_class_id');
-            if(!in_array($userClassId, $classIds)){
+            if(!in_array($userClassId, $classIds)  && !$isAdmin && !$isSpravce){
                 $this->session->setFlashdata('err_message', 'Vyhledaná praxe neexistuje.');
                 return $this->backUrl('practise-offer');
             }
