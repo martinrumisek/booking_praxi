@@ -78,6 +78,7 @@ $isSpravce = in_array('spravce', $role);
             <h3>Dovednosti</h3>
             <a class="btn-show" href="<?= base_url('/dashboard-skill')?>">Zobrazit</a>
         </div>
+        <?php if($isAdmin){ ?>
         <div class="card-main-admin d-flex flex-column align-items-center justify-content-center m-2">
             <i class="fa-solid fa-chart-column nav-icon-main-admin h2 m-0"></i>
             <h3>Log uživatelů</h3>
@@ -88,6 +89,7 @@ $isSpravce = in_array('spravce', $role);
             <h3>Log firem</h3>
             <a class="btn-show" href="<?= base_url('/dashboard-log-company')?>">Zobrazit</a>
         </div>
+        <?php } ?>
     </div>
     <div class="m-4"><a class="btn-back-app" href="<?= base_url('/home-student')?>">Zpět do aplikace</a></div>
 </div>
