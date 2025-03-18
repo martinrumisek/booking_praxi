@@ -185,7 +185,7 @@ th.date{
     <div class="d-flex flex-wrap justify-content-between m-3">
         <form action="" method="GET">
             <div class="d-flex">
-                <input class="search-input p-2 mt-2" id="search-input" name="search" type="text" placeholder="Vyhledat uživatele" <?php if(!empty($search)){?> value="<?= $search ?>" <?php } ?>>
+                <input class="search-input p-2 mt-2" id="search-input" name="search" type="text" placeholder="Vyhledat termín" <?php if(!empty($search)){?> value="<?= $search ?>" <?php } ?>>
                 <button class="btn btn-search mt-2"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </form>

@@ -98,7 +98,7 @@
         -webkit-line-clamp: 5;
     }
     .practise-card{
-        width: 18rem;
+        width: 22rem;
         height: 140px;
         background-color: white;
         border-radius: 20px;

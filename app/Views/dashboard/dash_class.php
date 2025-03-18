@@ -136,33 +136,37 @@
     input[type="number"] {
     -moz-appearance: textfield;
     }
-
+    .edit-icon:hover{
+      color: gray;
+    }
+    .delete-icon:hover{
+      color: red;
+    }
 </style>
 <div class="container page-class mt-2">
     <h2 class="text-center">Přehled tříd</h2>
     <div class="mt-1 d-flex justify-content-end">
         <a class="all-user mt-2" href="#modalLoadAllUser" data-bs-toggle="modal" data-bs-target="#modalAddType"><i class="fa-solid fa-plus"></i> Typ školy</a>
         <a class="all-user mt-2" href="#modalLoadAllUser" data-bs-toggle="modal" data-bs-target="#modalAddField"><i class="fa-solid fa-plus"></i> Obor školy</a>
-        <a class="all-user mt-2" href="#modalLoadAllUser" data-bs-toggle="modal" data-bs-target="#modalOpenExport"><i class="fa-solid fa-file-export"></i> Export</a>
     </div>
     <?php foreach($typeSchools as $type){?> 
         <div class="d-flex">
         <h4><?= $type['type_name'] . ' (' . $type['type_shortcut'] . ')' ?></h4>
-        <a class="p-1" href="#"  data-bs-toggle="modal" data-bs-target="#modalEditType" data-typeId-typeSchool="<?= $type['type_id'] ?>" data-typeName-typeSchool="<?= $type['type_name'] ?>" data-typeShortcut-typeSchool="<?= $type['type_shortcut'] ?>" data-typeDescription-typeSchool="<?= $type['type_description'] ?>"><i class="fa-solid fa-pencil"></i></a>
-        <a class="p-1" href="<?= base_url('/delete-type-school/'.$type['type_id']) ?>"><i class="fa-solid fa-trash"></i></a>
+        <a class="p-1 edit-icon" href="#"  data-bs-toggle="modal" data-bs-target="#modalEditType" data-typeId-typeSchool="<?= $type['type_id'] ?>" data-typeName-typeSchool="<?= $type['type_name'] ?>" data-typeShortcut-typeSchool="<?= $type['type_shortcut'] ?>" data-typeDescription-typeSchool="<?= $type['type_description'] ?>"><i class="fa-solid fa-pencil"></i></a>
+        <a class="p-1 delete-icon" href="<?= base_url('/delete-type-school/'.$type['type_id']) ?>"><i class="fa-solid fa-trash"></i></a>
         </div>
         <?php if(!empty($type['fields'])){ foreach($type['fields'] as $field){ ?>
         <div class="d-flex align-items-center">
         <p class="h6 m-0">Obor: <?= $field['field_name'] . ' ('. $field['field_shortcut'] . ')' ?></p>
-        <a class="p-1" href="#" data-bs-toggle="modal" data-bs-target="#modalEditField" data-fieldId-fieldStudy="<?= $field['field_id'] ?>" data-fieldName-fieldStudy="<?= $field['field_name'] ?>" data-fieldShortcut-fieldStudy="<?= $field['field_shortcut'] ?>"><i class="fa-solid fa-pencil"></i></a>
-        <a class="p-1" href="<?= base_url('/delete-field-study/'.$field['field_id']) ?>"><i class="fa-solid fa-trash"></i></a>
+        <a class="p-1 edit-icon" href="#" data-bs-toggle="modal" data-bs-target="#modalEditField" data-fieldId-fieldStudy="<?= $field['field_id'] ?>" data-fieldName-fieldStudy="<?= $field['field_name'] ?>" data-fieldShortcut-fieldStudy="<?= $field['field_shortcut'] ?>"><i class="fa-solid fa-pencil"></i></a>
+        <a class="p-1 delete-icon" href="<?= base_url('/delete-field-study/'.$field['field_id']) ?>"><i class="fa-solid fa-trash"></i></a>
         </div>
         <ul>
             <?php if(!empty($field['classes'])){ foreach($field['classes'] as $class){ ?>
                 <div class="d-flex align-items-center">
                 <li><?= $class['class_class'] . '.' . $class['class_letter_class'] . '  (' . $class['class_year_graduation'] . ')'?></li>
-                <a class="p-1" href="#" data-bs-toggle="modal" data-bs-target="#modalEditClass" data-classId-class="<?= $class['class_id'] ?>" data-classNumber-class="<?= $class['class_class'] ?>" data-classLetter-class="<?= $class['class_letter_class'] ?>" data-classGraduation-class="<?= $class['class_year_graduation'] ?>"><i class="fa-solid fa-pencil"></i></a>
-                <a class="p-1" href="<?= base_url('/delete-class/'.$class['class_id']) ?>"><i class="fa-solid fa-trash"></i></a>
+                <a class="p-1 edit-icon" href="#" data-bs-toggle="modal" data-bs-target="#modalEditClass" data-classId-class="<?= $class['class_id'] ?>" data-classNumber-class="<?= $class['class_class'] ?>" data-classLetter-class="<?= $class['class_letter_class'] ?>" data-classGraduation-class="<?= $class['class_year_graduation'] ?>"><i class="fa-solid fa-pencil"></i></a>
+                <a class="p-1 delete-icon" href="<?= base_url('/delete-class/'.$class['class_id']) ?>"><i class="fa-solid fa-trash"></i></a>
                 </div>
             <?php }} ?>
             <li><a class="add-new-class" href="#" data-bs-toggle="modal" data-bs-target="#modalAddClass" data-fieldId-field="<?= $field['field_id'] ?>"><i class="fa-solid fa-plus"></i> Třídu</a></li>
@@ -353,24 +357,6 @@
     </div>
   </div>
 </div>
-</div>
-<div class="modal" id="modalOpenExport">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between">
-        <h4 class="modal-title">Export tříd</h4>
-        <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
-      </div>
-      <div class="modal-body">
-            <div class="container">
-                
-            </div>
-      </div>
-      <div class="modal-footer">
-      <input class="btn-create" type="submit" placeholder="Uložit" value="Upravit">
-      </div>
-    </div>
-  </div>
 </div>
 </div>
 <script src="<?= base_url('assets/js/validate-empty-input.js') ?>"></script>

@@ -650,8 +650,7 @@ class Dashboard extends Controller
         if(!empty($search)){
             $this->categorySkill->groupStart()->like('category_name', $search)->orLike('skill_name', $search)->groupEnd();
         }
-        $results = $this->categorySkill->paginate(10);
-        $pager = $this->categorySkill->pager;
+        $results = $this->categorySkill->find();
         $categoryes = [];
         foreach($results as $category){
             $categoryId = $category['category_id'];
@@ -678,7 +677,6 @@ class Dashboard extends Controller
         $data= [
             'title' => 'Administrace',
             'categoryes' => $categoryes,
-            'pager' => $pager,
             'search' => $search,
         ];
         return view('dashboard/dash_skill', $data);
