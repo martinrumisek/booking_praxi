@@ -694,7 +694,7 @@ class Dashboard extends Controller
             default: $this->logUser->orderBy('log_user_create_time', 'DESC');
         }
         if(!empty($search)){
-            $this->logUser->groupStart()->like('user_name', $search)->groupEnd();
+            $this->logUser->groupStart()->like('user_name', $search)->orLike('user_surname', $search)->groupEnd();
         }
         $userLogs = $this->logUser->paginate(20);
         $pager = $this->logUser->pager;

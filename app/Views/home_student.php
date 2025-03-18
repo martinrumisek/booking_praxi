@@ -379,7 +379,7 @@ if(in_array('admin', $role)){
         </div>
         <div class="col-12 col-lg-6">
                 <div class="container-company" style="height: 100%;">
-                    <div class="p-5 container d-flex flex-column" style="height: 100%;">
+                    <div class="p-4 container d-flex flex-column" style="height: 100%;">
                         <?php if(!empty($practise) && $practise['user_offer_accepted'] == 1){ ?>
                         <div class="d-md-flex d-block">
                             <div class="d-flex justify-content-center align-items-center"><div class="icon-company d-flex align-items-center justify-content-center"><i class="fa-solid fa-building h1"></i></div></div>
@@ -399,14 +399,14 @@ if(in_array('admin', $role)){
                             <div class="d-flex justify-content-center h4"><?= $practiseDate['practise_name'] ?></div>
                             <div class="row mt-2">
                                 <?php $countDate = 1; foreach($dates as $date){ ?>
-                                    <div class="col-3 fw-bold">Termín <?= $countDate ?></div>
-                                    <div class="col-9"><?= date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])) ?></div>
+                                    <div class="col-4 text-end fw-bold">Termín <?= $countDate ?></div>
+                                    <div class="col-8 text-center"><?= date('d.m.Y', strtotime($date['date_date_from'])) . ' - ' . date('d.m.Y', strtotime($date['date_date_to'])) ?></div>
                                 <?php $countDate++; } ?>
                             </div>
                             <div class="d-flex flex-wrap mt-auto align-items-end mt-auto justify-content-center">
                                 <a class="m-2 practise-btn" data-bs-toggle="modal" data-bs-target="#modalShowInformationPractise" href="">Zobrazit informace</a>
                                 <a class="m-2 practise-btn" href="<?= base_url('/practise-offer')?>">Vybrat praxi</a>
-                                <a class="m-2 practise-btn" data-bs-toggle="modal" data-bs-target="#modalWriteMyPractise" id-practise-data="<?= $practiseDate['practise_id'] ?>" href="">Zapsat praxi</a>
+                                <a class="m-2 practise-btn" data-bs-toggle="modal" data-bs-target="#modalWriteMyPractise" id-practise-data="<?= $practiseDate['practise_id'] ?>" href="">Zapsat vlastní praxi</a>
                             </div>
                        <?php }else{ ?>
                             <!--- Když není zařazen do termínu praxe -->
