@@ -15,8 +15,7 @@ class UserAzureSync extends Controller
 {
     protected $provider;
 
-    public function getAllUsers()
-    {
+    public function getAllUsers(){
         $accessToken = $this->getAccessToken();
         $usersData = $this->getUsers($accessToken);
         $this->saveUsers($usersData);
@@ -25,9 +24,9 @@ class UserAzureSync extends Controller
     }
     public function upUsersClass(){
         $this->updateClassInPractisePlus();
-        //$this->updateClassYearGraduationPlus();
-        //$this->userToClass();
-        //return redirect()->to(base_url('/dashboard-class'));
+        $this->updateClassYearGraduationPlus();
+        $this->userToClass();
+        return redirect()->to(base_url('/dashboard-class'));
     }
     public function downUsersClass(){
         $this->updateClassYearGraduationMinus();
@@ -171,11 +170,21 @@ class UserAzureSync extends Controller
     }
     private function updateClassYearGraduationPlus(){
         $classModel = new ClassModel();
-        $classModel->db->table('class')->set('class_year_graduation', 'class_year_graduation + 1', false)->update();
+        $classes = $classModel->findAll();
+        foreach($classes as $class){
+            $classGraduation = $class['class_year_graduation'];
+            $newGraduation = $classGraduation + 1;
+            $classModel->update($class['class_id'], ['class_year_graduation' => $newGraduation]);
+        }
     }
     private function updateClassYearGraduationMinus(){
         $classModel = new ClassModel();
-        $classModel->db->table('class')->set('class_year_graduation', 'class_year_graduation - 1', false)->update();
+        $classes = $classModel->findAll();
+        foreach($classes as $class){
+            $classGraduation = $class['class_year_graduation'];
+            $newGraduation = $classGraduation - 1;
+            $classModel->update($class['class_id'], ['class_year_graduation' => $newGraduation]);
+        }
     }
     private function updateClassInPractisePlus(){
         $class_practise = new Class_Practise();
