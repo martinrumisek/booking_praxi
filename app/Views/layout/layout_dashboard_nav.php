@@ -170,7 +170,7 @@
         text-decoration: none;
         color: black;
         }
-        @media (min-height: 730px){
+        @media (min-height: 720px){
             .button-for-nav{
                display: none; 
             }
@@ -178,7 +178,7 @@
                 display:none
             }
         }
-        @media (max-height: 730px){
+        @media (max-height: 720px){
             .block-nav{
                 visibility: hidden;
             }

@@ -283,7 +283,7 @@
     <div class="col-12 col-md-8">
         <h4>Popis praxe</h4>
         <div class="container" style="height: 100%;">
-            <textarea name="full_description" class="full-description" id="editor"><?= $offer['offer_description'] ?></textarea>
+            <textarea name="full_description" class="full-description editor-mce"><?= $offer['offer_description'] ?></textarea>
         </div>
     </div>
 </div>

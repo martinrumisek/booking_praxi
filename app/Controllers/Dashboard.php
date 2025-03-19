@@ -1158,6 +1158,10 @@ class Dashboard extends Controller
             return redirect()->to(base_url('dashboard-company'));
         }
         $isValid = $this->verifyCompany($ico);
+        if(empty($isValid)){
+            $this->session->setFlashdata('err_message', 'Vámi zadaná firma neexistuje.');
+            return redirect()->to(base_url('dashboard-company'));
+        }
         if(empty($nameCompany)){
             $nameCompany = $isValid['obchodniJmeno'];
         }

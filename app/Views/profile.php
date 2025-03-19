@@ -77,11 +77,15 @@
  $companySession = session()->get('companyUser');
  $isStudent = in_array('student', $role);
  $isCompany = in_array('company', $role);
+ $isTeacher = in_array('teacher', $role);
  $isAdmin = in_array('admin', $role);
  $isSpravce = in_array('spravce', $role);
  if($isStudent){
      $userId = $userSession['id'];
 
+ }
+ if($isTeacher){
+    $userId = $userSession['id'];
  }
  if($isCompany){
      $userId = $companySession['idUser'];
