@@ -107,6 +107,7 @@ class Home extends BaseController
         $offerName = [];
         $companyId = [];
         $managerId = [];
+        if(!empty($userOffer)){
         foreach($userOffer as $offer){
             if(in_array($offer['offer_name'], $offerName) && in_array($offer['company_id'], $companyId) && in_array($offer['manager_id'], $managerId)){
                 continue;
@@ -115,6 +116,7 @@ class Home extends BaseController
             $companyId[] = $offer['company_id'];
             $managerId[] = $offer['manager_id'];
             $offers[] = $offer;
+        }
         }
         $data = [
             'title' => 'Hlavní stránka',
@@ -395,6 +397,7 @@ class Home extends BaseController
         $offerName = [];
         $offerManagerId = [];
         $companyId = [];
+        if(!empty($resultPractises)){
         foreach($resultPractises as $offer){
             $offerId = $offer['offer_id'];
             if(in_array($offer['offer_name'], $offerName)  && in_array($offer['manager_id'], $offerManagerId) && in_array($offer['company_id'], $companyId)){
@@ -437,6 +440,7 @@ class Home extends BaseController
             if($offer['user_offer_accepted'] == 1){
                 $userHavePractise = 1;
             }
+        }
         }
         $data = [
             'title' => 'Nabídky praxe',
@@ -489,6 +493,9 @@ class Home extends BaseController
         ->join('Category_skill', 'Skill.Category_skill_category_id = Category_skill.category_id AND Category_skill.category_del_time IS NULL', 'left')->find();
         $skills = [];
         foreach($resultSkills as $skill){
+            if (empty($skill['category_id']) || empty($skill['skill_id'])) {
+                continue;
+            }
             $categoryId = $skill['category_id'];
             if(!isset($skills[$categoryId])){
                 $skills[$categoryId] = [
@@ -503,7 +510,6 @@ class Home extends BaseController
                 ];
             }
         }
-        //log_message('info', 'data: ' . json_encode($skills));
         $data = [
             'title' => 'Zobrazení nabídky',
             'offer' => $offer,
