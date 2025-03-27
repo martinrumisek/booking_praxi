@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\OfferPractise;
+use App\Models\Skill_OfferPractise;
 use App\Models\User_OfferPractise;
 use CodeIgniter\I18n\Time;
 use App\Models\PractiseManager;
@@ -50,6 +51,7 @@ class Dashboard extends Controller
     var $user_offerPractise;
     var $offerPractiseModel;
     var $home;
+    var $skill_offerModel;
     public function __construct(){
         $this->userModel = new UserModel();
         $this->practiseModel = new Practise();
@@ -73,6 +75,7 @@ class Dashboard extends Controller
         $this->user_offerPractise = new User_OfferPractise();
         $this->offerPractiseModel = new OfferPractise();
         $this->home = new Home();
+        $this->skill_offerModel = new Skill_OfferPractise();
     }
     private function backUrl($url){
         $previousUrl = $this->request->getServer('HTTP_REFERER');
@@ -800,6 +803,7 @@ class Dashboard extends Controller
                 $dataClass = [
                     'Class_class_id' => $class,
                     'Practise_practise_id' => $id,
+                    'class_practise_create_class' => $class,
                 ];
                 $countClass--;
                 $this->class_practiseModel->insert($dataClass);
@@ -807,6 +811,7 @@ class Dashboard extends Controller
         }
         $path = FCPATH . 'assets/document';
         $file->move($path, $fileName);
+        $this->copyOfferToNewPractise($classes, $id);
         return redirect()->to(base_url('dashboard-calendar'));
     }
    /* public function sentMoreEmail(){
@@ -888,7 +893,8 @@ class Dashboard extends Controller
             }else{
                 $this->class_practiseModel->insert([
                     'Class_class_id' => $class,
-                    'Practise_practise_id' => $id
+                    'Practise_practise_id' => $id,
+                    'class_practise_create_class' => $class,
                 ]);
             }
         }
@@ -896,10 +902,58 @@ class Dashboard extends Controller
             if (!in_array($existingClass['Class_class_id'], $classes)) {
                 $this->class_practiseModel->delete($existingClass['class_practise_id']);
             }
-        }        
+        }
+    $this->copyOfferToNewPractise($classes, $id);   
 	return redirect()->to(base_url('dashboard-calendar'));
     }
-
+    private function copyOfferToNewPractise($idClasses, $practiseId = null){
+        log_message('info', 'AKce se spustila správně. Data: ' . json_encode($idClasses));
+        $idPractise = [];
+        foreach($idClasses as $class){
+            $practise_class = $this->class_practiseModel->where('class_practise_create_class', $class)->where('Practise_practise_id !=', $practiseId)->orderBy('class_practise_edit_time', 'DESC')->withDeleted()->first();
+            if($practise_class){
+                $idPractise[] = $practise_class['Practise_practise_id'];
+            }
+        }
+        log_message('info', '1. Data: ' . json_encode($idPractise));
+        foreach($idPractise as $practise){
+            $offers = $this->offerPractiseModel->where('Practise_practise_id', $practise)->where('offer_copy_next_year', 1)->withDeleted()->find();
+            log_message('info', '2. Data: ' . json_encode($offers));
+            if($offers){
+                foreach($offers as $offer){
+                    $managerId = $offer['Practise_manager_manager_id'];
+                    $lastOfferId = $offer['offer_id'];
+                    $existManager = $this->practiseManager->find($managerId);
+                    if($existManager){
+                        $data = [
+                            'offer_name' => $offer['offer_name'],
+                            'offer_requirements' => $offer['offer_requirements'],
+                            'offer_description' => $offer['offer_description'],
+                            'offer_city' => $offer['offer_city'],
+                            'offer_street' => $offer['offer_street'],
+                            'offer_post_code' => $offer['offer_post_code'],
+                            'offer_copy_next_year' => $offer['offer_copy_next_year'],
+                            'Practise_practise_id' => $practiseId,
+                            'Practise_manager_manager_id' => $managerId,
+                        ];
+                       $idOfferInsert = $this->offerPractiseModel->insert($data);
+                       $oldSkill_offer = $this->skill_offerModel->where('Offer_practise_offer_id', $lastOfferId)->find();
+                       foreach($oldSkill_offer as $skillOffer){
+                            $dataSkill = [
+                                'Skill_skill_id' => $skillOffer['Skill_skill_id'],
+                                'Offer_practise_offer_id' => $idOfferInsert,
+                            ];
+                            $this->skill_offerModel->insert($dataSkill);
+                       }
+                       $oldUpdateData = [
+                            'offer_copy_next_year' => 0,
+                       ];
+                       $this->offerPractiseModel->update($lastOfferId, $oldUpdateData);
+                    }
+                }
+            }
+        }
+    }
     public function deletePractise($id){
         $practise = $this->practiseModel->find($id);
         $fileName = $practise['practise_contract_file'];

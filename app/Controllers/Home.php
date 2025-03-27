@@ -919,6 +919,10 @@ class Home extends BaseController
         }
     }
     public function deleteOfferPractise($offerId){
+        $copyOfferUpdate = [
+            'offer_copy_next_year' => 0,
+        ];
+        $this->offerPractise->update($offerId, $copyOfferUpdate);
         $this->offerPractise->delete($offerId);
         $userOffers = $this->user_practiseModel->where('Offer_practise_offer_id', $offerId)->find();
         foreach($userOffers as $userOffer){

@@ -252,7 +252,7 @@ class UserAzureSync extends Controller
                 $allOfferPractises = $offerPractiseModel->where('Practise_practise_id')->find();
                 foreach($allOfferPractises as $offerPractise){
                     $user_offerPractiseModel->where('Offer_practise_offer_id', $offerPractise['offer_id'])->delete();
-                    $skill_offerPractiseModel->where('Offer_practise_offer_id', $offerPractise['offer_id'])->delete();
+                    //$skill_offerPractiseModel->where('Offer_practise_offer_id', $offerPractise['offer_id'])->delete();
                 }
                 $allOfferPractises = $offerPractiseModel->where('Practise_practise_id', $practise['practise_id'])->delete();
                 $practiseModel->delete($practise['practise_id']);
