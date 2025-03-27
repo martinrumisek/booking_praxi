@@ -1,68 +1,34 @@
-# CodeIgniter 4 Application Starter
+# BOOKING PRAXÍ - OAUH
+Mojí maturitní prací je webová aplikace Booking praxí, která zajišťuje efektivní
+správu školních praxí. Aplikace nahradí původní zastaralý systém, který již nevyhovuje
+požadavkům na efektivitu a uživatelskou přívětivost. Nový systém byl vytvořen od základů
+s využitím moderních technologií, jako jsou HTML, CSS, PHP, JavaScript, CodeIgniter 4
+a Bootstrap 5. Díky tomu bylo možné zjednodušit a optimalizovat procesy, zvýšit komfort
+uživatelů a zavést nové funkce, které umožní efektivnější správu praxí.
 
-## What is CodeIgniter?
+Aplikace přináší mnoho výhod pro všechny uživatele – studenty, firmy, učitele,
+administrátory školy. Studenti mohou jednoduše vyhledávat nabídky praxí, přihlásit se na
+vybranou praxi a spravovat svůj profil, kde mohou uvést své dovednosti a kontaktní údaje.
+Učitelé a administrátoři získávají přístup k přehledným nástrojům pro organizaci praxí,
+správu termínů a kontrolu studentů. Firmy mohou přidávat nabídky praxí, spravovat
+přihlášky studentů prostřednictvím systému.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+Hlavním přínosem projektu je modernizace a automatizace celého procesu správy
+praxí a tříd. Systém umožňuje bezpečné přihlašování studentů a zaměstnanců školy přes
+Microsoft Office, zatímco firmy se registrují s ověřováním IČO z veřejných rejstříků.
+Administrátoři školy mohou efektivně spravovat uživatelské účty, termíny praxí i nabídky.
+Nechybí ani funkce exportu dat do Excelu nebo generování PDF smluv pro studenty, což
+usnadňuje administrativu.
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+Aplikace je přizpůsobena potřebám naší školy. Na rozdíl od alternativních systémů,
+které nepodporují správu praxí, nebo nástrojů, jako je platforma JCMM, zaměřená pouze
+na stáže v Jihomoravském kraji, Booking praxí umožňuje komplexní správu praxí v rámci
+školních termínů. Tento systém se tak stává nástrojem, který propojuje všechny zúčastněné
+strany a výrazně zjednodušuje celý proces organizace praxí.
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+Projekt Booking praxí představuje moderní řešení, které zlepšuje správu praxí a
+šetří čas všem uživatelům. Díky svým funkcím a přívětivému uživatelskému rozhraní
+nabízí efektivní způsob, jak organizovat školní praxe a přináší výrazný posun oproti
+starému systému.
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
-
-## Installation & updates
-
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
-
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
-
-## Setup
-
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
-
-## Important Change with index.php
-
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
-
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
-
-**Please** read the user guide for a better explanation of how CI4 works!
-
-## Repository Management
-
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 8.1 or higher is required, with the following extensions installed:
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
-
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Booking praxí 2025
