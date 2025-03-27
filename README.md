@@ -31,4 +31,6 @@ Projekt Booking praxí představuje moderní řešení, které zlepšuje správu
 nabízí efektivní způsob, jak organizovat školní praxe a přináší výrazný posun oproti
 starému systému.
 
+Testovací verze běží na URL: https://www.booking-praxi.zdenekhrdina.cz/
+
 Booking praxí 2025
