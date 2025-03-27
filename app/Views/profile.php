@@ -116,7 +116,7 @@
                 </div>
                 <div class="col-12 col-lg-6 p-2">
                     <h5>Datum narození</h5>
-                    <p><?php if(empty($user['user_date_birthday'])){echo 'Není uvedeno';}else{echo $user['user_date_birthday'];} ?></p>
+                    <p><?php if(empty($user['user_date_birthday'])){echo 'Není uvedeno';}else{echo date('d.m.Y', strtotime($user['user_date_birthday']));} ?></p>
                 </div>
                 <div class="col-12 col-lg-6 p-2">
                     <h5>E-mail</h5>
