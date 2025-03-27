@@ -820,7 +820,6 @@ class Dashboard extends Controller
         foreach($companyes as $company){
             $moreMails[] = $company['representative_mail'];
         }
-        log_message('info', 'maily: ' . json_encode($moreMails));
         $messageHtml = 'Zkouška hromadného mailu:';
         $subjectEmail = 'Zkouška hromadného mailu';
         $this->email->sentMoreEmail($moreMails, $messageHtml, $subjectEmail);
@@ -907,7 +906,6 @@ class Dashboard extends Controller
 	return redirect()->to(base_url('dashboard-calendar'));
     }
     private function copyOfferToNewPractise($idClasses, $practiseId = null){
-        log_message('info', 'AKce se spustila správně. Data: ' . json_encode($idClasses));
         $idPractise = [];
         foreach($idClasses as $class){
             $practise_class = $this->class_practiseModel->where('class_practise_create_class', $class)->where('Practise_practise_id !=', $practiseId)->orderBy('class_practise_edit_time', 'DESC')->withDeleted()->first();
@@ -915,10 +913,8 @@ class Dashboard extends Controller
                 $idPractise[] = $practise_class['Practise_practise_id'];
             }
         }
-        log_message('info', '1. Data: ' . json_encode($idPractise));
         foreach($idPractise as $practise){
             $offers = $this->offerPractiseModel->where('Practise_practise_id', $practise)->where('offer_copy_next_year', 1)->withDeleted()->find();
-            log_message('info', '2. Data: ' . json_encode($offers));
             if($offers){
                 foreach($offers as $offer){
                     $managerId = $offer['Practise_manager_manager_id'];
