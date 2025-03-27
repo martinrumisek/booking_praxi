@@ -202,11 +202,11 @@
                 <div class="p-5 container">
                     <div class="d-md-flex d-block">
                         <div class="d-flex justify-content-center align-items-center"><div class="icon-user d-flex align-items-center justify-content-center"><i class="fa-solid fa-briefcase h1"></i></div></div>
-                        <div class="d-flex justify-content-center flex-column align-items-center p-0 m-4" style="width: 100%;"><span>Název praxe</span><textarea name="name_offer_practise" class="name-practise-offer empty-input" id=""><?= $offer['offer_name'] ?></textarea></div>
+                        <div class="d-flex justify-content-center flex-column align-items-center p-0 m-4" style="width: 100%;"><span>Název praxe</span><textarea onkeydown="return event.key !== 'Enter';" name="name_offer_practise" class="name-practise-offer empty-input" id=""><?= $offer['offer_name'] ?></textarea></div>
                     </div>
                     <div class="container mt-3 d-flex flex-column">
                         <span>Krátky popis praxe</span>
-                        <textarea name="short_description_offer_practise" class="short-description-offer" id=""><?= $offer['offer_requirements'] ?></textarea>
+                        <textarea onkeydown="return event.key !== 'Enter';" name="short_description_offer_practise" class="short-description-offer" id=""><?= $offer['offer_requirements'] ?></textarea>
                         
                     </div>
                 </div>

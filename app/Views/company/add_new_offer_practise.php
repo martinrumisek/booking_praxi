@@ -213,11 +213,11 @@ if($isAdmin || $isSpravce){
                 <div class="p-5 container">
                     <div class="d-md-flex d-block">
                         <div class="d-flex justify-content-center align-items-center"><div class="icon-user d-flex align-items-center justify-content-center"><i class="fa-solid fa-briefcase h1"></i></div></div>
-                        <div class="d-flex justify-content-center flex-column align-items-center p-0 m-4" style="width: 100%;"><span>Název praxe</span><textarea name="name_offer_practise" class="name-practise-offer empty-input" id=""></textarea></div>
+                        <div class="d-flex justify-content-center flex-column align-items-center p-0 m-4" style="width: 100%;"><span>Název praxe</span><textarea onkeydown="return event.key !== 'Enter';" name="name_offer_practise" class="name-practise-offer empty-input" id=""></textarea></div>
                     </div>
                     <div class="container mt-3 d-flex flex-column">
                         <span>Krátky popis praxe</span>
-                        <textarea name="short_description_offer_practise" class="short-description-offer" id=""></textarea>
+                        <textarea onkeydown="return event.key !== 'Enter';" name="short_description_offer_practise" class="short-description-offer" id=""></textarea>
                         
                     </div>
                 </div>
@@ -245,7 +245,7 @@ if($isAdmin || $isSpravce){
     </div>
 </div>
 <div class="btn-container d-flex flex-wrap justify-content-center align-items-center">
-<div class="d-flex">
+<div class="d-flex flex-wrap justify-content-center align-items-center p-1">
             <label class="d-flex align-items-center p-2 text-white" for="count_practise">Celkový počet žáků: </label>
             <select name="count_practise" id="count_practise">
                 <?php for($i = 1; $i <= 10; $i++){ ?>

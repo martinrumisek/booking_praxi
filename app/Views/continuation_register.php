@@ -133,6 +133,14 @@
             min-height: 900px;
         }
     }
+    .btn-close-modal{
+      color: black;
+      border: none;
+      border-radius: 100%;
+    }
+    .btn-close-modal:hover{
+      color: red;
+    }
 </style>
 <div class="login-container d-flex align-items-center">
     <div class="container">
@@ -224,7 +232,7 @@
                             <div class="col-12 col-lg-7">
                                 <div class="form-check mb-3">
                                     <input class="form-check-input" type="checkbox" id="agree_person" name="agree_person" value="1" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                    <label class="form-check-label" for="myCheck">Souhlas se zpracováním osobních údajů *</label>
+                                    <label class="form-check-label" for="myCheck">Souhlas se zpracováním osobních údajů (<a data-bs-toggle="modal" data-bs-target="#modalConfirm" href="#">víc zde</a>) *</label>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-4"><div class="d-flex justify-content-center justify-content-lg-end"><button type="submit" id="submit" class="btn form-button mt-3 mr-3 px-5">Registrovat se</button></div></div>
@@ -240,6 +248,46 @@
             <div class=" d-flex align-items-center justify-content-center m-2 h2 bg-white shadow soc-icon"><a href="https://www.oauh.cz/" aria-label="Webová stránka - OAUH"><i class="fa-solid fa-globe"></i></a></div>
         </div>
     </div>
+</div>
+<div class="modal modal-lg" id="modalConfirm">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">Zpracování osobních údajů</h4>
+        <button type="button" class="btn btn-close-modal d-flex" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark h3 m-0"></i></button>
+      </div>
+      <div class="modal-body">
+            <div class="container">
+                <h5>Souhlas se zpracováním osobních údajů</h5>
+               <p>Uděluji souhlas se zpracováním osobních údajů společnosti/instituce, za účelem registrace a správy uživatelského účtu v systému, komunikace a zajištění spolupráce v rámci pracovních nebo obchodních vztahů.</p>
+               <br>
+               <h5>Jaké údaje jsou zpracovány?</h5>
+               <p>Systém bude zpracovávat následující údaje:</p>
+               <ul>
+                <li>Identifikační údaje společnosti/instituce (název, IČO, adresa, právní forma).</li>
+                <li>Identifikační údaje zástupce společnosti/instituce (jméno, přijmení, titul, pozici, e-mail, tel. číslo).</li>
+                <li>Přihlašovací údaje (heslo - uloženo v šifrovací podobě).</li>
+               </ul>
+               <br>
+               <h5>Doba uchování osobních údajů</h5>
+               <p>Osobní údaje budou uchovány:</p>
+               <ul>
+                <li>Po dobu trvání registrace</li>
+                <li>Po ukončení spolupráce po nezbytnou dobu</li>
+               </ul>
+               <br>
+               <h5>Co můžete?</h5>
+               <p>Máte právo:</p>
+               <ul>
+                <li>Na přístup k osobním údajům</li>
+                <li>Na opravu nepřesných nebo neaktuálních údajů</li>
+                <li>Odvolat souhlas kdykoliv prostřednictvím kontaktu na správce</li>
+               </ul>
+            </div>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 <script>
     const emailPattern = /^[a-žA-Ž0-9._-]+@[a-žA-Ž0-9.-]+\.[a-žA-Ž]{2,}$/; 
@@ -338,7 +386,7 @@
     };
     const tooltipCheckbox = new bootstrap.Tooltip(checkboxInput, {
         html: true,
-        title: 'Váš je nutný!',
+        title: 'Váš souhlas je nutný!',
         trigger: 'manual',
     });
     const checkCheckbox = () => { 

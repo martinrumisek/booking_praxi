@@ -7,7 +7,7 @@
         height: 550px;
         background: #006DBC 0% 0% no-repeat padding-box;
         box-shadow: 0px 3px 6px #00000029;
-        border-radius: 0px 279px 246px 0px;
+        border-radius: 0px 0px 150px 0px;
         opacity: 1;
     }
     .profile-icon{
@@ -138,19 +138,20 @@
         position: fixed;
         bottom: 55px;
         right: 20px;
-        z-index: 1;
+        z-index: 100;
         padding: 10px 20px;
-        background-color: white; 
+        background-color: #006DBC; 
         box-shadow: 0px 3px 6px #00000029;
-        color: black;
+        color: white;
         border: none;
         border-radius: 10px;
         cursor: pointer;
         font-size: 16px;
     }
     .btn-right-display-submit:hover{
-        background-color: #006DBC;
-        color: white;
+        background-color: white;
+        color: black;
+        border: 1px solid #006DBC;
     }
     .modal-header{
       background-color: #006DBC;
@@ -230,37 +231,33 @@
             <div class="d-flex justify-content-center">
                 <div class="profile-icon d-flex justify-content-center align-items-center m-0 mt-3"><i class="fa-solid fa-building h1"></i></div>
             </div>
-            <div class="d-flex justify-content-center mt-3 profile-name m-3"><textarea name="nameCompany" class="name-company" id=""><?= $company['company_name'] ?></textarea></div>
+            <div class="d-flex justify-content-center mt-3 profile-name m-3"><textarea onkeydown="return event.key !== 'Enter';" name="nameCompany" class="name-company" id=""><?= $company['company_name'] ?></textarea></div>
             <div class="d-flex justify-content-center mt-3 profile-name"><h3 class="text-white"></h3></div>
         </div>
     </div>
     <div class="col-12 col-lg-7 d-flex align-items-center p-5">
-        <div class="d-flex align-items-center">
-            <div class="container">
-                <div class="h2">Kontaktní údaje</div>
-                <div class="d-flex align-items-center h5">
-                    <i class="fa-solid fa-user p-3"></i>
-                    <div class="p-3 d-flex align-items-center"><?= $contact['representative_degree_before'] . ' ' . $contact['representative_name'] . ' ' . $contact['representative_surname'] . ' ' . $contact['representative_degree_after'] ?></div>
+      <div class="container">
+            <h2>Kontaktní údaje</h2>
+            <div class="row">
+                <div class="col-12 col-lg-6 p-2">
+                    <h5>Jméno a příjmení</h5>
+                    <p><?= $contact['representative_degree_before'] . ' ' . $contact['representative_name'] . ' ' . $contact['representative_surname'] . ' ' . $contact['representative_degree_after'] ?></p>
                 </div>
-                <div class="d-flex align-items-center h5">
-                <div class="p-3 d-flex align-items-center">Funkce: </div>
-                    <div class="p-3 d-flex align-items-center"><?= $contact['representative_function'] ?></div>
+                <div class="col-12 col-lg-6 p-2">
+                    <h5>E-mail</h5>
+                    <p><?= $contact['representative_mail'] ?></p>
                 </div>
-                <div class="d-flex align-items-center h5">
-                    <i class="fa-solid fa-envelope p-3"></i>
-                    <div class="p-3 d-flex align-items-center"><?= $contact['representative_mail'] ?></div>
+                <div class="col-12 col-lg-6 p-2">
+                    <h5>Telefonní číslo</h5>
+                    <p><?= $contact['representative_phone'] ?></p>
                 </div>
-                <div class="d-flex align-items-center h5">
-                <i class="fa-solid fa-phone p-3"></i>
-                    <div class="p-3 d-flex align-items-center"><?= $contact['representative_phone'] ?></div>
+                <div class="col-12 col-lg-6 p-2">
+                    <h5>IČO</h5>
+                    <p><?= $company['company_ico'] ?></p>
                 </div>
-                <div class="d-flex align-items-center h5">
-                    <div class="p-3 d-flex align-items-center">IČO: </div>
-                    <div class="p-3 d-flex align-items-center"><?= $company['company_ico'] ?></div>
-                </div>
-                <div class="d-flex align-items-center h5">
-                    <i class=" p-3 fa-solid fa-location-dot"></i>
-                    <div class="p-3 d-flex align-items-center"><?= $company['company_post_code'] . '  ' . $company['company_city']. ', ' . $company['company_street'] ?></div>
+                <div class="col-12 col-lg-6 p-2">
+                    <h5>Sídlo firmy</h5>
+                    <p><?= $company['company_post_code'] . '  ' . $company['company_city']. ', ' . $company['company_street'] ?></p>
                 </div>
             </div>
         </div>

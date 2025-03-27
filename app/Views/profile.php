@@ -7,7 +7,7 @@
         height: 550px;
         background: #006DBC 0% 0% no-repeat padding-box;
         box-shadow: 0px 3px 6px #00000029;
-        border-radius: 0px 279px 246px 0px;
+        border-radius: 0px 0px 150px 0px;
         opacity: 1;
     }
     .profile-icon{
@@ -16,15 +16,11 @@
         border-radius: 200px;
         background-color: white;
         box-shadow: 0px 3px 6px #00000029;
-        margin-right: 20%;
         margin-top: 15px;
-    }
-    .profile-name{
-        margin-right: 20%;
     }
     .soc-icon{
         height: 27%;
-        margin-right: 20%;
+        margin-right: 8%;
     }
     .circle-icon{
         width: 50px;
@@ -59,6 +55,7 @@
         border-radius: 30px;
         background-color: white;
         box-shadow:0px 3px 6px #00000029;
+        margin-bottom: 10px;
     }
     .btn-repair{
         border-radius: 30px;
