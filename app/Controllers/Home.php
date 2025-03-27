@@ -693,7 +693,7 @@ class Home extends BaseController
         }
         $company = $this->companyModel->find($id);
         $today = date('Y-m-d');
-        $resultPractise = $this->practiseModel->where('practise_end_new_offer >=', $today)->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id', 'left')->join('Class_has_Practise', 'Practise.practise_id = Class_has_Practise.Practise_practise_id', 'left')->join('Class', 'Class_has_Practise.Class_class_id = Class.class_id', 'left')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id', 'left')->find();
+        $resultPractise = $this->practiseModel->where('practise_end_new_offer >=', $today)->join('Date_practise', 'Practise.practise_id = Date_practise.Practise_practise_id AND Date_practise.date_del_time IS NULL', 'left')->join('Class_has_Practise', 'Practise.practise_id = Class_has_Practise.Practise_practise_id AND Class_has_Practise.class_practise_del_time IS NULL', 'left')->join('Class', 'Class_has_Practise.Class_class_id = Class.class_id AND Class.class_del_time IS NULL', 'left')->join('Field_study', 'Class.Field_study_field_id = Field_study.field_id AND Field_study.field_del_time IS NULL', 'left')->find();
         $practises = [];
         foreach($resultPractise as $practise){
             $practiseId = $practise['practise_id'];
@@ -722,7 +722,7 @@ class Home extends BaseController
                 ];
             }
         }
-        $resultCategoryes = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id')->find();
+        $resultCategoryes = $this->categorySkill->join('Skill', 'Category_skill.category_id = Skill.Category_skill_category_id AND Skill.skill_del_time IS NULL ')->find();
         $categoryes = [];
         foreach($resultCategoryes as $category){
             $categoryId = $category['category_id'];
